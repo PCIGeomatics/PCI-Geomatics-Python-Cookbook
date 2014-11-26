@@ -1,0 +1,193 @@
+**Generic Geometric Correction**
+================================
+These recipes are for casual geospatial imagery users. They use generic math models to improve the geometric
+accuracy of images so that it better aligns with other datasources, such as GIS road layers.
+
+
+For many casual users of geospatial imagery, budgets may not be in place to obtain raw imagery from a vendor that
+can be processed with specific satellite and aerial models. Rather, many GIS departments have to use whatever imagery
+they can find. As a result, they often obtain imagery with nominal georeferencing, but may not line up with their
+GIS data (i.e. road vectors) and due to the fact that the imagery is already processed, they cannot use the recipes
+in the Satellite Photogrammetry section. As such, these recipes use generic math models to improve the geometric
+accuracy of images with nominal georeferencing. 
+
+Automatic GCP collection and 2D geometric correction with Polynomial Model
+--------------------------------------------------------------------------
+    This recipe provides a quick and automatic method to geometrically correct imagery with
+    georeferencing but missing a proper math model or orbital information. This process includes
+    automatic GCP collection and refinement. This may be useful for improving the georeferencing
+    of archive imagery.  
+
+    .. code-block:: python
+    
+        from pci.link import *
+        from pci.autogcp2 import *
+        from pci.gcprefn import * 
+        from pci.polymodel import *
+        from pci.ortho2 import * 
+
+        #create PIX link file of input tif image for GCP collection
+        input_image = r"C:\Geomatica_Cookbook\generic\miscellaneous_satellite.tif"
+        ingest_link_file = r"C:\Geomatica_Cookbook\generic\miscellaneous_satellite.pix"
+
+        link( input_image, ingest_link_file, [] ) 
+
+        #Automatic GCP collection using initial georeferencing only
+        reference_image = r"C:\Geomatica_Cookbook\generic\reference.tif"
+        in_match_chan = [4] 
+        ref_match_chan = [4] 
+        search_radius = [25]
+        num_gcps = [] #AUTOGCP2 returns the number of GCPs that were collected. Can use this for building intelligent scripts 
+
+        gcp_seg = autogcp2( ingest_link_file, in_match_chan, "", [], [], reference_image, ref_match_chan, 
+                            "", [], [], "", "", [], "", "", search_radius, "", [], "", num_gcps )
+
+        #Refine GCPs based on generic 2D Polynomial model, which is built by the GCPs
+        reject = [5, 1.0, 1.0]
+        refined_gcp_seg = [] #GCPREFN returns the segment number with the refined GCPs so that it can be provided into the next func.
+        out_stats = [] #GCPREFN populates this list with 11 useful statistics which can be used to build more intelligence into the GCP refinement process
+
+        gcprefn( ingest_link_file, [gcp_seg[0]], [], [], "POLY", [], reject, "NO", refined_gcp_seg, out_stats )
+
+        #Compute a 3D generic math model (Thin Plate Spline) from the GCPs you collected and refined
+        polymodel( ingest_link_file, [gcp_seg[0]], [3], [] )
+
+        #Geometrically correct the image with the tps model that was previously computed
+        geo_correct_image = r"C:\Geomatica_Cookbook\generic\corr_random_satellite.tif"
+        res_x = "2"
+        res_y = "2"
+
+        ortho2(ingest_link_file, [], [], [], "", geo_correct_image, "TIF", "", [], "", "", "", 
+               "", [], "", "", "", "", "", [], [], "", "", [], "", [], "")
+
+               
+Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model
+---------------------------------------------------------------------------------
+    Some GIS organizations and departments are limited to satellite and aerial imagery that
+    has previously been geometrically processed, but the image may not line up well with their GIS 
+    data layers or may be too inaccurate for practical use.
+    
+    
+    This recipe demonstrates how to geometrically correct an image with initial georeferencing
+    using automatic GCP collection and refinement from a referencing image.
+
+    .. code-block:: python
+            
+        from pci.link import *
+        from pci.autogcp2 import *
+        from pci.gcprefn import *
+        from pci.tpsmodel import *
+        from pci.ortho2 import *
+
+        #create PIX link file of input tif image for GCP collection
+        input_image = r"C:\Geomatica_Cookbook\generic\miscellaneous_satellite.tif"
+        ingest_link_file = r"C:\Geomatica_Cookbook\generic\miscellaneous_satellite.pix"
+
+        link( input_image, ingest_link_file, [] ) 
+
+        #Automatic GCP collection using initial georeferencing only
+        reference_image = r"C:\Geomatica_Cookbook\generic\reference.tif"
+        dem = r"C:\Geomatica_Cookbook\generic\dem.pix"
+        in_match_chan = [4] 
+        ref_match_chan = [4] 
+        search_radius = [25]
+        num_gcps = [] #AUTOGCP2 returns the number of GCPs that were collected. Can use this for building intelligent scripts 
+
+        gcp_seg = autogcp2( ingest_link_file, in_match_chan, "", [], [], reference_image, ref_match_chan, 
+                            dem, [], [], "", "", [], "", "", search_radius, "", [], "", num_gcps )
+
+        #Refine GCPs based on generic 2D Polynomial model, which is built by the GCPs
+        reject = [5, 1.0, 1.0]
+        refined_gcp_seg = [] #GCPREFN returns the segment number with the refined GCPs so that it can be provided into the next func.
+        out_stats = [] #GCPREFN populates this list with 11 useful statistics which can be used to build more intelligence into the GCP refinement process
+
+        gcprefn( ingest_link_file, [gcp_seg[0]], [], [], "POLY", [], reject, "NO", refined_gcp_seg, out_stats )
+
+        #Compute a 3D generic math model (Thin Plate Spline) from the GCPs you collected and refined
+        tpsmodel( ingest_link_file, [gcp_seg[0]], [] )
+
+        #Geometrically correct the image with the tps model that was previously computed
+        geo_correct_image = r"C:\Geomatica_Cookbook\generic\corr_random_satellite.tif"
+        res_x = "2"
+        res_y = "2"
+
+        ortho2(ingest_link_file, [], [], [], "", geo_correct_image, "TIF", "", [], "", "", "", 
+               "", [], "", "", "", "", dem, [], [], "", "", [], "", [], "") 
+            
+            
+Automatic GCP collection from road vector layer with generic 3D Geometric Correction
+------------------------------------------------------------------------------------
+    For Some GIS organizations it is important that archive imagery lines up well with GIS layers, such as 
+    road vector layers. Unfortunately, these images may have been previously corrected poorly and only contain nominal 
+    georeferencing.
+    
+    
+    This recipe demonstrates how to geometrically correct an image with nominal georeferencing
+    using automatic GCP collection and refinement from a vector road layer.
+
+    .. code-block:: python
+
+        from pci.fftmvec import *
+        from pci.imageinv import *
+        from pci.fimport import *
+        from pci.iii import *
+        from pci.pcimod import *
+        from pci.gcprefn import *
+        from pci.tpsmodel import *
+        from pci.ortho2 import *
+
+        input_image = r"C:\Geomatica_Cookbook\generic_road\misc_satellite_image.pix"
+
+        #Invert the Near-Infrared channel - Helps FFTMVEC to successfully collect GCPs
+        inverse_image = r"C:\Geomatica_Cookbook\generic_road\inv_misc_img.pix"
+        inv_channel = [3] #Near-Infrared channel
+
+        imageinv(input_image, inverse_image, inv_channel, [], [])  
+
+        #copy the inverted image channel into the ingested image we are going to collect GCPs for
+        pcimod(input_image, "ADD", [0,0,0,1]) #create new 32bit channel in input .pix image file
+        iii(inverse_image, input_image, [1], [5], [], []) #copy inverse image to input .pix image file
+
+        #Run FFTMVEC to automatically collect GCPs from road vectors
+        roadvec = r"C:\Geomatica_Cookbook\generic_road\roads\toronto_vector.pix"
+        gcp_seg = []
+
+        fftmvec( input_image, [1,2,4], [5], [], roadvec, [2], [], [15], "", gcp_seg )
+
+        #Refine GCPs - remove bad GCPs until RMSE falls below 1 pixel in x and y direction
+        refined_gcp_seg = []
+        model_type = u"POLY"      
+        reject = [5,1.0,1.0]    
+
+        gcprefn( input_image, [gcp_seg[0]], [], [], model_type, [], reject, u"NO", refined_gcp_seg, [] )
+
+        #Compute a 3D generic math model (Thin Plate Spline) from the GCPs you collected and refined
+        tpsmodel( input_image, [refined_gcp_seg[0]], [] )
+
+
+        #Geometrically correct the image with the tps model that was previously computed
+        geo_correct_image = r"C:\Geomatica_Cookbook\generic_road\corr_misc_satellite.pix"
+        dem = r"C:\Geomatica_Cookbook\generic_road\torontodem.pix"
+        res_x = "4"
+        res_y = "4"
+
+        ortho2( input_image, [], [], [], "", geo_correct_image, "", "", [], "", "", "", 
+               "", [], "", "", "", "", dem, [], [], "", "", [], "", [], "" )
+        
+        
+Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model - **Batch Processing**
+--------------------------------------------------------------------------------------------------------
+    This recipe demonstrates how to extract a DEM from multiple Aerial images, using an orthoengine project 
+    that was previously setup for digital aerial processing (See above recipe)
+
+    .. code-block:: python
+
+        #Create math model from OE to ingested images
+        ingest_airphoto_dir = r"c:\airphoto\ingests"
+        prepared_oe_proj = ingest_airphoto_dir + os.sep + "oe_configured.prj"
+
+        ingest_image_list = []
+        for r,d,f in os.walk(ingest_airphoto_dir):
+            for file in fnmatch.filter(f, "*.tif"):
+                print "found valid input file: ", file
+                ingest_image_list.append(os.path.join(r,file))   

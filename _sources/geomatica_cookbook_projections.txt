@@ -1,0 +1,74 @@
+**Projections**
+=======================
+This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+
+Create projection for an existing image file
+---------------------------------------------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        #UNDER CONSTRUCTION
+        
+        
+Reproject an image from one coordinate system to a different coordinate system
+------------------------------------------------------------------------------
+    This example explicitly imports the pansharp2 function from the pansharp2 module and imports
+    all onjects and functions from the ortho2 module
+
+    .. code-block:: python
+        
+        from pci.reproj2 import reproj2
+        
+        input_file = r"c:\data\image.pix" #UTM WGS84 projection
+        reproj_file = r"c:\data\reproj_image.pix
+        resolution = [2.0, 2.0]
+        map_units = "Long/Lat E122" #output will be longitude and latitude with NAD83 Ellipse
+        
+        reproj2(input_file, [], [], "", reproj_file, "", "", "", 
+                [], resolution, "YES", map_units, "", "", "", "", "", "", "")
+
+        
+Reproject a vector layer from one coordinate system to a different coordinate system
+--------------------------------------------------------------------------------------
+    Python prints help documentation to the terminal/console for the specified function. This includes information
+    about the signature of the function (arguments that need to be passed) and information about what the function
+    does. Furthermore, the help document includes information about what input data is required and what output is 
+    produced.
+    
+    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
+    
+
+    .. code-block:: python
+
+        from pci.reproj2 import reproj2
+        
+        input_file = r"c:\data\vectors.pix" #UTM WGS84 projection
+        vector_layers = [2,3]
+        reproj_file = r"c:\data\reproj_vectors.pix
+        map_units = "Long/Lat E122" #output will be longitude and latitude with NAD83 Ellipse
+        
+        reproj2(input_file, [], vector_layers, "VEC", reproj_file, "", "", "", 
+                [], resolution, "", map_units, "", "", "", "", "", "", "")
+        
+
+Resample Image channels
+-----------------------
+    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+    function. The main behaviour of this action is that the script will continue to run if the exception is called.
+    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
+    to process the other files
+
+    .. code-block:: python
+        
+        from pci.resamp import resamp
+        
+        input_file = r"c:\data\image.pix" #2m resolution data
+        channels = [] #defaults to all channels
+        resampled_file = r"c:\data\resampled_image.pix"
+        resolution = [4.0, 4.0] #downsample from 2m to 4m resolution
+        resample_method ="cubic" 
+        
+        resamp(input_file, channels, [], "", resampled_file, "", "", resolution, resample_method)
+        

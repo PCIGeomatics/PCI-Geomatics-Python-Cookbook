@@ -1,0 +1,64 @@
+.. Geomatica Cookbook documentation master file, created by
+   sphinx-quickstart on Tue Oct 14 11:42:20 2014.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to the Geomatica Python Cookbook!
+=========================================
+
+Welcome to PCI's Geomatica Python Cookbook. An online resource for Geomatica's Python Community. 
+
+Geomatica's python library offers geospatial developers and solution providers with a powerful set
+of remote sensing, photogrammetry, image processing, image analysis and information extraction 
+tools.
+
+This cookbook is great for new users looking to familiarize themselves with Geomatica's python 
+library and common workflows.  It is also a great resource for more advanced 
+users, as it contains useful code snippets that can be easily "plugged in" to a python script.
+
+* None of these recipes helping? `E-mail us <marketing@pcigeomatics.com>`_ with your recommendations
+* Want to contribute? Checkout our `Geomatica Cookbook GitHub <https://github.com/PCIGeomatics/PCI-Geomatics-Cookbook>`_ project
+
+**Requirements:** 
+ 
+* Geomatica 2014 (`Download <http://www.pcigeomatics.com/resources-support/more-resources/downloads>`_ the free 15-day full feature trial)
+* Python 2.7.X 64bit (automatically installs with Geomatica 2014)
+* Some recipes require ArcGIS 10.2.1 64bit Background Geoprocesses
+
+Geomatica Python Recipes
+========================
+
+.. toctree::
+   :maxdepth: 2
+
+   geomatica_cookbook_general
+   geomatica_cookbook_satellite_photogrammetry
+   geomatica_cookbook_aerial_photogrammetry
+   geomatica_cookbook_generic_geometric_correction
+   geomatica_cookbook_mosaicking
+   geomatica_cookbook_projections
+   geomatica_cookbook_files_layers
+   geomatica_cookbook_data_transforms
+   geomatica_cookbook_image_processing
+   geomatica_cookbook_integrate_arcpy
+   geomatica_cookbook_complete_workflows
+
+
+Contributors & Special Thanks 
+=============================
+**Author:** Shawn Melamed
+
+PCI Geomatics would like to extend a special thanks to the following contributors:
+
+* **PCI Development Team** for developing the functions and objects
+* **Sarah Thompson** for performing a code review
+* **Mauro Scatozza** for getting the github project launched
+* **Freddy Paya** for helping with some recipes
+* **Your name here** (`Become a contributor <https://github.com/PCIGeomatics/PCI-Geomatics-Cookbook>`_) 
+
+   
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`

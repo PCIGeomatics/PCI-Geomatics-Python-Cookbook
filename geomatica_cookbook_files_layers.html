@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Files &amp; Layers &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Data Transformations" href="geomatica_cookbook_data_transforms.html" />
+    <link rel="prev" title="Projections" href="geomatica_cookbook_projections.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_data_transforms.html" title="Data Transformations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="geomatica_cookbook_projections.html" title="Projections"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="files-layers">
+<h1><strong>Files &amp; Layers</strong><a class="headerlink" href="#files-layers" title="Permalink to this headline">¶</a></h1>
+<p>This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.</p>
+<div class="section" id="create-pix-pcidsk-file-with-empty-channels-defined">
+<h2>Create .pix (PCIDSK) file with empty channels defined<a class="headerlink" href="#create-pix-pcidsk-file-with-empty-channels-defined" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.cimpro2</span> <span class="kn">import</span> <span class="n">cimpro2</span>
+
+<span class="n">new_file</span> <span class="o">=</span> <span class="s">r&quot;c:\newfile\empty_file.pix&quot;</span>
+<span class="n">create_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="c">#creates 4 8bit, 0 16bit signed, 1 16bit unsigned and 2 32bit real channels</span>
+<span class="n">data_layout</span> <span class="o">=</span> <span class="s">&quot;tiled512&quot;</span> <span class="c">#creates data structure for file as 512x512 pixel tiles</span>
+<span class="n">projection</span> <span class="o">=</span> <span class="s">&quot;UTM&quot;</span>
+<span class="n">zone</span> <span class="o">=</span> <span class="p">[</span><span class="mi">55</span><span class="p">]</span>
+<span class="n">row</span> <span class="o">=</span> <span class="s">&quot;G&quot;</span>
+<span class="n">datum</span> <span class="o">=</span> <span class="s">&quot;D000&quot;</span> <span class="c">#D000 is WGS84. Also note that D122 is NAD83</span>
+<span class="n">top_left_x</span> <span class="o">=</span> <span class="s">&quot;514418.000&quot;</span>
+<span class="n">top</span> <span class="n">left_y</span> <span class="o">=</span> <span class="s">&quot;5262616.000&quot;</span>
+<span class="n">bottom_right_x</span> <span class="o">=</span> <span class="s">&quot;527908.000&quot;</span>
+<span class="n">bottom_right_y</span> <span class="o">=</span> <span class="s">&quot;5246564.000&quot;</span>
+<span class="n">res_x</span> <span class="o">=</span> <span class="s">&quot;2.0&quot;</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="s">&quot;2.0&quot;</span>
+
+<span class="n">cimpro2</span><span class="p">(</span><span class="n">new_file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">create_channels</span><span class="p">,</span> <span class="n">data_layout</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">zone</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">datum</span><span class="p">,</span>
+        <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="n">top_left_x</span><span class="p">,</span> <span class="n">top_left_y</span><span class="p">,</span> <span class="n">bottom_right_x</span><span class="p">,</span> <span class="n">bottom_right_y</span><span class="p">,</span> <span class="n">res_x</span><span class="p">,</span> <span class="n">res_y</span><span class="p">,</span>
+        <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[])</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="create-pix-pcidsk-file-with-no-projection-defined">
+<h2>Create .pix (PCIDSK) file with no projection defined<a class="headerlink" href="#create-pix-pcidsk-file-with-no-projection-defined" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.cim</span> <span class="kn">import</span> <span class="n">cim</span>
+
+<span class="n">new_file</span> <span class="o">=</span> <span class="s">r&quot;c:\newfile\empty_file.pix&quot;</span>
+<span class="n">file_size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1024</span><span class="p">,</span><span class="mi">1024</span><span class="p">]</span> <span class="c">#specifies the number of pixels and lines for the output image file</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">]</span>
+<span class="n">create_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="c">#creates 7 8bit, 1 16bit signed, 2 16bit unsigned and 5 32bit real channels</span>
+<span class="n">data_layout</span> <span class="o">=</span> <span class="s">&quot;PIXEL&quot;</span> <span class="c">#Pixel interleaved</span>
+
+<span class="n">cim</span><span class="p">(</span><span class="n">new_file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">file_size</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">create_channels</span><span class="p">,</span> <span class="n">data_layout</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="add-or-delete-new-channel-to-an-existing-pix-file">
+<h2>Add or delete new channel to an existing .pix file<a class="headerlink" href="#add-or-delete-new-channel-to-an-existing-pix-file" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Python prints help documentation to the terminal/console for the specified function. This includes information
+about the signature of the function (arguments that need to be passed) and information about what the function
+does. Furthermore, the help document includes information about what input data is required and what output is
+produced.</p>
+<p>It is best to access this directly with the python interpreter in Geomatica&#8217;s Focus or using a terminal/console</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pcimod</span> <span class="kn">import</span> <span class="n">pcimod</span>
+
+<span class="c">#Add new image channels to existing file</span>
+<span class="nb">file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\image.pix&quot;</span>
+<span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="c">#add 4 8bit, 0 16bit signed, 3 16bit unsigned and 1 32bit real channels</span>
+
+<span class="n">pcimod</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s">&quot;ADD&quot;</span><span class="p">,</span> <span class="n">channels</span><span class="p">)</span>
+
+<span class="c">#delete image channel(s) from existing file</span>
+<span class="nb">file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\image.pix&quot;</span>
+<span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span> <span class="c">#delete channels 1, 4 and 6</span>
+
+<span class="n">pcimod</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s">&quot;DEL&quot;</span><span class="p">,</span> <span class="n">channels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="copy-image-channels-to-an-existing-file-with-different-projection">
+<h2>Copy image channels to an existing file with different projection<a class="headerlink" href="#copy-image-channels-to-an-existing-file-with-different-projection" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This example explicitly imports the pansharp2 function from the pansharp2 module and imports
+all onjects and functions from the ortho2 module</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pcimod</span> <span class="kn">import</span> <span class="n">pcimod</span>
+<span class="kn">from</span> <span class="nn">pci.iii</span> <span class="kn">import</span> <span class="n">iii</span>
+<span class="kn">from</span> <span class="nn">pci.reproj2</span> <span class="kn">import</span> <span class="n">reproj2</span>
+
+<span class="n">source_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\ndvi_1.pix&quot;</span>
+<span class="n">destination_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\ndvi_2.pix&quot;</span>
+
+<span class="c">#Add a new channel with correct bit-depth to destination file</span>
+<span class="n">add_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">pcimod</span><span class="p">(</span><span class="n">destination_file</span><span class="p">,</span> <span class="s">&quot;ADD&quot;</span><span class="p">,</span> <span class="n">pcival</span><span class="p">)</span> <span class="c">#Adds a single 32 bit channel to the ndvi_2.pix file</span>
+
+
+<span class="c">#reproject the source channel to the same projection and extents of destination file</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Note: for now, it is required to know the projection information of the</span>
+<span class="sd">destination file. Support will be added soon to automatically retrieve this projection</span>
+<span class="sd">information. You can get the georeferencing information by running PROREP in terminal</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="n">ndvi_channel</span> <span class="o">=</span> <span class="mi">5</span> <span class="c">#NDVI was calculated for this image and is stored in channel 5</span>
+<span class="n">reproj_source_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\ndvi_1_temp_reproj.pix&quot;</span>
+<span class="n">reproj_method</span> <span class="o">=</span> <span class="s">&quot;BR&quot;</span> <span class="c">#Bounds and resolutions are unchanged, calculates pixels and lines</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
+<span class="n">map_units</span> <span class="o">=</span> <span class="s">&quot;UTM 55 G D000&quot;</span>
+<span class="n">top_left_x</span> <span class="o">=</span> <span class="s">&quot;514418.000&quot;</span>
+<span class="n">top</span> <span class="n">left_y</span> <span class="o">=</span> <span class="s">&quot;5262616.000&quot;</span>
+<span class="n">bottom_right_x</span> <span class="o">=</span> <span class="s">&quot;527908.000&quot;</span>
+<span class="n">bottom_right_y</span> <span class="o">=</span> <span class="s">&quot;5246564.000&quot;</span>
+
+<span class="n">reproj2</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span> <span class="n">ndvi_channel</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">reproj_source_file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">reproj_method</span><span class="p">,</span> <span class="p">[],</span> <span class="n">resolution</span><span class="p">,</span> <span class="s">&quot;NO&quot;</span><span class="p">,</span> <span class="n">map_units</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">top_left_x</span><span class="p">,</span>
+        <span class="n">top_left_y</span><span class="p">,</span> <span class="n">bottom_right_x</span><span class="p">,</span> <span class="n">bottom_right_y</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+
+<span class="c">#copy image channel</span>
+<span class="n">input_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">output_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+
+<span class="n">iii</span><span class="p">(</span><span class="n">reproj_source_file</span><span class="p">,</span> <span class="n">destination_file</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">,</span> <span class="n">output_channel</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="import-from-foreign-file-to-pix-or-pix-link-file">
+<h2>Import from foreign file to .pix or .pix link file<a class="headerlink" href="#import-from-foreign-file-to-pix-or-pix-link-file" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.fimport</span> <span class="kn">import</span> <span class="n">fimport</span>
+<span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
+
+<span class="c">#Import foreign file to .pix file (full image copy)</span>
+<span class="n">foreign_file</span> <span class="o">=</span> <span class="s">r&quot;c:\kompsat-2\raw\MSC_070611154402_04650_23191328M1P17G_1G.eph&quot;</span>
+<span class="n">pix_file</span> <span class="o">=</span> <span class="s">r&quot;c:\kompsat-2\import\kompsat-2.pix&quot;</span>
+
+<span class="n">fimport</span><span class="p">(</span><span class="n">foreign_file</span><span class="p">,</span> <span class="n">pix_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+
+<span class="c">#Import foreign file to .pix link file (link to original image)</span>
+<span class="n">pix_link_file</span> <span class="o">=</span>
+
+<span class="n">link</span><span class="p">(</span><span class="n">foreign_file</span><span class="p">,</span> <span class="n">pix_link_file</span><span class="p">,</span> <span class="p">[])</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="export-rasters-or-vectors-to-foreign-file-format">
+<h2>Export rasters or vectors to foreign file format<a class="headerlink" href="#export-rasters-or-vectors-to-foreign-file-format" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.fexport</span> <span class="kn">import</span> <span class="n">fexport</span>
+
+<span class="c">#export image raster(s) to jpeg2000 format</span>
+<span class="n">pix_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\imagery.pix&quot;</span>
+<span class="n">foreign_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\imagery.jp2&quot;</span>
+<span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;jpeg2000&quot;</span>
+<span class="n">compression</span> <span class="o">=</span> <span class="s">&quot;10&quot;</span> <span class="c">#result should b about 10% the size of the input image</span>
+
+<span class="n">fexport</span><span class="p">(</span><span class="n">pix_file</span><span class="p">,</span> <span class="n">foreign_file</span><span class="p">,</span> <span class="p">[],</span> <span class="n">channels</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">format</span><span class="p">,</span> <span class="n">compression</span><span class="p">)</span>
+
+
+<span class="c">#export vector layer</span>
+<span class="n">pix_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\vector.pix&quot;</span>
+<span class="n">foreign_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\shp\vector.shp&quot;</span>
+<span class="n">vector_layer</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">fexport</span><span class="p">(</span><span class="n">pix_file</span><span class="p">,</span> <span class="n">foreign_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">vector_layer</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;SHP&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c">#Note you can perform fexport to convert from a foreign file format to a different foreign file format</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><strong>Files &amp; Layers</strong></a><ul>
+<li><a class="reference internal" href="#create-pix-pcidsk-file-with-empty-channels-defined">Create .pix (PCIDSK) file with empty channels defined</a></li>
+<li><a class="reference internal" href="#create-pix-pcidsk-file-with-no-projection-defined">Create .pix (PCIDSK) file with no projection defined</a></li>
+<li><a class="reference internal" href="#add-or-delete-new-channel-to-an-existing-pix-file">Add or delete new channel to an existing .pix file</a></li>
+<li><a class="reference internal" href="#copy-image-channels-to-an-existing-file-with-different-projection">Copy image channels to an existing file with different projection</a></li>
+<li><a class="reference internal" href="#import-from-foreign-file-to-pix-or-pix-link-file">Import from foreign file to .pix or .pix link file</a></li>
+<li><a class="reference internal" href="#export-rasters-or-vectors-to-foreign-file-format">Export rasters or vectors to foreign file format</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_projections.html"
+                        title="previous chapter"><strong>Projections</strong></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_data_transforms.html"
+                        title="next chapter"><strong>Data Transformations</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/geomatica_cookbook_files_layers.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_data_transforms.html" title="Data Transformations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="geomatica_cookbook_projections.html" title="Projections"
+             >previous</a> |</li>
+        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Shawn Melamed.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    </div>
+  </body>
+</html>

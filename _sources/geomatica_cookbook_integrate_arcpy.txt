@@ -1,0 +1,318 @@
+**Integration with ArcPy**
+=================================
+This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+
+`ArcPy Cookbook <http://arcpy.wordpress.com/>`_
+
+Installing ArcGIS *64bit Background Geoprocesses*
+-------------------------------------------------
+    In order to use Geomatica's geospatial Python library with ArcPy, users, must install 
+    *ArcGIS' 64bit Background Geoprocesses*. This is required, because you cannot call Geomatica's
+    64bit modules with ArcGIS' native 32bit modules. Therefore, it is necessary to install 
+    ArcGIS' 64bit background geoprocesses.
+    
+    This section provides step-by-step instructions for installing the 
+    *ArcGIS 64bit Background Geoprocesses*
+    
+    **Steps:**
+    
+    **1.** Install ArcGIS 10.2.1 or later
+    
+    **2.** Acquire the ArcGIS for Desktop installation CD or the digital .iso file
+    
+        **Note:** You may need to install a virtual DVDrom (`Daemon Tools Lite <http://www.disk-tools.com/download/daemon>`_)
+    
+    **3.** Click *Setup* next to *ArcGIS for Desktop Background Geoprocessing (64-bit)*
+    
+    .. image:: images/64bit_geoprocesses.png
+    
+    **4.** Follow the prompts and install with the default settings
+    
+    **5.** Verify your installation - Navigate to *C:\Python27* and make sure that the 
+           folder *ArcGISx6410.2* is found in the python27 directory
+        
+    .. image:: images/ArcPy64bit_verify.png
+    
+    
+Import ArcPy and Geomatica Python Libraries and verify configuration
+--------------------------------------------------------------------
+    This section provides instructions on how to verify that the *ArcGIS 64bit Background Geoprocessing*
+    and Geomatica's Python library are properly installed and configured.
+    
+    **1.** Open a command prompt
+    
+    **2.** Navigate to and open the python executable in the *ArcGISx6410.2* directory, which will
+    start python's interactive mode
+    
+        **Note:** When executing python scripts that call Geomatica's and ArcGIS' python libraries,
+        it is required that you launch the script with the python executable in 
+        *C:\Python27\ArcGISx6410.2\python.exe*
+    
+    .. image:: images/ArcPy64bit_cmd.png
+    
+    **3.** Using Python's interactive mode, type the following to verify Geomatica's and 
+    ArcGIS' python libraries are correctly configured:  
+    
+    .. code-block:: python
+        
+        #verify Geomatica's python library
+        import pci
+        
+        #verify ArcGIS' python library
+        import arcpy
+        
+    
+    **Note:** If Geomatica's library is correctly configured, the statement, *"PCI Pluggable Framework environment
+    successfully loaded."* will be printed to the terminal. If ArcPy's library is successfully configured
+    nothing will be printed to the terminal. Both libraries will print error messages if there is a
+    problem 
+   
+    .. image:: images/ArcPy64bit_pci_verify.png
+    
+    
+        
+Handling Geomatica and ArcPy Exceptions
+---------------------------------------
+    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+    function in Geomatica and ArcPy. 
+    
+    `Click here <http://resources.arcgis.com/en/help/main/10.2/index.html#//002z0000000q000000>`_ 
+    for more examples of error handling with ArcPy.
+
+    .. code-block:: python
+
+        from pci.pansharp2 import pansharp2
+        from pci.exceptions import PCIException
+        import arcpy
+        
+        #Geomatic Python Try-except statement
+        
+        ms_file = r"c:\NewYorkk_multispectral.pix" #this file is incorrectly spelt and thus, does not exist
+        ms_channels = [1,2,3,4] #pansharpen channels 1 to 4 (Red, green, blue and NIR) 
+        pan_file = r"c:\NewYork_panchromatic.pix"
+        out_file = r"c:\NewYork_pansharpened.pix"
+
+        try:
+            pansharp2(ms_file, ms_channels, [], pan_file, [], out_file, [], "", [], "", "pix", "tiled512")
+        except PCIException, e:
+            print e
+        except Exception, e:
+            print e
+              
+        #ArcPy Try-except statement
+              
+        try:
+            # Execute the Buffer tool
+            #
+            arcpy.Buffer_analysis("c:/transport/roads.shp", "c:/transport/roads_buffer.shp")
+        except Exception as e:
+            print e.message
+            
+            # If using this code within a script tool, AddError can be used to return messages 
+            #   back to a script tool.  If not, AddError will have no effect.
+            arcpy.AddError(e.message)
+                
+        
+Combining Geomatica and ArcPy Functions
+---------------------------------------
+    Use Geomatica to automatically extract a 3D Digital Surface Model (DSM) from high 
+    resolution aerial imagery. Then use ArcPy to calculte 
+
+    .. code-block:: python
+
+        from pci.epipolar2 import *
+        from pci.autodem2 import *
+        from pci.fexport import *
+        from pci.exceptions import *
+        from pathcheck import *
+        from sys import argv
+        import arcpy
+        from arcpy import env
+        import arcpy.mapping
+        import locale
+        import os
+        import shutil
+        import calendar, time
+
+        arcpy.CheckOutExtension("3D") #Licensing the ArcGIS 3D Analyst extension
+        arcpy.env.overwriteOutput = True
+        print "esri's ArcPy environment successfully loaded."
+
+        locale.setlocale( locale.LC_ALL, "" )
+        locale.setlocale( locale.LC_NUMERIC, "C" )
+    
+        print ""
+        print "***************************************************************"
+        print "              PCI - Running Epipolar Generation"
+        print "***************************************************************"
+        print ""
+
+        intermediate_outputs = out_folder + '/intermediate_results/'
+
+        if not os.path.exists(intermediate_outputs): 
+            os.makedirs(intermediate_outputs)
+
+        #Set Epipolar Parameters
+        mfile = in_folder + '*.pix'  
+        dbic = [1,2,3]      # Integer
+        mmseg = []      # Integer
+        dbiw = []      # Integer
+        srcbgd = u"" 
+        selmthd = u"OPT" 
+        minpc = []      # Integer
+        sampling = [2]      # Integer
+        epi_outdir = intermediate_outputs + 'epipolars'
+        outbgd = [0]     # Float
+        tfile = u"" 
+        genopt = u"" 
+        memsize = [1024]      # Integer
+
+        os.mkdir(epi_outdir)
+
+        try:
+            epipolar2( mfile, dbic, mmseg, dbiw, srcbgd, selmthd, minpc,
+                      sampling, epi_outdir, outbgd, tfile, genopt, memsize )
+        except PCIException, e:
+            print e
+        except Exception, e:
+            print e
+
+        print "Epipolar Generation Complete!"
+        print ""
+
+        print ""
+        print "***************************************************************"
+        print "                 PCI - Running DSM Extraction"
+        print "***************************************************************"
+        print ""
+
+        #Set autodem2 parameters
+        mfile = intermediate_outputs + 'epipolars\\e*.pix' 
+        dbic = [1]      # Integer
+        dbiw = []      # Integer
+        minmaxel = []     # Float
+        failvalu = []      # Integer
+        backelev = [-32768]     # Float
+        demdet = u"" 
+        tertype = u"" 
+        datatype = u"" 
+        extinter = []      # Integer
+        demedit = u"" 
+        scorchan = u"no" 
+        wallis = u"" 
+        tfile = u"" 
+        dsm_outdir = intermediate_outputs + 'dsm' 
+        filedsm = intermediate_outputs + 'dsm_Urban.pix' 
+        demclip = u"" 
+        mapunits = u"" 
+        upleft = []     # Float
+        loright = []     # Float
+        pxszout = [1.0, 1.00]     # Float
+        mergeopt = u"blend" 
+
+        os.mkdir(dsm_outdir)
+
+        try:
+            autodem2( mfile, dbic, dbiw, minmaxel, failvalu, backelev, demdet, 
+                    tertype, datatype, extinter, demedit, scorchan, wallis, 
+                    tfile, dsm_outdir, filedsm, demclip, mapunits, upleft, loright, 
+                    pxszout, mergeopt )
+        except PCIException, e:
+            print e
+        except Exception, e:
+            print e
+
+        print "DSM Extraction Complete!"
+        print ""
+
+        #Export DSM to 32bit GeoTIFF (PCI Geomatica)
+        fili	=	filedsm
+        filo	=	intermediate_outputs + 'dsm_urban.tif'
+        dbiw	=	[]
+        dbic	=	[1]
+        dbib	=	[]
+        dbvs	=	[]
+        dblut	=	[]
+        dbpct	=	[]
+        ftype	=	"TIF"
+        foptions =  u""
+
+        try:
+            fexport( fili, filo, dbiw, dbic, dbib, dbvs, dblut, dbpct, ftype, foptions )
+        except PCIException, e:
+            print e
+        except Exception, e:
+            print e
+
+        print ""
+        print "***************************************************************"
+        print "                 esri - Running Visibility Analysis                 "
+        print "***************************************************************"
+        print ""
+
+        print "Creating File Geodatabase"
+        arcpy.CreateFileGDB_management(intermediate_outputs, 'pci_esri-solution.gdb') #Create output file GeoDatabase
+        print "File Geodatabase created successfully!"
+        print ""
+
+        geodatabase_file = intermediate_outputs + 'pci_esri-solution.gdb'
+
+        vis_raster = geodatabase_file + '/Visibility_raster'
+
+        Analysis_type = "OBSERVERS"
+        Import_Surface_Raster = filo
+        Input_Observer_Feature = point_file
+        Output_Raster = vis_raster
+        AboGLevel = ""
+        NODATA= [-32768]
+
+        # Process: Visibility
+        print ""
+        print "Beginning Visibility Analysis"
+        arcpy.Visibility_3d(Import_Surface_Raster, Input_Observer_Feature, Output_Raster, AboGLevel, Analysis_type, "NODATA", "1", "FLAT_EARTH", "0.13", "5", "", "1.5", "", "100", "", "", "", "")
+        print "Visibility Analysis complete!"
+
+        # Convert Raster to Polygon in ArcGIS
+
+        inRaster = vis_raster
+        out_poly_folder = intermediate_outputs + "polygons/"
+        outPolygons = out_poly_folder + "visibility_poly.shp"
+        field = "VALUE"
+
+        if not os.path.isdir(out_poly_folder):
+            os.mkdir(out_poly_folder)
+
+        print ""
+        print "Running Raster to Polygon Conversion"
+        # Execute RasterToPolygon
+        arcpy.RasterToPolygon_conversion(inRaster, outPolygons, "NO_SIMPLIFY", field)
+        print ""
+        print "Raster to Polygon Conversion Completed!"
+        print ""
+
+        print ""
+        print "***************************************************************"
+        print "              esri - Intersect Analysis with Roads               "
+        print "***************************************************************"
+        print ""
+
+        print "Beginning Intersect Analysis"
+
+        final_outputs = out_folder + '/final_results/'
+        vis_road_dir = final_outputs + 'road_visibility/'
+
+        roads = road_file
+        visibility_poly = outPolygons
+        inFeatures = [roads, visibility_poly]
+        roads_Intersect = vis_road_dir + 'road_visibility.shp'  
+
+        print 
+
+        if not os.path.exists(vis_road_dir): 
+            os.makedirs(vis_road_dir)
+            print "output path created"
+        print ""
+          
+        arcpy.Intersect_analysis(inFeatures, roads_Intersect, "ALL", "", "LINE")
+        print ""
+        print "Intersect Analysis Complete"

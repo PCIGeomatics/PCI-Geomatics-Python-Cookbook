@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Generic Geometric Correction &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Mosaicking" href="geomatica_cookbook_mosaicking.html" />
+    <link rel="prev" title="Digital Aerial Photogrammetry" href="geomatica_cookbook_aerial_photogrammetry.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_mosaicking.html" title="Mosaicking"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="geomatica_cookbook_aerial_photogrammetry.html" title="Digital Aerial Photogrammetry"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="generic-geometric-correction">
+<h1><strong>Generic Geometric Correction</strong><a class="headerlink" href="#generic-geometric-correction" title="Permalink to this headline">¶</a></h1>
+<p>These recipes are for casual geospatial imagery users. They use generic math models to improve the geometric
+accuracy of images so that it better aligns with other datasources, such as GIS road layers.</p>
+<p>For many casual users of geospatial imagery, budgets may not be in place to obtain raw imagery from a vendor that
+can be processed with specific satellite and aerial models. Rather, many GIS departments have to use whatever imagery
+they can find. As a result, they often obtain imagery with nominal georeferencing, but may not line up with their
+GIS data (i.e. road vectors) and due to the fact that the imagery is already processed, they cannot use the recipes
+in the Satellite Photogrammetry section. As such, these recipes use generic math models to improve the geometric
+accuracy of images with nominal georeferencing.</p>
+<div class="section" id="automatic-gcp-collection-and-2d-geometric-correction-with-polynomial-model">
+<h2>Automatic GCP collection and 2D geometric correction with Polynomial Model<a class="headerlink" href="#automatic-gcp-collection-and-2d-geometric-correction-with-polynomial-model" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe provides a quick and automatic method to geometrically correct imagery with
+georeferencing but missing a proper math model or orbital information. This process includes
+automatic GCP collection and refinement. This may be useful for improving the georeferencing
+of archive imagery.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.polymodel</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#create PIX link file of input tif image for GCP collection</span>
+<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\miscellaneous_satellite.tif&quot;</span>
+<span class="n">ingest_link_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\miscellaneous_satellite.pix&quot;</span>
+
+<span class="n">link</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+
+<span class="c">#Automatic GCP collection using initial georeferencing only</span>
+<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\reference.tif&quot;</span>
+<span class="n">in_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">search_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">]</span>
+<span class="n">num_gcps</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#AUTOGCP2 returns the number of GCPs that were collected. Can use this for building intelligent scripts</span>
+
+<span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="n">in_match_chan</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">reference_image</span><span class="p">,</span> <span class="n">ref_match_chan</span><span class="p">,</span>
+                    <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">search_radius</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">num_gcps</span> <span class="p">)</span>
+
+<span class="c">#Refine GCPs based on generic 2D Polynomial model, which is built by the GCPs</span>
+<span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="n">refined_gcp_seg</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#GCPREFN returns the segment number with the refined GCPs so that it can be provided into the next func.</span>
+<span class="n">out_stats</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#GCPREFN populates this list with 11 useful statistics which can be used to build more intelligence into the GCP refinement process</span>
+
+<span class="n">gcprefn</span><span class="p">(</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;POLY&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">reject</span><span class="p">,</span> <span class="s">&quot;NO&quot;</span><span class="p">,</span> <span class="n">refined_gcp_seg</span><span class="p">,</span> <span class="n">out_stats</span> <span class="p">)</span>
+
+<span class="c">#Compute a 3D generic math model (Thin Plate Spline) from the GCPs you collected and refined</span>
+<span class="n">polymodel</span><span class="p">(</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[]</span> <span class="p">)</span>
+
+<span class="c">#Geometrically correct the image with the tps model that was previously computed</span>
+<span class="n">geo_correct_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\corr_random_satellite.tif&quot;</span>
+<span class="n">res_x</span> <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+
+<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">geo_correct_image</span><span class="p">,</span> <span class="s">&quot;TIF&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+       <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model">
+<h2>Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model<a class="headerlink" href="#automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Some GIS organizations and departments are limited to satellite and aerial imagery that
+has previously been geometrically processed, but the image may not line up well with their GIS
+data layers or may be too inaccurate for practical use.</p>
+<p>This recipe demonstrates how to geometrically correct an image with initial georeferencing
+using automatic GCP collection and refinement from a referencing image.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.tpsmodel</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#create PIX link file of input tif image for GCP collection</span>
+<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\miscellaneous_satellite.tif&quot;</span>
+<span class="n">ingest_link_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\miscellaneous_satellite.pix&quot;</span>
+
+<span class="n">link</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+
+<span class="c">#Automatic GCP collection using initial georeferencing only</span>
+<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\reference.tif&quot;</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\dem.pix&quot;</span>
+<span class="n">in_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">search_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">]</span>
+<span class="n">num_gcps</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#AUTOGCP2 returns the number of GCPs that were collected. Can use this for building intelligent scripts</span>
+
+<span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="n">in_match_chan</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">reference_image</span><span class="p">,</span> <span class="n">ref_match_chan</span><span class="p">,</span>
+                    <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">search_radius</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">num_gcps</span> <span class="p">)</span>
+
+<span class="c">#Refine GCPs based on generic 2D Polynomial model, which is built by the GCPs</span>
+<span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="n">refined_gcp_seg</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#GCPREFN returns the segment number with the refined GCPs so that it can be provided into the next func.</span>
+<span class="n">out_stats</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#GCPREFN populates this list with 11 useful statistics which can be used to build more intelligence into the GCP refinement process</span>
+
+<span class="n">gcprefn</span><span class="p">(</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;POLY&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">reject</span><span class="p">,</span> <span class="s">&quot;NO&quot;</span><span class="p">,</span> <span class="n">refined_gcp_seg</span><span class="p">,</span> <span class="n">out_stats</span> <span class="p">)</span>
+
+<span class="c">#Compute a 3D generic math model (Thin Plate Spline) from the GCPs you collected and refined</span>
+<span class="n">tpsmodel</span><span class="p">(</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[]</span> <span class="p">)</span>
+
+<span class="c">#Geometrically correct the image with the tps model that was previously computed</span>
+<span class="n">geo_correct_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\corr_random_satellite.tif&quot;</span>
+<span class="n">res_x</span> <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+
+<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">geo_correct_image</span><span class="p">,</span> <span class="s">&quot;TIF&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+       <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="automatic-gcp-collection-from-road-vector-layer-with-generic-3d-geometric-correction">
+<h2>Automatic GCP collection from road vector layer with generic 3D Geometric Correction<a class="headerlink" href="#automatic-gcp-collection-from-road-vector-layer-with-generic-3d-geometric-correction" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>For Some GIS organizations it is important that archive imagery lines up well with GIS layers, such as
+road vector layers. Unfortunately, these images may have been previously corrected poorly and only contain nominal
+georeferencing.</p>
+<p>This recipe demonstrates how to geometrically correct an image with nominal georeferencing
+using automatic GCP collection and refinement from a vector road layer.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.fftmvec</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.imageinv</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.fimport</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.iii</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.pcimod</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.tpsmodel</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\misc_satellite_image.pix&quot;</span>
+
+<span class="c">#Invert the Near-Infrared channel - Helps FFTMVEC to successfully collect GCPs</span>
+<span class="n">inverse_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\inv_misc_img.pix&quot;</span>
+<span class="n">inv_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="c">#Near-Infrared channel</span>
+
+<span class="n">imageinv</span><span class="p">(</span><span class="n">input_image</span><span class="p">,</span> <span class="n">inverse_image</span><span class="p">,</span> <span class="n">inv_channel</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+
+<span class="c">#copy the inverted image channel into the ingested image we are going to collect GCPs for</span>
+<span class="n">pcimod</span><span class="p">(</span><span class="n">input_image</span><span class="p">,</span> <span class="s">&quot;ADD&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c">#create new 32bit channel in input .pix image file</span>
+<span class="n">iii</span><span class="p">(</span><span class="n">inverse_image</span><span class="p">,</span> <span class="n">input_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[])</span> <span class="c">#copy inverse image to input .pix image file</span>
+
+<span class="c">#Run FFTMVEC to automatically collect GCPs from road vectors</span>
+<span class="n">roadvec</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\roads\toronto_vector.pix&quot;</span>
+<span class="n">gcp_seg</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">fftmvec</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[],</span> <span class="n">roadvec</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">15</span><span class="p">],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">gcp_seg</span> <span class="p">)</span>
+
+<span class="c">#Refine GCPs - remove bad GCPs until RMSE falls below 1 pixel in x and y direction</span>
+<span class="n">refined_gcp_seg</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">model_type</span> <span class="o">=</span> <span class="s">u&quot;POLY&quot;</span>
+<span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]</span>
+
+<span class="n">gcprefn</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">model_type</span><span class="p">,</span> <span class="p">[],</span> <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="n">refined_gcp_seg</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+
+<span class="c">#Compute a 3D generic math model (Thin Plate Spline) from the GCPs you collected and refined</span>
+<span class="n">tpsmodel</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="p">[</span><span class="n">refined_gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[]</span> <span class="p">)</span>
+
+
+<span class="c">#Geometrically correct the image with the tps model that was previously computed</span>
+<span class="n">geo_correct_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\corr_misc_satellite.pix&quot;</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\torontodem.pix&quot;</span>
+<span class="n">res_x</span> <span class="o">=</span> <span class="s">&quot;4&quot;</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="s">&quot;4&quot;</span>
+
+<span class="n">ortho2</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">geo_correct_image</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+       <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model-batch-processing">
+<h2>Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model - <strong>Batch Processing</strong><a class="headerlink" href="#automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model-batch-processing" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe demonstrates how to extract a DEM from multiple Aerial images, using an orthoengine project
+that was previously setup for digital aerial processing (See above recipe)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#Create math model from OE to ingested images</span>
+<span class="n">ingest_airphoto_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\ingests&quot;</span>
+<span class="n">prepared_oe_proj</span> <span class="o">=</span> <span class="n">ingest_airphoto_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;oe_configured.prj&quot;</span>
+
+<span class="n">ingest_image_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">r</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">ingest_airphoto_dir</span><span class="p">):</span>
+    <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&quot;*.tif&quot;</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;found valid input file: &quot;</span><span class="p">,</span> <span class="nb">file</span>
+        <span class="n">ingest_image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">file</span><span class="p">))</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><strong>Generic Geometric Correction</strong></a><ul>
+<li><a class="reference internal" href="#automatic-gcp-collection-and-2d-geometric-correction-with-polynomial-model">Automatic GCP collection and 2D geometric correction with Polynomial Model</a></li>
+<li><a class="reference internal" href="#automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model">Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model</a></li>
+<li><a class="reference internal" href="#automatic-gcp-collection-from-road-vector-layer-with-generic-3d-geometric-correction">Automatic GCP collection from road vector layer with generic 3D Geometric Correction</a></li>
+<li><a class="reference internal" href="#automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model-batch-processing">Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model - <strong>Batch Processing</strong></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_aerial_photogrammetry.html"
+                        title="previous chapter"><strong>Digital Aerial Photogrammetry</strong></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_mosaicking.html"
+                        title="next chapter"><strong>Mosaicking</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/geomatica_cookbook_generic_geometric_correction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_mosaicking.html" title="Mosaicking"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="geomatica_cookbook_aerial_photogrammetry.html" title="Digital Aerial Photogrammetry"
+             >previous</a> |</li>
+        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Shawn Melamed.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    </div>
+  </body>
+</html>

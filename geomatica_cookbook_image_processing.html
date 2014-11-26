@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Geospatial Image Processing &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Integration with ArcPy" href="geomatica_cookbook_integrate_arcpy.html" />
+    <link rel="prev" title="Data Transformations" href="geomatica_cookbook_data_transforms.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_integrate_arcpy.html" title="Integration with ArcPy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="geomatica_cookbook_data_transforms.html" title="Data Transformations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="geospatial-image-processing">
+<h1><strong>Geospatial Image Processing</strong><a class="headerlink" href="#geospatial-image-processing" title="Permalink to this headline">¶</a></h1>
+<p>This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.</p>
+<div class="section" id="pansharpen-satellite-images">
+<h2>Pansharpen satellite images<a class="headerlink" href="#pansharpen-satellite-images" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe provides a simple way to pansharpen level 2 aerial imagery in order
+to convert it to level 3 imagery.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
+
+<span class="n">ms_file</span> <span class="o">=</span> <span class="s">&quot;c:\geoeye_raw\po_311159_0000000\po_311159_bgrn_0000000.tif&quot;</span>
+<span class="n">pan_file</span> <span class="o">=</span> <span class="s">&quot;c:\geoeye_raw\po_311159_0000000\po_311159_pan_0000000.tif&quot;</span>
+<span class="n">ms_channels</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#takes all input channels by default</span>
+<span class="n">pan_channel</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">pansharp_file</span> <span class="o">=</span><span class="s">&quot;c:\geoeye_processed\psh_po_311159_0000000.pix&quot;</span>
+
+
+<span class="n">pansharp2</span><span class="p">(</span><span class="n">ms_file</span><span class="p">,</span> <span class="n">ms_channels</span><span class="p">,</span> <span class="p">[],</span> <span class="n">pan_file</span><span class="p">,</span> <span class="n">pan_channel</span><span class="p">,</span> <span class="n">pansharp_file</span><span class="p">,</span>
+          <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="pansharpen-satellite-images-batch-processing">
+<h2>Pansharpen satellite images - <strong>Batch Processing</strong><a class="headerlink" href="#pansharpen-satellite-images-batch-processing" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe provides a simple way to pansharpen level 2 aerial imagery in order
+to convert it to level 3 imagery.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#UNDER CONSTRUCTION</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="co-register-ms-with-pan-image-and-then-pansharpen">
+<h2>Co-register MS with PAN image and then pansharpen<a class="headerlink" href="#co-register-ms-with-pan-image-and-then-pansharpen" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe provides a simple way to pansharpen level 2 aerial imagery in order
+to convert it to level 3 imagery.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
+<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="n">autogcp2</span>
+<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="n">gcprefn</span>
+<span class="kn">from</span> <span class="nn">pci.rfmodel</span> <span class="kn">import</span> <span class="n">rfmodel</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
+<span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
+
+<span class="c">#get raw inputs</span>
+<span class="n">ms_raw_file</span> <span class="o">=</span> <span class="s">r&quot;c:\kompsat3\K3_20131003174133_07365_20171339_L1R_Aux.xml-MS&quot;</span>
+<span class="n">ms_channels</span> <span class="o">=</span> <span class="s">&quot;[1,2,3,4]</span>
+<span class="n">pan_raw_file</span> <span class="o">=</span> <span class="s">r&quot;c:\kompsat3\K3_20131003174133_07365_20171339_L1R_Aux.xml-PAN&quot;</span>
+<span class="n">pan_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c">#create link .pix file for MS image</span>
+<span class="n">ms_link_file</span> <span class="o">=</span> <span class="s">r&quot;c:\kompsat3_working\ms_kompsat3.pix&quot;</span>
+
+<span class="n">link</span><span class="p">(</span><span class="n">ms_raw_file</span><span class="p">,</span> <span class="n">ms_link_file</span><span class="p">,</span> <span class="p">[])</span>
+
+
+<span class="c">#Perform Automatic GCP collection on MS image using PAN image as reference</span>
+<span class="n">raw_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">reference_image</span> <span class="o">=</span> <span class="n">pan_raw_file</span> <span class="c">#this line is redundant, but makes code easier to read</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\kompsat3\reference\dem_file.pix&quot;</span>
+<span class="n">gcp_search_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>
+
+<span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span><span class="n">ms_link_file</span><span class="p">,</span> <span class="n">raw_match_chan</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">reference_image</span><span class="p">,</span> <span class="n">ref_match_chan</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span>
+                <span class="p">[],</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="n">gcp_search_radius</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+
+<span class="c">#Automatically refine GCPs based on RMSE</span>
+<span class="n">model_type</span> <span class="o">=</span> <span class="s">u&quot;RF&quot;</span>    <span class="c">#rational function model is often best for newer sensors with good RPCs</span>
+<span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]</span>  <span class="c">#Continue to reject worse GCPs until RMSE falls below 0.5 pixel in x and y directions</span>
+<span class="n">refined_gcps</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">gcprefn</span><span class="p">(</span><span class="n">ms_link_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span>
+        <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="n">refined_gcps</span><span class="p">,</span> <span class="p">[])</span>
+
+
+<span class="c">#Calculate the mathematical model from GCPs (rational function model)</span>
+<span class="n">gcp_seg</span> <span class="o">=</span> <span class="p">[</span><span class="n">refined_gcps</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="c">#use GCPs from the output GCP segment from GCPREFN</span>
+
+<span class="n">rfmodel</span><span class="p">(</span> <span class="n">ms_link_file</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
+
+
+<span class="c">#co-register the MS image to PAN image</span>
+<span class="n">ortho_ms_file</span> <span class="o">=</span> <span class="s">r&quot;c:\kompsat3\ortho\ortho_ms_kompsat3.pix&quot;</span>
+<span class="n">mapunits</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="n">res_x</span> <span class="o">=</span> <span class="s">&quot;2.8&quot;</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="s">&quot;2.8&quot;</span>
+
+<span class="n">ortho2</span><span class="p">(</span> <span class="n">ms_link_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_ms_file</span><span class="p">,</span> <span class="s">&quot;tif&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span>
+       <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">mapunits</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
+
+
+<span class="c">#pansharpen the now coregistered MS and PAN imagery</span>
+<span class="n">pansharp_file</span> <span class="o">=</span><span class="s">&quot;c:\kompsat3_processed\psh_kompsat3.pix&quot;</span>
+
+<span class="n">pansharp2</span><span class="p">(</span><span class="n">ortho_ms_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">pan_raw_file</span><span class="p">,</span> <span class="p">[],</span> <span class="n">pansharp_file</span><span class="p">,</span>
+          <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="level-2-to-level-3-airphoto-processing-pansharpening">
+<h2>Level 2 to Level 3 Airphoto Processing (Pansharpening)<a class="headerlink" href="#level-2-to-level-3-airphoto-processing-pansharpening" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe provides a simple way to pansharpen level 2 aerial imagery in order
+to convert it to level 3 imagery.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.ihr</span> <span class="kn">import</span> <span class="n">ihr</span>
+<span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
+<span class="kn">from</span> <span class="nn">pci.setpro2</span> <span class="kn">import</span> <span class="n">setpro2</span>
+<span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
+<span class="kn">from</span> <span class="nn">pci.fexport</span> <span class="kn">import</span> <span class="n">fexport</span>
+
+<span class="c">#create pix live link file for MS and PAN images</span>
+<span class="n">pan_level2</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\Level2\00025\Lvl02-00025-Pan.tif&quot;</span>
+<span class="n">pan_link</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\working\Lvl02-00025-Pan.pix&quot;</span>
+<span class="n">link</span><span class="p">(</span><span class="n">pan_level2</span><span class="p">,</span> <span class="n">pan_link</span><span class="p">,</span> <span class="p">[])</span>
+
+<span class="n">ms_level2</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\Level2\00025\Lvl02-00025-Col.tif&quot;</span>
+<span class="n">ms_link</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\working\Lvl02-00025-Col.pix&quot;</span>
+<span class="n">link</span><span class="p">(</span><span class="n">ms_level2</span><span class="p">,</span> <span class="n">ms_link</span><span class="p">,</span> <span class="p">[])</span>
+
+<span class="c">#get extents of pan image</span>
+<span class="n">header_info</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ihr</span><span class="p">(</span> <span class="n">pan_link</span><span class="p">,</span> <span class="n">header_info</span> <span class="p">)</span>
+
+<span class="sd">&#39;&#39;&#39;ihr returns the extents of the imagery to the output list &#39;header_info&#39;:</span>
+<span class="sd">header_info[11] = Upper Left X</span>
+<span class="sd">header_info[12] = Upper Left Y</span>
+<span class="sd">header_info[13] = Lower Right X</span>
+<span class="sd">header_info[14] = Lower Right Y&#39;&#39;&#39;</span>
+
+<span class="c">#set meter projection for pan (have to flip the ULY and LRY values for meter projection</span>
+<span class="n">setpro2</span><span class="p">(</span><span class="n">pan_link</span><span class="p">,</span> <span class="s">&quot;Metre&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">11</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">14</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">13</span><span class="p">]),</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">12</span><span class="p">]),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+
+<span class="c">#set meter projection for MS image (use same extents as PAN image and change resolution). Using same values</span>
+<span class="n">setpro2</span><span class="p">(</span><span class="n">ms_link</span><span class="p">,</span> <span class="s">&quot;Metre&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">11</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">14</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">13</span><span class="p">]),</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">12</span><span class="p">]),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+
+<span class="c">#run Pansharp2 on MS and PAN imagery</span>
+<span class="n">level3_image</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\output_level3\00025-PSH.pix&quot;</span>
+<span class="n">pansharp2</span><span class="p">(</span><span class="n">ms_link</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">pan_link</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">level3_image</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c">#set Level3 (pansharpened image) back to pixel projection (no projection)</span>
+<span class="n">setpro2</span><span class="p">(</span><span class="n">level3_image</span><span class="p">,</span> <span class="s">&quot;PIXEL&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">11</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">12</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">13</span><span class="p">]),</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">14</span><span class="p">]),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+
+<span class="c">#optionally convert it to a TIF image</span>
+<span class="n">level3_image_tif</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\output_level3\00025-PSH.tif&quot;</span>
+<span class="n">fexport</span><span class="p">(</span><span class="n">level3_image</span><span class="p">,</span> <span class="n">level3_image_tif</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;TIF&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="cloud-masking-haze-removal">
+<h2>Cloud Masking &amp; Haze Removal<a class="headerlink" href="#cloud-masking-haze-removal" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe provides a simple way to pansharpen level 2 aerial imagery in order
+to convert it to level 3 imagery.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#UNDER CONSTRUCTION</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="calculate-top-of-atmosphere-toa-reflectance-image">
+<h2>Calculate Top-of-atmosphere (TOA) Reflectance image<a class="headerlink" href="#calculate-top-of-atmosphere-toa-reflectance-image" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe provides a simple way to pansharpen level 2 aerial imagery in order
+to convert it to level 3 imagery.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">raw_dn_image</span> <span class="o">=</span> <span class="s">r&quot;c:\kompsat3\K3_20131003174133_07365_20171339_L1R_Aux.xml-MS&quot;</span>
+<span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">toa_image</span> <span class="o">=</span> <span class="s">r&quot;c:\kompsat3_toa\kompsat3_toa.pix&quot;</span>
+
+<span class="n">dn2toa</span><span class="p">(</span><span class="n">raw_dn_image</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;Reflectance&quot;</span><span class="p">,</span> <span class="n">toa_image</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><strong>Geospatial Image Processing</strong></a><ul>
+<li><a class="reference internal" href="#pansharpen-satellite-images">Pansharpen satellite images</a></li>
+<li><a class="reference internal" href="#pansharpen-satellite-images-batch-processing">Pansharpen satellite images - <strong>Batch Processing</strong></a></li>
+<li><a class="reference internal" href="#co-register-ms-with-pan-image-and-then-pansharpen">Co-register MS with PAN image and then pansharpen</a></li>
+<li><a class="reference internal" href="#level-2-to-level-3-airphoto-processing-pansharpening">Level 2 to Level 3 Airphoto Processing (Pansharpening)</a></li>
+<li><a class="reference internal" href="#cloud-masking-haze-removal">Cloud Masking &amp; Haze Removal</a></li>
+<li><a class="reference internal" href="#calculate-top-of-atmosphere-toa-reflectance-image">Calculate Top-of-atmosphere (TOA) Reflectance image</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_data_transforms.html"
+                        title="previous chapter"><strong>Data Transformations</strong></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_integrate_arcpy.html"
+                        title="next chapter"><strong>Integration with ArcPy</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/geomatica_cookbook_image_processing.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_integrate_arcpy.html" title="Integration with ArcPy"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="geomatica_cookbook_data_transforms.html" title="Data Transformations"
+             >previous</a> |</li>
+        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Shawn Melamed.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    </div>
+  </body>
+</html>
