@@ -1,6 +1,11 @@
 **Mosaicking**
 =================================
-This section provides help, error handling and etc.
+This section provides recipes related to Geomatica's automatic mosaicking functions. Here you
+will discover concepts for automatic color balancing, seamline generation, tiling from vector
+polygons, clipping mosaics to irregular polygons and more...
+
+Please note that this section expects that you ahave already generated the ortho images, which
+are to be included into the mosaic.
 
 Automatic color balancing and seamline generation (With QA preview mosaic)
 --------------------------------------------------------------------------
@@ -12,20 +17,21 @@ Automatic color balancing and seamline generation (With QA preview mosaic)
 
         from pci.mosprep import mosprep
 
-        orthos = r"C:\project001\orthos"
-        src_img_file = r"C:\project001\mosaic_prep\preview_proj001.xml"
+        orthos = r"C:\orthos"
+        src_img_file = r"C:\Mosaic\mosaic.xml"
         normalize = "None" #HotSpot method often useful for airphoto imagery
         col_balance = "neighborhood"
         cutlines = "minsqdiff"
 
-        mosprep(orthos, src_img_file, [], "", normalize, 
-                col_balance, cloud_mask, globfile, globmask, cutlines)
+        mosprep(orthos, src_img_file, [], "", "ADAPTIVE",
+                "OVERLAP", "", "", [], cutlines)
         
         
 Generate full resolution mosaic (single image)
 ----------------------------------------------
-    This example explicitly imports the pansharp2 function from the pansharp2 module and imports
-    all onjects and functions from the ortho2 module
+    This recipe demonstrates how to create a single full resolution mosaic file from multiple
+    input images (usually orthos), using the color balancing coefficients and seamlines 
+    automatically computed from the MOSPREP function (see above).
 
     .. code-block:: python
 
@@ -51,33 +57,34 @@ Generate full resolution mosaic (single image)
 Generate Mosaic tiles (from vector map-sheet) with JPEG compression
 -------------------------------------------------------------------
     This recipe creates a full resolution tiled mosaic with jpeg compression set to 75%. This
-    can be very useful for when generating large mosaics. 
+    can be very useful when generating large mosaics. 
 
-    This recipe provides an example of creating tif tiles (with JPEG compression) defined by 
-    vector polygons. The polygons can have overlap.
-    The recipe also names the tiles using an attribute field "Tile Code" 
+    In this recipe, GeoTIFF tiles (with JPEG compression), defined by 
+    vector polygons, are generated. The polygons, which define the tiles can have overlap.
+    Furthermore, the script automatically names the tiles using an attribute field "Tile Code"
+    found in the vector polygon file.
 
     .. code-block:: python
 
         from pci.mosdef import mosdef
-        from pci.mosrun2 import mosrun2  
-        
-        #Create Mosaic Definition XML file to 
-        src_image_file = r"C:\project001\mosaic_prep\preview_proj001.xml"
-        mosdef_file = r"C:\project001\mosaic_def\def_proj001.xml"
-        tile_specs = r"VECTOR, C:\project001\misc\tiles.pix, Tile_Code" #tiling parameter 
+        from pci.mosrun2 import mosrun2
+
+        #Create Mosaic Definition XML file to
+        src_image_file = r"C:\project001\mosprep\mosaic.xml" 
+        mosdef_file = r"C:\project001\mosdef\mosdef.xml"
+        tile_specs = r"VECTOR, C:\tiles.pix, Tile_Code" #tiling parameters
         mos_res = [2]
         blend_width = [5]
-        
-        mosdef(src_image_file, mosdef_file, [], "", "", "", mos_res, blend_width, 
+
+        mosdef(src_image_file, mosdef_file, [], "", "", "", mos_res, blend_width,
                [], "TIF", "JPEG75") #.tif output file format with JPEG 75% compression
-        
+
         #Create full resolution mosaic
-        mos_dir = r"C:\project001\Final_mosaic"
+        mos_dir = r"C:\project001\mosaic\Tiles"
         source_map = "yes"
-        
-        mosrun2(src_image_file, mosdef_file, mos_dir, "", source_map, 
-                "", "", "TIF", "JPG") #
+
+        mosrun2(src_image_file, mosdef_file, mos_dir, "", source_map,
+                "", "", "", "NEAR")
         
         
 Clip Mosaic to polygon (Cookie Cutter Method)
@@ -90,33 +97,14 @@ Clip Mosaic to polygon (Cookie Cutter Method)
 
     .. code-block:: python
 
-        from pci.pansharp2 import pansharp2
-        from pci.exceptions import PCIException
-
-        ms_file = r"c:\NewYorkk_multispectral.pix" #this file is incorrectly spelt and thus, does not exist
-        ms_channels = [1,2,3,4] #pansharpen channels 1 to 4 (Red, green, blue and NIR) 
-        pan_file = r"c:\NewYork_panchromatic.pix"
-        out_file = r"c:\NewYork_pansharpened.pix"
-
-        try:
-            pansharp2(ms_file, ms_channels, [], pan_file, [], out_file, [], "", [], "", "pix", "tiled512")
-        except PCIException, e:
-            print e
-        except Exception, e:
-            print e
-            
-        #This results in python printing a PCI caught exception that the input multispectral file does not exist
-        #The script will continue to run through to the next line of code without exiting, because the exception
-        #is handled with a print statement
+        #UNDER CONSTRUCTION
         
 
-End-to-end mosaic generation with tiling - **Full Workflow** `Download <http://www.pcigeomatics.com/resources-support/more-resources/downloads>`_ 
+End-to-end mosaic generation with tiling - **Full Workflow** 
 -------------------------------------------------------------------------------------------------------------------------------------------------
-    This recipe provides code that will clip a mosaic along the edges of an input irregular polygon. This is
-    commonly known as a "Cookie Cutter" method. 
-
-    E.g. For country-wide mosaics, the function can remove the imagery outside of a country's
-    political borders. 
+    This recipe provides a complete mosaicking workflow, with automatic tiling from vector polygons.
+    The script takes in orthos that have been processed and performs automatic color balancing and
+    automatic seamline generation.
 
     .. code-block:: python
          
@@ -124,42 +112,42 @@ End-to-end mosaic generation with tiling - **Full Workflow** `Download <http://w
         from pci.mosdef import mosdef
         from pci.mosrun2 import mosrun2
         from pci.exceptions import PCIException
-    
+
         orthos = r"C:\project001\orthos"
-        src_img_file = r"C:\project001\mosaic_prep\preview_proj001.xml"
+        src_img_file = r"C:\project001\mosprep\mosaic.xml" 
         normalize = "None" #HotSpot method often useful for airphoto imagery
         col_balance = "neighborhood"
         cutlines = "minsqdiff"
-        
+
         try:
-            mosprep(orthos, src_img_file, [], "", normalize, 
-                    col_balance, cloud_mask, globfile, globmask, cutlines)
+            mosprep(orthos, src_img_file, [], "", "ADAPTIVE",
+                    "OVERLAP", "", "", [], cutlines)
         except PCIException, e:
             print e
         except Exception, e:
             print e
-        
-        #Create Mosaic Definition XML file to 
-        mosdef_file = r"C:\project001\mosaic_def\def_proj001.xml"
-        tile_specs = r"VECTOR, C:\project001\misc\tiles.pix, Tile_Code" #tiling parameter 
+
+        #Create Mosaic Definition XML file to
+        mosdef_file = r"C:\project001\mosaic_def\mosdef.xml"
+        tile_specs = r"VECTOR, C:\project001\misc\tiles.pix, Tile_Code" #tiling parameter
         mos_res = [2]
         blend_width = [5]
-        
+
         try:
-            mosdef(src_image_file, mosdef_file, [], "", "", "", mos_res, blend_width, 
+            mosdef(src_img_file, mosdef_file, [], "", "", "", mos_res, blend_width,
                 [], "TIF", "JPEG75") #.tif output file format with JPEG 75% compression
         except PCIException, e:
             print e
         except Exception, e:
             print e
-        
+
         #Create full resolution mosaic
-        mos_dir = r"C:\project001\Final_mosaic"
+        mos_dir = r"C:\project001\final_mosaic"
         source_map = "yes"
-        
+
         try:
-            mosrun2(src_image_file, mosdef_file, mos_dir, "", source_map, 
-                    "", "", "TIF", "JPG") #
+            mosrun2(src_img_file, mosdef_file, mos_dir, "", source_map,
+                    "", "", "", "NEAR") 
         except PCIException, e:
             print e
         except Exception, e:

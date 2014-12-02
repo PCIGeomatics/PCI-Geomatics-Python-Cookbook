@@ -1,0 +1,333 @@
+**Data Transformations**
+========================
+This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+
+     
+Convert bitmap to vector line and polygon layers
+------------------------------------------------
+    Python prints help documentation to the terminal/console for the specified function. This includes information
+    about the signature of the function (arguments that need to be passed) and information about what the function
+    does. Furthermore, the help document includes information about what input data is required and what output is 
+    produced.
+    
+    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
+    
+
+    .. code-block:: python
+
+        from pci.bit2line import bit2line 
+        from pci.bit2poly import bit2poly
+        
+        #Set input bitmap file and layer
+        bitmap_file = r"c:\input\bitmap.pix"
+        bitmap_layer = [2]
+        
+        
+        #Convert bitmap to vector lines
+        output_line = r"c:\output\lines.pix"
+        smooth_lines = "Yes"
+        format = "pix"
+        
+        bit2line(bitmap_file, bitmap_layer, output_line, "YES", smooth_lines, "", format, "")
+        
+        
+        #Convert bitmap to vector polygons
+        output_poly = r"c:\output\polygon_shp\polygons.shp"
+        smooth_poly = "Yes"
+        format = "shp" #output will be an ArcGIS shapefile
+        
+        bit2poly(bitmap_file, bitmap_layer, output_poly, smooth_poly, "", format, "")
+        
+
+Convert Raster to vector line, polygon, point and raster bitmap
+---------------------------------------------------------------
+    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+    function. The main behaviour of this action is that the script will continue to run if the exception is called.
+    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
+    to process the other files
+
+    .. code-block:: python
+
+        from pci.ras2line import ras2line
+        from pci.ras2poly import ras2poly
+        from pci.ras2pnt import ras2pnt
+        from pci.ras2bit import ras2bit
+        from pci.ra2thmr import thmr
+        
+        #Set input raster file and layer
+        raster_file = r"c:\input\bitmap.pix"
+        raster_chan = [1]
+        
+        
+        #Convert raster channel to vector lines
+        output_line = r"c:\output\ras2lines.pix"
+        smooth_line = "Yes"
+        format = "pix" 
+        
+        ras2line(raster_file, raster_chan, output_line, "yes", smooth_line, "", format, foptions)
+        
+        
+        #Convert raster channel to vector polygons
+        output_poly = r"c:\output\ras2poly.shp"
+        smooth_poly = "Yes"
+        format = "shp" #output will be an ArcGIS shapefile
+        
+        ras2poly(raster_file, raster_chan, output_poly, smooth_poly, "", format, "")
+
+        
+        #Convert raster channel to vector points
+        output_points = r"c:\output\ras2pnts.pix"
+        format = "shp" 
+        
+        ras2pnt(raster_file, raster_chan, output_points, "", format, "")
+        
+        
+        #Convert raster channel to bitmap
+        output_bitmap = r"c:\output\ras2bitmap.shp"
+        smooth_poly = "Yes"
+        format = "pix" 
+        
+        ras2bit(raster_file, raster_chan, output_bitmap, "", format, "")
+        
+        
+        
+Convert vector line layer to vector polygons, vector points and raster
+----------------------------------------------------------------------
+    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+    function. The main behaviour of this action is that the script will continue to run if the exception is called.
+    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
+    to process the other files
+
+    .. code-block:: python
+
+        from pci.line2poly import line2poly
+        from pci.line2pnt import line2pnt
+        from pci.line2ras import line2ras
+        
+        #Set input vector line file and layer
+        line_file = r"c:\input\line.shp"
+        line_layer = [1]
+        
+        
+        #Convert vector line to vector polygon
+        output_poly = r"c:\output\polygons\line2poly.shp"
+        format = "shp"
+        
+        line2poly(line_file, line_layer, output_poly, "", format, "")
+        
+        
+        #convert vector line to vector points
+        output_points = r"c:\output\line2points.pix"
+        format = "pix"
+        convert_mthd = "vertices" #a unique point is placed on each vertex of each line
+        
+        line2pnt(line_file, line_layer, output_points, convert_mthd, "", format, "")
+       
+       
+        #convert vector line to raster (burns values where the line exists into raster cells) 
+        output_raster = r"c:\output\line2ras.pix"
+        format = "pix"
+        attr_field = "Num_of_lanes" #intersecting raster cells will be assigned a value based on the number of lanes in the road
+        connect = [8] #connect lines using all directions including diagonals
+        res = [1] #output raster set to 1m pixel resolution
+        
+        line2ras(line_file, line_layer, output_raster, [], attr_field, [], connect, 
+                 res, format, "")
+        
+        
+Convert vector polygon layer to vector lines, points, raster bitmap layer and image raster
+-------------------------------------------------------------------------------------------
+    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+    function. The main behaviour of this action is that the script will continue to run if the exception is called.
+    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
+    to process the other files
+
+    .. code-block:: python
+
+        from pci.poly2line import poly2line
+        from pci.poly2pnt import poly2pnt
+        from pci.poly2bit import poly2bit
+        from pci.poly2ras import poly2ras
+        
+        #Set input vector polygon file and layer
+        poly_file = r"c:\input\poly.pix"
+        poly_layer = [2]
+        
+        
+        #Convert vector polygons to vector lines
+        output_line = r"c:\output\polygons\poly2line.shp"
+        format = "shp"
+        
+        poly2line(poly_file, poly_layer, output_line, "", format, "")
+        
+        
+        #convert vector polygons to vector points (does not create centroid, search cookbook for "centroid") 
+        output_points = r"c:\output\poly2points.pix"
+        format = "pix"
+        
+        poly2pnt(poly_file, poly_layer, output_points, "", format, "")
+       
+       
+        #convert vector polygons to a bitmap 
+        output_bitmap = r"c:\output\poly2bitmap.pix"
+        format = "pix"
+        res = [1]
+        
+        poly2bit(poly_file, poly_layer, output_bitmap, "", res, format, "")
+        
+        
+        #convert vector line to raster (burns values where the polygon exists into raster cells)
+        output_raster = r"c:\output\poly2ras.pix"
+        format = "pix"
+        raster_type = "Thematic Raster"
+        attr_field = "Num_of_lanes" #land use class number
+        res = [1] #output raster set to 1m pixel resolution  
+        
+        
+        poly2ras(poly_file, poly_layer, output_raster, [], raster_type, 
+                 attr_field, res, format, "")
+        
+        
+        
+Automatically collect GCP points and convert to Chip Database - **Partial Workflow**
+------------------------------------------------------------------------------------
+    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+    function. The main behaviour of this action is that the script will continue to run if the exception is called.
+    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
+    to process the other files
+
+    .. code-block:: python
+
+        from pci.link import link
+        from pci.autogcp2 import *
+        from pci.gcprefn import *
+        
+        #Create Link File to hold new GCP segment(s)
+        raw_geoeye_image = r"C:\geoeye\RAWDATA\po_311159_0000000\po_000000_bgrn_0000000.tif"
+        link_pix_file = r"C:\geoeye\pix_link\po_311159_0000000\po_311159_bgrn_0000000.pix"
+        
+        link( raw_geoeye_image, link_pix_file, [] )
+        
+        #Run GCP Collection and store new GCP segment in link pix file
+        raw_match_chan = [4]       #When available NIR channel is recommended
+        reference_image = r"C:\geoeye\reference\reference_image.pix" 
+        ref_match_chan = [4]
+        dem = r"C:\geoeye\reference\dem_file.pix" 
+        gcp_search_radius = [50] 
+
+        gcp_seg = autogcp2(link_pix_file, raw_match_chan, u"", [], [], reference_image, ref_match_chan, dem, 
+                        [], [], u"", u"", [], u"", u"", gcp_search_radius, u"", [], u"", [])
+        
+        #autogcp2 function returns the new gcp segment, which can then be directly passed to the gcp refinement function
+        
+        #Setup required parameters for automatic GCP refinement    
+        model_type = u"RF"    #rational function model is often best for newer sensors with good RPCs 
+        order = [0]           #a polynomial order of 0 is best for most DigitalGlobe sensors (due to very accurate RPCs)   
+        reject = [5,0.5,0.5]  #Continue to reject worse GCPs until RMSE falls below 0.5 pixel in x and y directions
+
+        gcprefn(link_pix_file, [gcp_seg], [], [], model_type, order, reject, u"NO", [], [])
+        
+        #accurate GCPs should now be stored in the link pix file
+          
+        #convert GCPs to chip database    
+        chip_chans = [1,2,3]
+        chipDB_file = r"C:\geoeye\reference\chipDatabase\chips.cdb" 
+        
+        pnt2chip(link_pix_file, chip_chans, [], link_pix_file, [gcp_seg], 
+                 chipDB_file, "geoeye", "", [], dem, [], [])
+        
+
+Create raster DEM from vector elevation layers
+----------------------------------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        from pci.vdemingest import *
+        from pci.vdemsetup import *
+        from pci.vdemint import *
+
+        #ingests the LIDAR point cloud (.las) into a working format (.pix)
+        lidar_point_cloud = r"C:\input_lidar\lidar_cloud.las"
+        lidar_return = "RETURNALL" #uses all lidar returns in the .las file
+        pix_vector = r"C:\working_lidar\lidar_vector.pix" #output .pix vector file
+        map_units    = "UTM 17 D000"
+
+        vdemingest( lidar_point_cloud, "", "", "", lidar_return, [], "", 
+                    "", "", pix_vector, map_units, "", [] )
+
+
+        #setup the vector files for interpolation into a raster DEM
+        indexfil = r"C:\working_lidar\lidar_vector.pix"   # output index file, used by VDEMINT
+        dem_res  = [1,1] 
+
+        vdemsetup( lidar_point_cloud, indexfil, "PIX", "", 
+                   dem_res, [], "", [], "" )
+
+                   
+        #interpolate the LIDAR point cloud      
+        dem_file = r"C:\output_dem\dem_fromLIDAR.pix"
+        maxiter = [20] # max 20 smoothing iterations
+        memsize= [2048] # use 2048 MB (~2GB) of memory
+
+        vdemint( file, [1], [], pix_vector, [], [], "", maxiter, memsize )
+        
+
+Create raster DEM from LIDAR points (.las)
+----------------------------------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        from pci.vdemingest import *
+        from pci.vdemsetup import *
+        from pci.vdemint import *
+
+        #ingests the LIDAR point cloud (.las) into a working format (.pix)
+        lidar_point_cloud = r"C:\input_lidar\lidar_cloud.las"
+        lidar_return = "RETURNALL" #uses all lidar returns in the .las file
+        pix_vector = r"C:\working_lidar\lidar_vector.pix" #output .pix vector file
+        map_units    = "UTM 17 D000"
+
+        vdemingest( lidar_point_cloud, "", "", "", lidar_return, [], "", 
+                    "", "", pix_vector, map_units, "", [] )
+
+
+        #setup the vector files for interpolation into a raster DEM
+        indexfil = r"C:\working_lidar\lidar_vector.pix"   # output index file, used by VDEMINT
+        dem_res  = [1,1] 
+
+        vdemsetup( lidar_point_cloud, indexfil, "PIX", "", 
+                   dem_res, [], "", [], "" )
+
+                   
+        #interpolate the LIDAR point cloud      
+        dem_file = r"C:\output_dem\dem_fromLIDAR.pix"
+        maxiter = [20] # max 20 smoothing iterations
+        memsize= [2048] # use 2048 MB (~2GB) of memory
+
+        vdemint( file, [1], [], pix_vector, [], [], "", maxiter, memsize )
+
+        
+Generate contours from raster DEM 
+---------------------------------
+    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+    function. The main behaviour of this action is that the script will continue to run if the exception is called.
+    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
+    to process the other files
+
+    .. code-block:: python
+
+        from pci.contour import contour
+        
+        dem_file = r"c:\dem\extracted_dem.pix"
+        elev_chan = [1]
+        output_contour_layer = [2]
+        contour_interval = [10] 10m intervals between contour lines
+        dem_no_data = [-32768] #no data value set for inptu DEM
+        contour_field = "Elevation"
+        
+        contour(dem_file, elev_chan, [], output_contour_layer, 
+                "", contour_interval, backval, contour_field)

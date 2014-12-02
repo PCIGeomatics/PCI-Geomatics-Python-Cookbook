@@ -1,0 +1,177 @@
+**Files & Layers**
+=======================
+This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+
+Create .pix (PCIDSK) file with empty channels defined
+-----------------------------------------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        from pci.cimpro2 import cimpro2
+        
+        new_file = r"c:\newfile\empty_file.pix"
+        create_channels = [4,0,1,2] #creates 4 8bit, 0 16bit signed, 1 16bit unsigned and 2 32bit real channels
+        data_layout = "tiled512" #creates data structure for file as 512x512 pixel tiles 
+        projection = "UTM"
+        zone = [55]
+        row = "G"
+        datum = "D000" #D000 is WGS84. Also note that D122 is NAD83
+        top_left_x = "514418.000"
+        top left_y = "5262616.000"
+        bottom_right_x = "527908.000"
+        bottom_right_y = "5246564.000"
+        res_x = "2.0"
+        res_y = "2.0"
+        
+        cimpro2(new_file, "", create_channels, data_layout, projection, zone, row, datum, 
+                "N", top_left_x, top_left_y, bottom_right_x, bottom_right_y, res_x, res_y, 
+                "", "", "", "", "", "", "", "", "", "", "", "", "", [], [], [])
+        
+
+Create .pix (PCIDSK) file with no projection defined
+----------------------------------------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        from pci.cim import cim       
+        
+        new_file = r"c:\newfile\empty_file.pix"
+        file_size = [1024,1024] #specifies the number of pixels and lines for the output image file
+        res = [15,15]
+        create_channels = [7,1,2,5] #creates 7 8bit, 1 16bit signed, 2 16bit unsigned and 5 32bit real channels
+        data_layout = "PIXEL" #Pixel interleaved
+        
+        cim(new_file, "", "", file_size, res, create_channels, data_layout)
+                   
+
+Add or delete new channel to an existing .pix file
+--------------------------------------------------
+    Python prints help documentation to the terminal/console for the specified function. This includes information
+    about the signature of the function (arguments that need to be passed) and information about what the function
+    does. Furthermore, the help document includes information about what input data is required and what output is 
+    produced.
+    
+    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
+    
+
+    .. code-block:: python
+
+        from pci.pcimod import pcimod
+        
+        #Add new image channels to existing file
+        file = r"c:\data\image.pix"
+        channels = [4,0,3,1] #add 4 8bit, 0 16bit signed, 3 16bit unsigned and 1 32bit real channels
+        
+        pcimod(file, "ADD", channels)
+        
+        #delete image channel(s) from existing file
+        file = r"c:\data\image.pix"
+        channels = [1,4,6] #delete channels 1, 4 and 6
+        
+        pcimod(file, "DEL", channels)
+       
+                   
+Copy image channels to an existing file with different projection 
+-----------------------------------------------------------------
+    This example explicitly imports the pansharp2 function from the pansharp2 module and imports
+    all onjects and functions from the ortho2 module
+
+    .. code-block:: python
+        
+        from pci.pcimod import pcimod
+        from pci.iii import iii
+        from pci.reproj2 import reproj2
+        
+        source_file = r"c:\data\ndvi_1.pix"
+        destination_file = r"c:\data\ndvi_2.pix"
+                
+        #Add a new channel with correct bit-depth to destination file
+        add_channel = [0,0,0,1]  
+        
+        pcimod(destination_file, "ADD", pcival) #Adds a single 32 bit channel to the ndvi_2.pix file
+        
+        
+        #reproject the source channel to the same projection and extents of destination file
+        
+        ''' 
+        Note: for now, it is required to know the projection information of the 
+        destination file. Support will be added soon to automatically retrieve this projection
+        information. You can get the georeferencing information by running PROREP in terminal
+        '''
+        
+        ndvi_channel = 5 #NDVI was calculated for this image and is stored in channel 5
+        reproj_source_file = r"c:\data\ndvi_1_temp_reproj.pix"
+        reproj_method = "BR" #Bounds and resolutions are unchanged, calculates pixels and lines
+        resolution = [2.0, 2.0]
+        map_units = "UTM 55 G D000"
+        top_left_x = "514418.000"
+        top left_y = "5262616.000"
+        bottom_right_x = "527908.000"
+        bottom_right_y = "5246564.000"
+        
+        reproj2(source_file, ndvi_channel, [], "", reproj_source_file, "", "", 
+                reproj_method, [], resolution, "NO", map_units, "", top_left_x, 
+                top_left_y, bottom_right_x, bottom_right_y, "", "")
+        
+        
+        #copy image channel
+        input_channel = [1]
+        output_channel = [6]
+        
+        iii(reproj_source_file, destination_file, input_channel, output_channel, [], [])
+        
+        
+Import from foreign file to .pix or .pix link file
+---------------------------------------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        from pci.fimport import fimport
+        from pci.link import link
+        
+        #Import foreign file to .pix file (full image copy)
+        foreign_file = r"c:\kompsat-2\raw\MSC_070611154402_04650_23191328M1P17G_1G.eph" 
+        pix_file = r"c:\kompsat-2\import\kompsat-2.pix"
+        
+        fimport(foreign_file, pix_file, [], "", "")
+
+        
+        #Import foreign file to .pix link file (link to original image)
+        pix_link_file = 
+        
+        link(foreign_file, pix_link_file, [])
+        
+
+Export rasters or vectors to foreign file format
+-------------------------------------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        from pci.fexport import fexport 
+        
+        #export image raster(s) to jpeg2000 format
+        pix_file = r"c:\data\imagery.pix"
+        foreign_file = r"c:\data\imagery.jp2"
+        channels = [1,2,3,4]
+        format = "jpeg2000"
+        compression = "10" #result should b about 10% the size of the input image
+        
+        fexport(pix_file, foreign_file, [], channels, [], [], [], [], format, compression)
+        
+        
+        #export vector layer
+        pix_file = r"c:\data\vector.pix"
+        foreign_file = r"c:\data\shp\vector.shp"
+        vector_layer = [2]
+                
+        fexport(pix_file, foreign_file, [], [], [], vector_layer, [], [], "SHP", "")
+                
+        #Note you can perform fexport to convert from a foreign file format to a different foreign file format

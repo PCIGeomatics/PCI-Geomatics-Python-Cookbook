@@ -16,8 +16,7 @@ This cookbook is great for new users looking to familiarize themselves with Geom
 library and common workflows.  It is also a great resource for more advanced 
 users, as it contains useful code snippets that can be easily "plugged in" to a python script.
 
-* None of these recipes helping? `E-mail us <marketing@pcigeomatics.com>`_ with your recommendations
-* Want to contribute? Checkout our `Geomatica Cookbook GitHub <https://github.com/PCIGeomatics/PCI-Geomatics-Cookbook>`_ project
+* None of these recipes helping? Want to know if something else is possible with Geomatica? `E-mail us <cookbook@pcigeomatics.com>`_ with your questions.
 
 **Requirements:** 
  
@@ -32,6 +31,7 @@ Geomatica Python Recipes
    :maxdepth: 2
 
    geomatica_cookbook_general
+   geomatica_cookbook_integrate_arcpy
    geomatica_cookbook_satellite_photogrammetry
    geomatica_cookbook_aerial_photogrammetry
    geomatica_cookbook_generic_geometric_correction
@@ -40,13 +40,12 @@ Geomatica Python Recipes
    geomatica_cookbook_files_layers
    geomatica_cookbook_data_transforms
    geomatica_cookbook_image_processing
-   geomatica_cookbook_integrate_arcpy
-   geomatica_cookbook_complete_workflows
+
 
 
 Contributors & Special Thanks 
 =============================
-**Author:** Shawn Melamed
+**Author: Shawn Melamed**
 
 PCI Geomatics would like to extend a special thanks to the following contributors:
 
@@ -54,7 +53,6 @@ PCI Geomatics would like to extend a special thanks to the following contributor
 * **Sarah Thompson** for performing a code review
 * **Mauro Scatozza** for getting the github project launched
 * **Freddy Paya** for helping with some recipes
-* **Your name here** (`Become a contributor <https://github.com/PCIGeomatics/PCI-Geomatics-Cookbook>`_) 
 
    
 Indices and tables

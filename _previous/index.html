@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to the Geomatica Python Cookbook! &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="css/default.css" type="text/css" />
+    <link rel="stylesheet" href="css/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/underscore.js"></script>
+    <script type="text/javascript" src="js/doctools.js"></script>
+    <script type="text/javascript" src="js/sidebar.js"></script>
+    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="#" />
+    <link rel="next" title="Geomatica Py General" href="geomatica_cookbook_general.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_general.html" title="Geomatica Py General"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-the-geomatica-python-cookbook">
+<h1>Welcome to the Geomatica Python Cookbook!<a class="headerlink" href="#welcome-to-the-geomatica-python-cookbook" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to PCI&#8217;s Geomatica Python Cookbook. An online resource for Geomatica&#8217;s Python Community.</p>
+<p>Geomatica&#8217;s python library offers geospatial developers and solution providers with a powerful set
+of remote sensing, photogrammetry, image processing, image analysis and information extraction
+tools.</p>
+<p>This cookbook is great for new users looking to familiarize themselves with Geomatica&#8217;s python
+library and common workflows.  It is also a great resource for more advanced
+users, as it contains useful code snippets that can be easily &#8220;plugged in&#8221; to a python script.</p>
+<ul class="simple">
+<li>None of these recipes helping? <a class="reference external" href="mailto:marketing&#37;&#52;&#48;pcigeomatics&#46;com">E-mail us</a> with your recommendations</li>
+<li>Want to contribute? Checkout our <a class="reference external" href="https://github.com/PCIGeomatics/PCI-Geomatics-Python-Cookbook">Geomatica Cookbook GitHub</a> project</li>
+</ul>
+<p><strong>Requirements:</strong></p>
+<ul class="simple">
+<li>Geomatica 2014 (<a class="reference external" href="http://www.pcigeomatics.com/resources-support/more-resources/downloads">Download</a> the free 15-day full feature trial)</li>
+<li>Python 2.7.X 64bit (automatically installs with Geomatica 2014)</li>
+<li>Some recipes require ArcGIS 10.2.1 64bit Background Geoprocesses</li>
+</ul>
+</div>
+<div class="section" id="geomatica-python-recipes">
+<h1>Geomatica Python Recipes<a class="headerlink" href="#geomatica-python-recipes" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_general.html"><strong>Geomatica Py General</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_general.html#check-installation-of-geomatica-py-libraries">Check Installation of Geomatica Py Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_general.html#import-geomatica-py-libraries">Import Geomatica Py Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_general.html#accessing-help-about-geomatica-py-function">Accessing Help About Geomatica Py Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_general.html#handling-geomatica-py-exceptions">Handling Geomatica Py Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html"><strong>Satellite Photogrammetry</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#ingest-older-raw-satellite-images">Ingest Older Raw Satellite Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#import-satellite-images-from-new-sensors">Import Satellite Images from New Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#create-pix-link-file-for-satellite-images-from-new-sensors">Create .pix Link File for Satellite Images from New Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#import-satellite-images-from-auxiliary-files">Import satellite images from auxiliary files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#automatic-gcp-collection-and-refinement">Automatic GCP Collection and Refinement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#automatic-gcp-collection-and-refinement-batch-processing">Automatic GCP Collection and Refinement - <strong>Batch Processing</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#iterate-through-gcp-collection-refinement-until-success-batch-processing">Iterate through GCP collection/refinement until success - <strong>Batch Processing</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#automatic-gcp-collection-and-refinement-from-road-vector-layer">Automatic GCP Collection and refinement from road vector layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#subset-an-orthoengine-project">Subset an OrthoEngine Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#merge-multiple-orthoengine-projects-with-tie-points">Merge multiple OrthoEngine projects with tie points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#automatic-bundle-adjustment-and-orthorectification-gcps-previously-collected">Automatic Bundle Adjustment and Orthorectification (GCPs previously collected)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#automatic-dem-extraction-with-model-refinement-gcps-previously-collected">Automatic DEM Extraction with Model Refinement(GCPs previously collected)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#satellite-orthorectification-with-gcps-previously-collected-batch-processing">Satellite Orthorectification with GCPs previously collected - <strong>Batch Processing</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#satellite-photogrammetric-batch-workflow-with-user-provided-dem-full-workflow">Satellite Photogrammetric Batch Workflow with user provided DEM - <strong>Full Workflow</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#satellite-photogrammetric-batch-workflow-with-dem-extraction-full-workflow">Satellite Photogrammetric Batch Workflow with DEM Extraction - <strong>Full Workflow</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html"><strong>Digital Aerial Photogrammetry</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#create-pix-link-file-from-raw-aerial-images">Create .pix Link File from Raw Aerial Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#discover-all-airphotos-in-a-directory-and-create-pix-link-file-batch-processing">Discover all airphotos in a directory and create .pix link file - <strong>Batch Processing</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#setup-digital-airphoto-project-for-photogrammetric-processing">Setup Digital Airphoto Project for Photogrammetric Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#automatic-dem-extraction-from-aerial-imagery-batch-processing">Automatic DEM Extraction from Aerial Imagery - <strong>Batch Processing</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#automatic-orthorectification-of-aerial-imagery">Automatic Orthorectification of Aerial Imagery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#automatic-orthorectification-of-aerial-imagery-batch-processing">Automatic Orthorectification of Aerial Imagery - <strong>Batch Processing</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#digital-aerial-orthorectification-with-user-provided-dem-full-workflow">Digital Aerial Orthorectification with user provided DEM - <strong>Full Workflow</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#digital-aerial-orthorectification-with-dem-extraction-full-workflow">Digital Aerial Orthorectification with DEM Extraction - <strong>Full Workflow</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_aerial_photogrammetry.html#create-camera-calibration-xml-file">Create Camera Calibration (.xml) file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_generic_geometric_correction.html"><strong>Generic Geometric Correction</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_generic_geometric_correction.html#automatic-gcp-collection-and-2d-geometric-correction-with-polynomial-model">Automatic GCP collection and 2D geometric correction with Polynomial Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_generic_geometric_correction.html#automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model">Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_generic_geometric_correction.html#automatic-gcp-collection-from-road-vector-layer-with-generic-3d-geometric-correction">Automatic GCP collection from road vector layer with generic 3D Geometric Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_generic_geometric_correction.html#automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model-batch-processing">Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model - <strong>Batch Processing</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_mosaicking.html"><strong>Mosaicking</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#automatic-color-balancing-and-seamline-generation-with-qa-preview-mosaic">Automatic color balancing and seamline generation (With QA preview mosaic)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#generate-full-resolution-mosaic-single-image">Generate full resolution mosaic (single image)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#generate-mosaic-tiles-from-vector-map-sheet-with-jpeg-compression">Generate Mosaic tiles (from vector map-sheet) with JPEG compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#clip-mosaic-to-polygon-cookie-cutter-method">Clip Mosaic to polygon (Cookie Cutter Method)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#end-to-end-mosaic-generation-with-tiling-full-workflow-download">End-to-end mosaic generation with tiling - <strong>Full Workflow</strong> Download</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_projections.html"><strong>Projections</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_projections.html#create-projection-for-an-existing-image-file">Create projection for an existing image file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_projections.html#reproject-an-image-from-one-coordinate-system-to-a-different-coordinate-system">Reproject an image from one coordinate system to a different coordinate system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_projections.html#reproject-a-vector-layer-from-one-coordinate-system-to-a-different-coordinate-system">Reproject a vector layer from one coordinate system to a different coordinate system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_projections.html#resample-image-channels">Resample Image channels</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_files_layers.html"><strong>Files &amp; Layers</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_files_layers.html#create-pix-pcidsk-file-with-empty-channels-defined">Create .pix (PCIDSK) file with empty channels defined</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_files_layers.html#create-pix-pcidsk-file-with-no-projection-defined">Create .pix (PCIDSK) file with no projection defined</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_files_layers.html#add-or-delete-new-channel-to-an-existing-pix-file">Add or delete new channel to an existing .pix file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_files_layers.html#copy-image-channels-to-an-existing-file-with-different-projection">Copy image channels to an existing file with different projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_files_layers.html#import-from-foreign-file-to-pix-or-pix-link-file">Import from foreign file to .pix or .pix link file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_files_layers.html#export-rasters-or-vectors-to-foreign-file-format">Export rasters or vectors to foreign file format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_data_transforms.html"><strong>Data Transformations</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-bitmap-to-vector-line-and-polygon-layers">Convert bitmap to vector line and polygon layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-raster-to-vector-line-polygon-point-and-raster-bitmap">Convert Raster to vector line, polygon, point and raster bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-vector-line-layer-to-vector-polygons-vector-points-and-raster">Convert vector line layer to vector polygons, vector points and raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-vector-polygon-layer-to-vector-lines-points-raster-bitmap-layer-and-image-raster">Convert vector polygon layer to vector lines, points, raster bitmap layer and image raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#automatically-collect-gcp-points-and-convert-to-chip-database-partial-workflow">Automatically collect GCP points and convert to Chip Database - <strong>Partial Workflow</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#create-raster-dem-from-vector-elevation-layers">Create raster DEM from vector elevation layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#create-raster-dem-from-lidar-points-las">Create raster DEM from LIDAR points (.las)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#generate-contours-from-raster-dem">Generate contours from raster DEM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_image_processing.html"><strong>Geospatial Image Processing</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_image_processing.html#pansharpen-satellite-images">Pansharpen satellite images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_image_processing.html#pansharpen-satellite-images-batch-processing">Pansharpen satellite images - <strong>Batch Processing</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_image_processing.html#co-register-ms-with-pan-image-and-then-pansharpen">Co-register MS with PAN image and then pansharpen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_image_processing.html#level-2-to-level-3-airphoto-processing-pansharpening">Level 2 to Level 3 Airphoto Processing (Pansharpening)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_image_processing.html#cloud-masking-haze-removal">Cloud Masking &amp; Haze Removal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_image_processing.html#calculate-top-of-atmosphere-toa-reflectance-image">Calculate Top-of-atmosphere (TOA) Reflectance image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html"><strong>Integration with ArcPy</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#installing-arcgis-64bit-background-geoprocesses">Installing ArcGIS <em>64bit Background Geoprocesses</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#import-arcpy-and-geomatica-python-libraries-and-verify-configuration">Import ArcPy and Geomatica Python Libraries and verify configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#handling-geomatica-and-arcpy-exceptions">Handling Geomatica and ArcPy Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#combining-geomatica-and-arcpy-functions">Combining Geomatica and ArcPy Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_complete_workflows.html"><strong>Workflow Examples for the Left-side of Your Brain</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_complete_workflows.html#co-register-image-stack">Co-register image stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_complete_workflows.html#automatically-identify-and-calculate-volume-of-new-stockpiles">Automatically identify and calculate volume of new stockpiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_complete_workflows.html#orthorectification-pansharpening-and-mosaicking-of-satellite-imagery">Orthorectification, pansharpening and mosaicking of satellite imagery</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="contributors-special-thanks">
+<h1>Contributors &amp; Special Thanks<a class="headerlink" href="#contributors-special-thanks" title="Permalink to this headline">¶</a></h1>
+<p><strong>Author:</strong> Shawn Melamed</p>
+<p>PCI Geomatics would like to extend a special thanks to the following contributors:</p>
+<ul class="simple">
+<li><strong>PCI Development Team</strong> for developing the functions and objects</li>
+<li><strong>Sarah Thompson</strong> for performing a code review</li>
+<li><strong>Mauro Scatozza</strong> for getting the github project launched</li>
+<li><strong>Freddy Paya</strong> for helping with some recipes</li>
+<li><strong>Your name here</strong> (<a class="reference external" href="https://github.com/PCIGeomatics/PCI-Geomatics-Cookbook">Become a contributor</a>)</li>
+</ul>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to the Geomatica Python Cookbook!</a></li>
+<li><a class="reference internal" href="#geomatica-python-recipes">Geomatica Python Recipes</a></li>
+<li><a class="reference internal" href="#contributors-special-thanks">Contributors &amp; Special Thanks</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_general.html"
+                        title="next chapter"><strong>Geomatica Py General</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_general.html" title="Geomatica Py General"
+             >next</a> |</li>
+        <li><a href="#">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Shawn Melamed.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    </div>
+  </body>
+</html>

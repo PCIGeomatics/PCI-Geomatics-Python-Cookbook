@@ -52,15 +52,14 @@
             
   <div class="section" id="data-transformations">
 <h1><strong>Data Transformations</strong><a class="headerlink" href="#data-transformations" title="Permalink to this headline">¶</a></h1>
-<p>This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.</p>
-<div class="section" id="convert-bitmap-to-vector-line-and-polygon-layers">
-<h2>Convert bitmap to vector line and polygon layers<a class="headerlink" href="#convert-bitmap-to-vector-line-and-polygon-layers" title="Permalink to this headline">¶</a></h2>
+<p>This section provides some recipes for converting from one data format to another. Examples include:
+vector polygons to bitmaps or thematic rasters, bitmaps to vectors, DEMs to contours, LIDAR (.las) to
+raster DEM and more...</p>
+<div class="section" id="convert-bitmap-to-vector-line-or-vector-polygon-layers">
+<h2>Convert bitmap to vector line or vector polygon layers<a class="headerlink" href="#convert-bitmap-to-vector-line-or-vector-polygon-layers" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Python prints help documentation to the terminal/console for the specified function. This includes information
-about the signature of the function (arguments that need to be passed) and information about what the function
-does. Furthermore, the help document includes information about what input data is required and what output is
-produced.</p>
-<p>It is best to access this directly with the python interpreter in Geomatica&#8217;s Focus or using a terminal/console</p>
+<div><p>Takes an input bitmap segment and converts it to either a vector line or vector polygon layer.
+The output is written to a new file.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.bit2line</span> <span class="kn">import</span> <span class="n">bit2line</span>
 <span class="kn">from</span> <span class="nn">pci.bit2poly</span> <span class="kn">import</span> <span class="n">bit2poly</span>
 
@@ -87,34 +86,31 @@ produced.</p>
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="convert-raster-to-vector-line-polygon-point-and-raster-bitmap">
-<h2>Convert Raster to vector line, polygon, point and raster bitmap<a class="headerlink" href="#convert-raster-to-vector-line-polygon-point-and-raster-bitmap" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="convert-raster-to-vector-line-vector-polygon-vector-point-and-bitmap-layers">
+<h2>Convert raster to vector line, vector polygon, vector point and bitmap layers<a class="headerlink" href="#convert-raster-to-vector-line-vector-polygon-vector-point-and-bitmap-layers" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-function. The main behaviour of this action is that the script will continue to run if the exception is called.
-This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-to process the other files</p>
+<div><p>This recipe demonstrates how to convert a raster channel to various vector data types and an
+output bitmap</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.ras2line</span> <span class="kn">import</span> <span class="n">ras2line</span>
 <span class="kn">from</span> <span class="nn">pci.ras2poly</span> <span class="kn">import</span> <span class="n">ras2poly</span>
 <span class="kn">from</span> <span class="nn">pci.ras2pnt</span> <span class="kn">import</span> <span class="n">ras2pnt</span>
 <span class="kn">from</span> <span class="nn">pci.ras2bit</span> <span class="kn">import</span> <span class="n">ras2bit</span>
-<span class="kn">from</span> <span class="nn">pci.ra2thmr</span> <span class="kn">import</span> <span class="n">thmr</span>
 
 <span class="c">#Set input raster file and layer</span>
-<span class="n">raster_file</span> <span class="o">=</span> <span class="s">r&quot;c:\input\bitmap.pix&quot;</span>
+<span class="n">raster_file</span> <span class="o">=</span> <span class="s">r&quot;c:\raster.pix&quot;</span>
 <span class="n">raster_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 
 <span class="c">#Convert raster channel to vector lines</span>
-<span class="n">output_line</span> <span class="o">=</span> <span class="s">r&quot;c:\output\ras2lines.pix&quot;</span>
+<span class="n">output_line</span> <span class="o">=</span> <span class="s">r&quot;c:\ras2lines.pix&quot;</span>
 <span class="n">smooth_line</span> <span class="o">=</span> <span class="s">&quot;Yes&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;pix&quot;</span>
 
-<span class="n">ras2line</span><span class="p">(</span><span class="n">raster_file</span><span class="p">,</span> <span class="n">raster_chan</span><span class="p">,</span> <span class="n">output_line</span><span class="p">,</span> <span class="s">&quot;yes&quot;</span><span class="p">,</span> <span class="n">smooth_line</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">foptions</span><span class="p">)</span>
+<span class="n">ras2line</span><span class="p">(</span><span class="n">raster_file</span><span class="p">,</span> <span class="n">raster_chan</span><span class="p">,</span> <span class="n">output_line</span><span class="p">,</span> <span class="s">&quot;yes&quot;</span><span class="p">,</span> <span class="n">smooth_line</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 
 
 <span class="c">#Convert raster channel to vector polygons</span>
-<span class="n">output_poly</span> <span class="o">=</span> <span class="s">r&quot;c:\output\ras2poly.shp&quot;</span>
+<span class="n">output_poly</span> <span class="o">=</span> <span class="s">r&quot;c:\ras2poly.shp&quot;</span>
 <span class="n">smooth_poly</span> <span class="o">=</span> <span class="s">&quot;Yes&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;shp&quot;</span> <span class="c">#output will be an ArcGIS shapefile</span>
 
@@ -122,14 +118,14 @@ to process the other files</p>
 
 
 <span class="c">#Convert raster channel to vector points</span>
-<span class="n">output_points</span> <span class="o">=</span> <span class="s">r&quot;c:\output\ras2pnts.pix&quot;</span>
+<span class="n">output_points</span> <span class="o">=</span> <span class="s">r&quot;c:\ras2pnts.pix&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;shp&quot;</span>
 
 <span class="n">ras2pnt</span><span class="p">(</span><span class="n">raster_file</span><span class="p">,</span> <span class="n">raster_chan</span><span class="p">,</span> <span class="n">output_points</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 
 
 <span class="c">#Convert raster channel to bitmap</span>
-<span class="n">output_bitmap</span> <span class="o">=</span> <span class="s">r&quot;c:\output\ras2bitmap.shp&quot;</span>
+<span class="n">output_bitmap</span> <span class="o">=</span> <span class="s">r&quot;c:\ras2bitmap.pix&quot;</span>
 <span class="n">smooth_poly</span> <span class="o">=</span> <span class="s">&quot;Yes&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;pix&quot;</span>
 
@@ -138,31 +134,29 @@ to process the other files</p>
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="convert-vector-line-layer-to-vector-polygons-vector-points-and-raster">
-<h2>Convert vector line layer to vector polygons, vector points and raster<a class="headerlink" href="#convert-vector-line-layer-to-vector-polygons-vector-points-and-raster" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="convert-vector-line-layer-to-vector-polygon-vector-point-and-raster-layers">
+<h2>Convert vector line layer to vector polygon, vector point and raster layers<a class="headerlink" href="#convert-vector-line-layer-to-vector-polygon-vector-point-and-raster-layers" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-function. The main behaviour of this action is that the script will continue to run if the exception is called.
-This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-to process the other files</p>
+<div><p>This recipe demonstrates how to convert a vector line layer to various vector and raster data
+types</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.line2poly</span> <span class="kn">import</span> <span class="n">line2poly</span>
 <span class="kn">from</span> <span class="nn">pci.line2pnt</span> <span class="kn">import</span> <span class="n">line2pnt</span>
 <span class="kn">from</span> <span class="nn">pci.line2ras</span> <span class="kn">import</span> <span class="n">line2ras</span>
 
 <span class="c">#Set input vector line file and layer</span>
-<span class="n">line_file</span> <span class="o">=</span> <span class="s">r&quot;c:\input\line.shp&quot;</span>
+<span class="n">line_file</span> <span class="o">=</span> <span class="s">r&quot;c:\line.shp&quot;</span>
 <span class="n">line_layer</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 
 <span class="c">#Convert vector line to vector polygon</span>
-<span class="n">output_poly</span> <span class="o">=</span> <span class="s">r&quot;c:\output\polygons\line2poly.shp&quot;</span>
+<span class="n">output_poly</span> <span class="o">=</span> <span class="s">r&quot;c:\line2poly.shp&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;shp&quot;</span>
 
 <span class="n">line2poly</span><span class="p">(</span><span class="n">line_file</span><span class="p">,</span> <span class="n">line_layer</span><span class="p">,</span> <span class="n">output_poly</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 
 
 <span class="c">#convert vector line to vector points</span>
-<span class="n">output_points</span> <span class="o">=</span> <span class="s">r&quot;c:\output\line2points.pix&quot;</span>
+<span class="n">output_points</span> <span class="o">=</span> <span class="s">r&quot;c:\line2points.pix&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;pix&quot;</span>
 <span class="n">convert_mthd</span> <span class="o">=</span> <span class="s">&quot;vertices&quot;</span> <span class="c">#a unique point is placed on each vertex of each line</span>
 
@@ -170,7 +164,7 @@ to process the other files</p>
 
 
 <span class="c">#convert vector line to raster (burns values where the line exists into raster cells)</span>
-<span class="n">output_raster</span> <span class="o">=</span> <span class="s">r&quot;c:\output\line2ras.pix&quot;</span>
+<span class="n">output_raster</span> <span class="o">=</span> <span class="s">r&quot;c:\line2ras.pix&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;pix&quot;</span>
 <span class="n">attr_field</span> <span class="o">=</span> <span class="s">&quot;Num_of_lanes&quot;</span> <span class="c">#intersecting raster cells will be assigned a value based on the number of lanes in the road</span>
 <span class="n">connect</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="c">#connect lines using all directions including diagonals</span>
@@ -182,39 +176,39 @@ to process the other files</p>
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="convert-vector-polygon-layer-to-vector-lines-points-raster-bitmap-layer-and-image-raster">
-<h2>Convert vector polygon layer to vector lines, points, raster bitmap layer and image raster<a class="headerlink" href="#convert-vector-polygon-layer-to-vector-lines-points-raster-bitmap-layer-and-image-raster" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="convert-vector-polygon-layer-to-vector-line-vector-point-bitmap-and-thematic-raster-layers">
+<h2>Convert vector polygon layer to vector line, vector point, bitmap and thematic raster layers<a class="headerlink" href="#convert-vector-polygon-layer-to-vector-line-vector-point-bitmap-and-thematic-raster-layers" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-function. The main behaviour of this action is that the script will continue to run if the exception is called.
-This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-to process the other files</p>
+<div><p>This recipe demonstrates how to convert a vector poylgon layer to various vector and raster data
+types.</p>
+<p>Of particular interest, the final block demonstrates how to convert a polygon layer to a thematic
+raster (raster with attributes).</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.poly2line</span> <span class="kn">import</span> <span class="n">poly2line</span>
 <span class="kn">from</span> <span class="nn">pci.poly2pnt</span> <span class="kn">import</span> <span class="n">poly2pnt</span>
 <span class="kn">from</span> <span class="nn">pci.poly2bit</span> <span class="kn">import</span> <span class="n">poly2bit</span>
 <span class="kn">from</span> <span class="nn">pci.poly2ras</span> <span class="kn">import</span> <span class="n">poly2ras</span>
 
 <span class="c">#Set input vector polygon file and layer</span>
-<span class="n">poly_file</span> <span class="o">=</span> <span class="s">r&quot;c:\input\poly.pix&quot;</span>
-<span class="n">poly_layer</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">poly_file</span> <span class="o">=</span> <span class="s">r&quot;C:\polygons.pix&quot;</span>
+<span class="n">poly_layer</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">]</span>
 
 
 <span class="c">#Convert vector polygons to vector lines</span>
-<span class="n">output_line</span> <span class="o">=</span> <span class="s">r&quot;c:\output\polygons\poly2line.shp&quot;</span>
+<span class="n">output_line</span> <span class="o">=</span> <span class="s">r&quot;C:\poly2line.shp&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;shp&quot;</span>
 
 <span class="n">poly2line</span><span class="p">(</span><span class="n">poly_file</span><span class="p">,</span> <span class="n">poly_layer</span><span class="p">,</span> <span class="n">output_line</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 
 
 <span class="c">#convert vector polygons to vector points (does not create centroid, search cookbook for &quot;centroid&quot;)</span>
-<span class="n">output_points</span> <span class="o">=</span> <span class="s">r&quot;c:\output\poly2points.pix&quot;</span>
+<span class="n">output_points</span> <span class="o">=</span> <span class="s">r&quot;C:\poly2points.pix&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;pix&quot;</span>
 
 <span class="n">poly2pnt</span><span class="p">(</span><span class="n">poly_file</span><span class="p">,</span> <span class="n">poly_layer</span><span class="p">,</span> <span class="n">output_points</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 
 
 <span class="c">#convert vector polygons to a bitmap</span>
-<span class="n">output_bitmap</span> <span class="o">=</span> <span class="s">r&quot;c:\output\poly2bitmap.pix&quot;</span>
+<span class="n">output_bitmap</span> <span class="o">=</span> <span class="s">r&quot;C:\poly2bitmap.pix&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;pix&quot;</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
@@ -222,10 +216,10 @@ to process the other files</p>
 
 
 <span class="c">#convert vector line to raster (burns values where the polygon exists into raster cells)</span>
-<span class="n">output_raster</span> <span class="o">=</span> <span class="s">r&quot;c:\output\poly2ras.pix&quot;</span>
+<span class="n">output_raster</span> <span class="o">=</span> <span class="s">r&quot;C:\poly2thmras.pix&quot;</span>
 <span class="n">format</span> <span class="o">=</span> <span class="s">&quot;pix&quot;</span>
 <span class="n">raster_type</span> <span class="o">=</span> <span class="s">&quot;Thematic Raster&quot;</span>
-<span class="n">attr_field</span> <span class="o">=</span> <span class="s">&quot;Num_of_lanes&quot;</span> <span class="c">#land use class number</span>
+<span class="n">attr_field</span> <span class="o">=</span> <span class="s">&quot;class_num&quot;</span> <span class="c">#land use class number</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c">#output raster set to 1m pixel resolution</span>
 
 
@@ -238,84 +232,46 @@ to process the other files</p>
 <div class="section" id="automatically-collect-gcp-points-and-convert-to-chip-database-partial-workflow">
 <h2>Automatically collect GCP points and convert to Chip Database - <strong>Partial Workflow</strong><a class="headerlink" href="#automatically-collect-gcp-points-and-convert-to-chip-database-partial-workflow" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-function. The main behaviour of this action is that the script will continue to run if the exception is called.
-This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-to process the other files</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
-<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="c">#Create Link File to hold new GCP segment(s)</span>
-<span class="n">raw_geoeye_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\RAWDATA\po_311159_0000000\po_000000_bgrn_0000000.tif&quot;</span>
-<span class="n">link_pix_file</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\pix_link\po_311159_0000000\po_311159_bgrn_0000000.pix&quot;</span>
-
-<span class="n">link</span><span class="p">(</span> <span class="n">raw_geoeye_image</span><span class="p">,</span> <span class="n">link_pix_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
-
-<span class="c">#Run GCP Collection and store new GCP segment in link pix file</span>
-<span class="n">raw_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>       <span class="c">#When available NIR channel is recommended</span>
-<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\reference\reference_image.pix&quot;</span>
-<span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\reference\dem_file.pix&quot;</span>
-<span class="n">gcp_search_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>
-
-<span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span><span class="n">link_pix_file</span><span class="p">,</span> <span class="n">raw_match_chan</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">reference_image</span><span class="p">,</span> <span class="n">ref_match_chan</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span>
-                <span class="p">[],</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="n">gcp_search_radius</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
-
-<span class="c">#autogcp2 function returns the new gcp segment, which can then be directly passed to the gcp refinement function</span>
-
-<span class="c">#Setup required parameters for automatic GCP refinement</span>
-<span class="n">model_type</span> <span class="o">=</span> <span class="s">u&quot;RF&quot;</span>    <span class="c">#rational function model is often best for newer sensors with good RPCs</span>
-<span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>           <span class="c">#a polynomial order of 0 is best for most DigitalGlobe sensors (due to very accurate RPCs)</span>
-<span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]</span>  <span class="c">#Continue to reject worse GCPs until RMSE falls below 0.5 pixel in x and y directions</span>
-
-<span class="n">gcprefn</span><span class="p">(</span><span class="n">link_pix_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
-
-<span class="c">#accurate GCPs should now be stored in the link pix file</span>
-
-<span class="c">#convert GCPs to chip database</span>
-<span class="n">chip_chans</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">chipDB_file</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\reference\chipDatabase\chips.cdb&quot;</span>
-
-<span class="n">pnt2chip</span><span class="p">(</span><span class="n">link_pix_file</span><span class="p">,</span> <span class="n">chip_chans</span><span class="p">,</span> <span class="p">[],</span> <span class="n">link_pix_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">],</span>
-         <span class="n">chipDB_file</span><span class="p">,</span> <span class="s">&quot;geoeye&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+<div><p>This example demonstrates how to automatically collect GCPs on an image and create a chip
+database from the GCP points, using the geographically accurate reference image as the base</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#UNDER CONSTRUCTION</span>
 </pre></div>
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="create-raster-dem-from-vector-elevation-layers">
-<h2>Create raster DEM from vector elevation layers<a class="headerlink" href="#create-raster-dem-from-vector-elevation-layers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-raster-dem-from-various-vector-elevation-layers">
+<h2>Create raster DEM from various vector elevation layers<a class="headerlink" href="#create-raster-dem-from-various-vector-elevation-layers" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.vdemingest</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.vdemsetup</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.vdemint</span> <span class="kn">import</span> <span class="o">*</span>
+<div><p>Interpolate a DEM from multiple vector sources, such as, contours, points and break-lines.</p>
+<p>Note: the VDEMINGEST function discovers all valid input data in a directory.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.vdemingest</span> <span class="kn">import</span> <span class="n">vdemingest</span>
+<span class="kn">from</span> <span class="nn">pci.vdemsetup</span> <span class="kn">import</span> <span class="n">vdemsetup</span>
+<span class="kn">from</span> <span class="nn">pci.vdemint</span> <span class="kn">import</span> <span class="n">vdemint</span>
 
-<span class="c">#ingests the LIDAR point cloud (.las) into a working format (.pix)</span>
-<span class="n">lidar_point_cloud</span> <span class="o">=</span> <span class="s">r&quot;C:\input_lidar\lidar_cloud.las&quot;</span>
-<span class="n">lidar_return</span> <span class="o">=</span> <span class="s">&quot;RETURNALL&quot;</span> <span class="c">#uses all lidar returns in the .las file</span>
-<span class="n">pix_vector</span> <span class="o">=</span> <span class="s">r&quot;C:\working_lidar\lidar_vector.pix&quot;</span> <span class="c">#output .pix vector file</span>
+<span class="c">#ingests the points, contours and breaklines from the following directories into a .pix file</span>
+<span class="n">points</span> <span class="o">=</span> <span class="s">r&quot;C:\points&quot;</span>
+<span class="n">contours</span> <span class="o">=</span> <span class="s">r&quot;C:\lines&quot;</span>
+<span class="n">break_lines</span> <span class="o">=</span> <span class="s">r&quot;C:\breaklines&quot;</span>
+<span class="n">pix_vector</span> <span class="o">=</span> <span class="s">r&quot;C:\output\ingest_vectors.pix&quot;</span>
 <span class="n">map_units</span>    <span class="o">=</span> <span class="s">&quot;UTM 17 D000&quot;</span>
 
-<span class="n">vdemingest</span><span class="p">(</span> <span class="n">lidar_point_cloud</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">lidar_return</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="n">vdemingest</span><span class="p">(</span> <span class="n">points</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="n">break_lines</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
             <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">pix_vector</span><span class="p">,</span> <span class="n">map_units</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 
 <span class="c">#setup the vector files for interpolation into a raster DEM</span>
-<span class="n">indexfil</span> <span class="o">=</span> <span class="s">r&quot;C:\working_lidar\lidar_vector.pix&quot;</span>   <span class="c"># output index file, used by VDEMINT</span>
-<span class="n">dem_res</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">index_file</span> <span class="o">=</span> <span class="s">r&quot;c:\output\dem_from_vectors.txt&quot;</span>   <span class="c"># output index file, used by VDEMINT</span>
+<span class="n">dem_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="n">vdemsetup</span><span class="p">(</span> <span class="n">lidar_point_cloud</span><span class="p">,</span> <span class="n">indexfil</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="n">vdemsetup</span><span class="p">(</span> <span class="n">pix_vector</span><span class="p">,</span> <span class="n">index_file</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
            <span class="n">dem_res</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
 
 
 <span class="c">#interpolate the LIDAR point cloud</span>
-<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;C:\output_dem\dem_fromLIDAR.pix&quot;</span>
 <span class="n">maxiter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="c"># max 20 smoothing iterations</span>
-<span class="n">memsize</span><span class="o">=</span> <span class="p">[</span><span class="mi">2048</span><span class="p">]</span> <span class="c"># use 2048 MB (~2GB) of memory</span>
+<span class="n">memsize</span><span class="o">=</span> <span class="p">[</span><span class="mi">1024</span><span class="p">]</span> <span class="c"># use 2048 MB (~2GB) of memory</span>
 
-<span class="n">vdemint</span><span class="p">(</span> <span class="nb">file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="n">pix_vector</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">memsize</span> <span class="p">)</span>
+<span class="n">vdemint</span><span class="p">(</span> <span class="n">index_file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="n">pix_vector</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">memsize</span> <span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -323,16 +279,15 @@ Use the Python interpreter in the terminal/console for quickly checking the inst
 <div class="section" id="create-raster-dem-from-lidar-points-las">
 <h2>Create raster DEM from LIDAR points (.las)<a class="headerlink" href="#create-raster-dem-from-lidar-points-las" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.vdemingest</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.vdemsetup</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.vdemint</span> <span class="kn">import</span> <span class="o">*</span>
+<div><p>This recipe creates a 1m (GSD) raster DEM from lidar return points stored in a .las file</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.vdemingest</span> <span class="kn">import</span> <span class="n">vdemingest</span>
+<span class="kn">from</span> <span class="nn">pci.vdemsetup</span> <span class="kn">import</span> <span class="n">vdemsetup</span>
+<span class="kn">from</span> <span class="nn">pci.vdemint</span> <span class="kn">import</span> <span class="n">vdemint</span>
 
 <span class="c">#ingests the LIDAR point cloud (.las) into a working format (.pix)</span>
-<span class="n">lidar_point_cloud</span> <span class="o">=</span> <span class="s">r&quot;C:\input_lidar\lidar_cloud.las&quot;</span>
+<span class="n">lidar_point_cloud</span> <span class="o">=</span> <span class="s">r&quot;C:\lidar\lidar_cloud.las&quot;</span>
 <span class="n">lidar_return</span> <span class="o">=</span> <span class="s">&quot;RETURNALL&quot;</span> <span class="c">#uses all lidar returns in the .las file</span>
-<span class="n">pix_vector</span> <span class="o">=</span> <span class="s">r&quot;C:\working_lidar\lidar_vector.pix&quot;</span> <span class="c">#output .pix vector file</span>
+<span class="n">pix_vector</span> <span class="o">=</span> <span class="s">r&quot;C:\lidar\lidar_vector.pix&quot;</span>
 <span class="n">map_units</span>    <span class="o">=</span> <span class="s">&quot;UTM 17 D000&quot;</span>
 
 <span class="n">vdemingest</span><span class="p">(</span> <span class="n">lidar_point_cloud</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">lidar_return</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
@@ -340,19 +295,18 @@ Use the Python interpreter in the terminal/console for quickly checking the inst
 
 
 <span class="c">#setup the vector files for interpolation into a raster DEM</span>
-<span class="n">indexfil</span> <span class="o">=</span> <span class="s">r&quot;C:\working_lidar\lidar_vector.pix&quot;</span>   <span class="c"># output index file, used by VDEMINT</span>
-<span class="n">dem_res</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">index_file</span> <span class="o">=</span> <span class="s">r&quot;C:\lidar\lidar_dem.txt&quot;</span>   <span class="c"># output index file, used by VDEMINT</span>
+<span class="n">dem_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="n">vdemsetup</span><span class="p">(</span> <span class="n">lidar_point_cloud</span><span class="p">,</span> <span class="n">indexfil</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="n">vdemsetup</span><span class="p">(</span> <span class="n">lidar_point_cloud</span><span class="p">,</span> <span class="n">index_file</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
            <span class="n">dem_res</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
 
 
 <span class="c">#interpolate the LIDAR point cloud</span>
-<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;C:\output_dem\dem_fromLIDAR.pix&quot;</span>
 <span class="n">maxiter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="c"># max 20 smoothing iterations</span>
 <span class="n">memsize</span><span class="o">=</span> <span class="p">[</span><span class="mi">2048</span><span class="p">]</span> <span class="c"># use 2048 MB (~2GB) of memory</span>
 
-<span class="n">vdemint</span><span class="p">(</span> <span class="nb">file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="n">pix_vector</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">memsize</span> <span class="p">)</span>
+<span class="n">vdemint</span><span class="p">(</span> <span class="n">index_file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="n">pix_vector</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">memsize</span> <span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -360,21 +314,18 @@ Use the Python interpreter in the terminal/console for quickly checking the inst
 <div class="section" id="generate-contours-from-raster-dem">
 <h2>Generate contours from raster DEM<a class="headerlink" href="#generate-contours-from-raster-dem" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-function. The main behaviour of this action is that the script will continue to run if the exception is called.
-This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-to process the other files</p>
+<div><p>This recipe uses a single function to generate contour vectors from a raster DEM</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.contour</span> <span class="kn">import</span> <span class="n">contour</span>
 
-<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;c:\dem\extracted_dem.pix&quot;</span>
+<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;C:\dem.pix&quot;</span>
 <span class="n">elev_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">output_contour_layer</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="n">contour_interval</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="mi">10</span><span class="n">m</span> <span class="n">intervals</span> <span class="n">between</span> <span class="n">contour</span> <span class="n">lines</span>
+<span class="n">contour_layer_name</span> <span class="o">=</span> <span class="s">&quot;Contours&quot;</span>
+<span class="n">contour_interval</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="c">#10m intervals between contour lines</span>
 <span class="n">dem_no_data</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">32768</span><span class="p">]</span> <span class="c">#no data value set for inptu DEM</span>
 <span class="n">contour_field</span> <span class="o">=</span> <span class="s">&quot;Elevation&quot;</span>
 
-<span class="n">contour</span><span class="p">(</span><span class="n">dem_file</span><span class="p">,</span> <span class="n">elev_chan</span><span class="p">,</span> <span class="p">[],</span> <span class="n">output_contour_layer</span><span class="p">,</span>
-        <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">contour_interval</span><span class="p">,</span> <span class="n">backval</span><span class="p">,</span> <span class="n">contour_field</span><span class="p">)</span>
+<span class="n">contour</span><span class="p">(</span><span class="n">dem_file</span><span class="p">,</span> <span class="n">elev_chan</span><span class="p">,</span> <span class="p">[],</span> <span class="n">contour_layer_name</span><span class="p">,</span>
+        <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">contour_interval</span><span class="p">,</span> <span class="p">[],</span> <span class="n">contour_field</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -390,12 +341,12 @@ to process the other files</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><strong>Data Transformations</strong></a><ul>
-<li><a class="reference internal" href="#convert-bitmap-to-vector-line-and-polygon-layers">Convert bitmap to vector line and polygon layers</a></li>
-<li><a class="reference internal" href="#convert-raster-to-vector-line-polygon-point-and-raster-bitmap">Convert Raster to vector line, polygon, point and raster bitmap</a></li>
-<li><a class="reference internal" href="#convert-vector-line-layer-to-vector-polygons-vector-points-and-raster">Convert vector line layer to vector polygons, vector points and raster</a></li>
-<li><a class="reference internal" href="#convert-vector-polygon-layer-to-vector-lines-points-raster-bitmap-layer-and-image-raster">Convert vector polygon layer to vector lines, points, raster bitmap layer and image raster</a></li>
+<li><a class="reference internal" href="#convert-bitmap-to-vector-line-or-vector-polygon-layers">Convert bitmap to vector line or vector polygon layers</a></li>
+<li><a class="reference internal" href="#convert-raster-to-vector-line-vector-polygon-vector-point-and-bitmap-layers">Convert raster to vector line, vector polygon, vector point and bitmap layers</a></li>
+<li><a class="reference internal" href="#convert-vector-line-layer-to-vector-polygon-vector-point-and-raster-layers">Convert vector line layer to vector polygon, vector point and raster layers</a></li>
+<li><a class="reference internal" href="#convert-vector-polygon-layer-to-vector-line-vector-point-bitmap-and-thematic-raster-layers">Convert vector polygon layer to vector line, vector point, bitmap and thematic raster layers</a></li>
 <li><a class="reference internal" href="#automatically-collect-gcp-points-and-convert-to-chip-database-partial-workflow">Automatically collect GCP points and convert to Chip Database - <strong>Partial Workflow</strong></a></li>
-<li><a class="reference internal" href="#create-raster-dem-from-vector-elevation-layers">Create raster DEM from vector elevation layers</a></li>
+<li><a class="reference internal" href="#create-raster-dem-from-various-vector-elevation-layers">Create raster DEM from various vector elevation layers</a></li>
 <li><a class="reference internal" href="#create-raster-dem-from-lidar-points-las">Create raster DEM from LIDAR points (.las)</a></li>
 <li><a class="reference internal" href="#generate-contours-from-raster-dem">Generate contours from raster DEM</a></li>
 </ul>

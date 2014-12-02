@@ -1,0 +1,425 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Integration with ArcPy &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="css/default.css" type="text/css" />
+    <link rel="stylesheet" href="css/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/underscore.js"></script>
+    <script type="text/javascript" src="js/doctools.js"></script>
+    <script type="text/javascript" src="js/sidebar.js"></script>
+    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Workflow Examples for the Left-side of Your Brain" href="geomatica_cookbook_complete_workflows.html" />
+    <link rel="prev" title="Geospatial Image Processing" href="geomatica_cookbook_image_processing.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_complete_workflows.html" title="Workflow Examples for the Left-side of Your Brain"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="geomatica_cookbook_image_processing.html" title="Geospatial Image Processing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="integration-with-arcpy">
+<h1><strong>Integration with ArcPy</strong><a class="headerlink" href="#integration-with-arcpy" title="Permalink to this headline">¶</a></h1>
+<p>This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.</p>
+<p><a class="reference external" href="http://arcpy.wordpress.com/">ArcPy Cookbook</a></p>
+<div class="section" id="installing-arcgis-64bit-background-geoprocesses">
+<h2>Installing ArcGIS <em>64bit Background Geoprocesses</em><a class="headerlink" href="#installing-arcgis-64bit-background-geoprocesses" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>In order to use Geomatica&#8217;s geospatial Python library with ArcPy, users, must install
+<em>ArcGIS&#8217; 64bit Background Geoprocesses</em>. This is required, because you cannot call Geomatica&#8217;s
+64bit modules with ArcGIS&#8217; native 32bit modules. Therefore, it is necessary to install
+ArcGIS&#8217; 64bit background geoprocesses.</p>
+<p>This section provides step-by-step instructions for installing the
+<em>ArcGIS 64bit Background Geoprocesses</em></p>
+<p><strong>Steps:</strong></p>
+<p><strong>1.</strong> Install ArcGIS 10.2.1 or later</p>
+<p><strong>2.</strong> Acquire the ArcGIS for Desktop installation CD or the digital .iso file</p>
+<blockquote>
+<div><strong>Note:</strong> You may need to install a virtual DVDrom (<a class="reference external" href="http://www.disk-tools.com/download/daemon">Daemon Tools Lite</a>)</div></blockquote>
+<p><strong>3.</strong> Click <em>Setup</em> next to <em>ArcGIS for Desktop Background Geoprocessing (64-bit)</em></p>
+<img alt="images/64bit_geoprocesses.png" src="images/64bit_geoprocesses.png" />
+<p><strong>4.</strong> Follow the prompts and install with the default settings</p>
+<dl class="docutils">
+<dt><strong>5.</strong> Verify your installation - Navigate to <em>C:Python27</em> and make sure that the</dt>
+<dd>folder <em>ArcGISx6410.2</em> is found in the python27 directory</dd>
+</dl>
+<img alt="images/ArcPy64bit_verify.png" src="images/ArcPy64bit_verify.png" />
+</div></blockquote>
+</div>
+<div class="section" id="import-arcpy-and-geomatica-python-libraries-and-verify-configuration">
+<h2>Import ArcPy and Geomatica Python Libraries and verify configuration<a class="headerlink" href="#import-arcpy-and-geomatica-python-libraries-and-verify-configuration" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This section provides instructions on how to verify that the <em>ArcGIS 64bit Background Geoprocessing</em>
+and Geomatica&#8217;s Python library are properly installed and configured.</p>
+<p><strong>1.</strong> Open a command prompt</p>
+<p><strong>2.</strong> Navigate to and open the python executable in the <em>ArcGISx6410.2</em> directory, which will
+start python&#8217;s interactive mode</p>
+<blockquote>
+<div><strong>Note:</strong> When executing python scripts that call Geomatica&#8217;s and ArcGIS&#8217; python libraries,
+it is required that you launch the script with the python executable in
+<em>C:Python27ArcGISx6410.2python.exe</em></div></blockquote>
+<img alt="images/ArcPy64bit_cmd.png" src="images/ArcPy64bit_cmd.png" />
+<p><strong>3.</strong> Using Python&#8217;s interactive mode, type the following to verify Geomatica&#8217;s and
+ArcGIS&#8217; python libraries are correctly configured:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#verify Geomatica&#39;s python library</span>
+<span class="kn">import</span> <span class="nn">pci</span>
+
+<span class="c">#verify ArcGIS&#39; python library</span>
+<span class="kn">import</span> <span class="nn">arcpy</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> If Geomatica&#8217;s library is correctly configured, the statement, <em>&#8220;PCI Pluggable Framework environment
+successfully loaded.&#8221;</em> will be printed to the terminal. If ArcPy&#8217;s library is successfully configured
+nothing will be printed to the terminal. Both libraries will print error messages if there is a
+problem</p>
+<img alt="images/ArcPy64bit_pci_verify.png" src="images/ArcPy64bit_pci_verify.png" />
+</div></blockquote>
+</div>
+<div class="section" id="handling-geomatica-and-arcpy-exceptions">
+<h2>Handling Geomatica and ArcPy Exceptions<a class="headerlink" href="#handling-geomatica-and-arcpy-exceptions" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+function in Geomatica and ArcPy.</p>
+<p><a class="reference external" href="http://resources.arcgis.com/en/help/main/10.2/index.html#//002z0000000q000000">Click here</a>
+for more examples of error handling with ArcPy.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
+<span class="kn">from</span> <span class="nn">pci.exceptions</span> <span class="kn">import</span> <span class="n">PCIException</span>
+<span class="kn">import</span> <span class="nn">arcpy</span>
+
+<span class="c">#Geomatic Python Try-except statement</span>
+
+<span class="n">ms_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYorkk_multispectral.pix&quot;</span> <span class="c">#this file is incorrectly spelt and thus, does not exist</span>
+<span class="n">ms_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="c">#pansharpen channels 1 to 4 (Red, green, blue and NIR)</span>
+<span class="n">pan_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYork_panchromatic.pix&quot;</span>
+<span class="n">out_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYork_pansharpened.pix&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">pansharp2</span><span class="p">(</span><span class="n">ms_file</span><span class="p">,</span> <span class="n">ms_channels</span><span class="p">,</span> <span class="p">[],</span> <span class="n">pan_file</span><span class="p">,</span> <span class="p">[],</span> <span class="n">out_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;pix&quot;</span><span class="p">,</span> <span class="s">&quot;tiled512&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+
+<span class="c">#ArcPy Try-except statement</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c"># Execute the Buffer tool</span>
+    <span class="c">#</span>
+    <span class="n">arcpy</span><span class="o">.</span><span class="n">Buffer_analysis</span><span class="p">(</span><span class="s">&quot;c:/transport/roads.shp&quot;</span><span class="p">,</span> <span class="s">&quot;c:/transport/roads_buffer.shp&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span>
+
+    <span class="c"># If using this code within a script tool, AddError can be used to return messages</span>
+    <span class="c">#   back to a script tool.  If not, AddError will have no effect.</span>
+    <span class="n">arcpy</span><span class="o">.</span><span class="n">AddError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="combining-geomatica-and-arcpy-functions">
+<h2>Combining Geomatica and ArcPy Functions<a class="headerlink" href="#combining-geomatica-and-arcpy-functions" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Use Geomatica to automatically extract a 3D Digital Surface Model (DSM) from high
+resolution aerial imagery. Then use ArcPy to calculte</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.epipolar2</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.autodem2</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.fexport</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.exceptions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pathcheck</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
+<span class="kn">import</span> <span class="nn">arcpy</span>
+<span class="kn">from</span> <span class="nn">arcpy</span> <span class="kn">import</span> <span class="n">env</span>
+<span class="kn">import</span> <span class="nn">arcpy.mapping</span>
+<span class="kn">import</span> <span class="nn">locale</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">calendar</span><span class="o">,</span> <span class="nn">time</span>
+
+<span class="n">arcpy</span><span class="o">.</span><span class="n">CheckOutExtension</span><span class="p">(</span><span class="s">&quot;3D&quot;</span><span class="p">)</span> <span class="c">#Licensing the ArcGIS 3D Analyst extension</span>
+<span class="n">arcpy</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">overwriteOutput</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">print</span> <span class="s">&quot;esri&#39;s ArcPy environment successfully loaded.&quot;</span>
+
+<span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span> <span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
+<span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span> <span class="n">locale</span><span class="o">.</span><span class="n">LC_NUMERIC</span><span class="p">,</span> <span class="s">&quot;C&quot;</span> <span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
+<span class="k">print</span> <span class="s">&quot;              PCI - Running Epipolar Generation&quot;</span>
+<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="n">intermediate_outputs</span> <span class="o">=</span> <span class="n">out_folder</span> <span class="o">+</span> <span class="s">&#39;/intermediate_results/&#39;</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">intermediate_outputs</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">intermediate_outputs</span><span class="p">)</span>
+
+<span class="c">#Set Epipolar Parameters</span>
+<span class="n">mfile</span> <span class="o">=</span> <span class="n">in_folder</span> <span class="o">+</span> <span class="s">&#39;*.pix&#39;</span>
+<span class="n">dbic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>      <span class="c"># Integer</span>
+<span class="n">mmseg</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
+<span class="n">dbiw</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
+<span class="n">srcbgd</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">selmthd</span> <span class="o">=</span> <span class="s">u&quot;OPT&quot;</span>
+<span class="n">minpc</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
+<span class="n">sampling</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>      <span class="c"># Integer</span>
+<span class="n">epi_outdir</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;epipolars&#39;</span>
+<span class="n">outbgd</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>     <span class="c"># Float</span>
+<span class="n">tfile</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">genopt</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">memsize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1024</span><span class="p">]</span>      <span class="c"># Integer</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">epi_outdir</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">epipolar2</span><span class="p">(</span> <span class="n">mfile</span><span class="p">,</span> <span class="n">dbic</span><span class="p">,</span> <span class="n">mmseg</span><span class="p">,</span> <span class="n">dbiw</span><span class="p">,</span> <span class="n">srcbgd</span><span class="p">,</span> <span class="n">selmthd</span><span class="p">,</span> <span class="n">minpc</span><span class="p">,</span>
+              <span class="n">sampling</span><span class="p">,</span> <span class="n">epi_outdir</span><span class="p">,</span> <span class="n">outbgd</span><span class="p">,</span> <span class="n">tfile</span><span class="p">,</span> <span class="n">genopt</span><span class="p">,</span> <span class="n">memsize</span> <span class="p">)</span>
+<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+
+<span class="k">print</span> <span class="s">&quot;Epipolar Generation Complete!&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
+<span class="k">print</span> <span class="s">&quot;                 PCI - Running DSM Extraction&quot;</span>
+<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="c">#Set autodem2 parameters</span>
+<span class="n">mfile</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;epipolars</span><span class="se">\\</span><span class="s">e*.pix&#39;</span>
+<span class="n">dbic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>      <span class="c"># Integer</span>
+<span class="n">dbiw</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
+<span class="n">minmaxel</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c"># Float</span>
+<span class="n">failvalu</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
+<span class="n">backelev</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">32768</span><span class="p">]</span>     <span class="c"># Float</span>
+<span class="n">demdet</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">tertype</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">datatype</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">extinter</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
+<span class="n">demedit</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">scorchan</span> <span class="o">=</span> <span class="s">u&quot;no&quot;</span>
+<span class="n">wallis</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">tfile</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">dsm_outdir</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;dsm&#39;</span>
+<span class="n">filedsm</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;dsm_Urban.pix&#39;</span>
+<span class="n">demclip</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">mapunits</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
+<span class="n">upleft</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c"># Float</span>
+<span class="n">loright</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c"># Float</span>
+<span class="n">pxszout</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]</span>     <span class="c"># Float</span>
+<span class="n">mergeopt</span> <span class="o">=</span> <span class="s">u&quot;blend&quot;</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">dsm_outdir</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">autodem2</span><span class="p">(</span> <span class="n">mfile</span><span class="p">,</span> <span class="n">dbic</span><span class="p">,</span> <span class="n">dbiw</span><span class="p">,</span> <span class="n">minmaxel</span><span class="p">,</span> <span class="n">failvalu</span><span class="p">,</span> <span class="n">backelev</span><span class="p">,</span> <span class="n">demdet</span><span class="p">,</span>
+            <span class="n">tertype</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">extinter</span><span class="p">,</span> <span class="n">demedit</span><span class="p">,</span> <span class="n">scorchan</span><span class="p">,</span> <span class="n">wallis</span><span class="p">,</span>
+            <span class="n">tfile</span><span class="p">,</span> <span class="n">dsm_outdir</span><span class="p">,</span> <span class="n">filedsm</span><span class="p">,</span> <span class="n">demclip</span><span class="p">,</span> <span class="n">mapunits</span><span class="p">,</span> <span class="n">upleft</span><span class="p">,</span> <span class="n">loright</span><span class="p">,</span>
+            <span class="n">pxszout</span><span class="p">,</span> <span class="n">mergeopt</span> <span class="p">)</span>
+<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+
+<span class="k">print</span> <span class="s">&quot;DSM Extraction Complete!&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="c">#Export DSM to 32bit GeoTIFF (PCI Geomatica)</span>
+<span class="n">fili</span>    <span class="o">=</span>       <span class="n">filedsm</span>
+<span class="n">filo</span>    <span class="o">=</span>       <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;dsm_urban.tif&#39;</span>
+<span class="n">dbiw</span>    <span class="o">=</span>       <span class="p">[]</span>
+<span class="n">dbic</span>    <span class="o">=</span>       <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">dbib</span>    <span class="o">=</span>       <span class="p">[]</span>
+<span class="n">dbvs</span>    <span class="o">=</span>       <span class="p">[]</span>
+<span class="n">dblut</span>   <span class="o">=</span>       <span class="p">[]</span>
+<span class="n">dbpct</span>   <span class="o">=</span>       <span class="p">[]</span>
+<span class="n">ftype</span>   <span class="o">=</span>       <span class="s">&quot;TIF&quot;</span>
+<span class="n">foptions</span> <span class="o">=</span>  <span class="s">u&quot;&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">fexport</span><span class="p">(</span> <span class="n">fili</span><span class="p">,</span> <span class="n">filo</span><span class="p">,</span> <span class="n">dbiw</span><span class="p">,</span> <span class="n">dbic</span><span class="p">,</span> <span class="n">dbib</span><span class="p">,</span> <span class="n">dbvs</span><span class="p">,</span> <span class="n">dblut</span><span class="p">,</span> <span class="n">dbpct</span><span class="p">,</span> <span class="n">ftype</span><span class="p">,</span> <span class="n">foptions</span> <span class="p">)</span>
+<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">e</span>
+
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
+<span class="k">print</span> <span class="s">&quot;                 esri - Running Visibility Analysis                 &quot;</span>
+<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="k">print</span> <span class="s">&quot;Creating File Geodatabase&quot;</span>
+<span class="n">arcpy</span><span class="o">.</span><span class="n">CreateFileGDB_management</span><span class="p">(</span><span class="n">intermediate_outputs</span><span class="p">,</span> <span class="s">&#39;pci_esri-solution.gdb&#39;</span><span class="p">)</span> <span class="c">#Create output file GeoDatabase</span>
+<span class="k">print</span> <span class="s">&quot;File Geodatabase created successfully!&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="n">geodatabase_file</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;pci_esri-solution.gdb&#39;</span>
+
+<span class="n">vis_raster</span> <span class="o">=</span> <span class="n">geodatabase_file</span> <span class="o">+</span> <span class="s">&#39;/Visibility_raster&#39;</span>
+
+<span class="n">Analysis_type</span> <span class="o">=</span> <span class="s">&quot;OBSERVERS&quot;</span>
+<span class="n">Import_Surface_Raster</span> <span class="o">=</span> <span class="n">filo</span>
+<span class="n">Input_Observer_Feature</span> <span class="o">=</span> <span class="n">point_file</span>
+<span class="n">Output_Raster</span> <span class="o">=</span> <span class="n">vis_raster</span>
+<span class="n">AboGLevel</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="n">NODATA</span><span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">32768</span><span class="p">]</span>
+
+<span class="c"># Process: Visibility</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="k">print</span> <span class="s">&quot;Beginning Visibility Analysis&quot;</span>
+<span class="n">arcpy</span><span class="o">.</span><span class="n">Visibility_3d</span><span class="p">(</span><span class="n">Import_Surface_Raster</span><span class="p">,</span> <span class="n">Input_Observer_Feature</span><span class="p">,</span> <span class="n">Output_Raster</span><span class="p">,</span> <span class="n">AboGLevel</span><span class="p">,</span> <span class="n">Analysis_type</span><span class="p">,</span> <span class="s">&quot;NODATA&quot;</span><span class="p">,</span> <span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;FLAT_EARTH&quot;</span><span class="p">,</span> <span class="s">&quot;0.13&quot;</span><span class="p">,</span> <span class="s">&quot;5&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;1.5&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;100&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Visibility Analysis complete!&quot;</span>
+
+<span class="c"># Convert Raster to Polygon in ArcGIS</span>
+
+<span class="n">inRaster</span> <span class="o">=</span> <span class="n">vis_raster</span>
+<span class="n">out_poly_folder</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&quot;polygons/&quot;</span>
+<span class="n">outPolygons</span> <span class="o">=</span> <span class="n">out_poly_folder</span> <span class="o">+</span> <span class="s">&quot;visibility_poly.shp&quot;</span>
+<span class="n">field</span> <span class="o">=</span> <span class="s">&quot;VALUE&quot;</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">out_poly_folder</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">out_poly_folder</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="k">print</span> <span class="s">&quot;Running Raster to Polygon Conversion&quot;</span>
+<span class="c"># Execute RasterToPolygon</span>
+<span class="n">arcpy</span><span class="o">.</span><span class="n">RasterToPolygon_conversion</span><span class="p">(</span><span class="n">inRaster</span><span class="p">,</span> <span class="n">outPolygons</span><span class="p">,</span> <span class="s">&quot;NO_SIMPLIFY&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="k">print</span> <span class="s">&quot;Raster to Polygon Conversion Completed!&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
+<span class="k">print</span> <span class="s">&quot;              esri - Intersect Analysis with Roads               &quot;</span>
+<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="k">print</span> <span class="s">&quot;Beginning Intersect Analysis&quot;</span>
+
+<span class="n">final_outputs</span> <span class="o">=</span> <span class="n">out_folder</span> <span class="o">+</span> <span class="s">&#39;/final_results/&#39;</span>
+<span class="n">vis_road_dir</span> <span class="o">=</span> <span class="n">final_outputs</span> <span class="o">+</span> <span class="s">&#39;road_visibility/&#39;</span>
+
+<span class="n">roads</span> <span class="o">=</span> <span class="n">road_file</span>
+<span class="n">visibility_poly</span> <span class="o">=</span> <span class="n">outPolygons</span>
+<span class="n">inFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="n">roads</span><span class="p">,</span> <span class="n">visibility_poly</span><span class="p">]</span>
+<span class="n">roads_Intersect</span> <span class="o">=</span> <span class="n">vis_road_dir</span> <span class="o">+</span> <span class="s">&#39;road_visibility.shp&#39;</span>
+
+<span class="k">print</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">vis_road_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">vis_road_dir</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;output path created&quot;</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
+<span class="n">arcpy</span><span class="o">.</span><span class="n">Intersect_analysis</span><span class="p">(</span><span class="n">inFeatures</span><span class="p">,</span> <span class="n">roads_Intersect</span><span class="p">,</span> <span class="s">&quot;ALL&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;LINE&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="k">print</span> <span class="s">&quot;Intersect Analysis Complete&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><strong>Integration with ArcPy</strong></a><ul>
+<li><a class="reference internal" href="#installing-arcgis-64bit-background-geoprocesses">Installing ArcGIS <em>64bit Background Geoprocesses</em></a></li>
+<li><a class="reference internal" href="#import-arcpy-and-geomatica-python-libraries-and-verify-configuration">Import ArcPy and Geomatica Python Libraries and verify configuration</a></li>
+<li><a class="reference internal" href="#handling-geomatica-and-arcpy-exceptions">Handling Geomatica and ArcPy Exceptions</a></li>
+<li><a class="reference internal" href="#combining-geomatica-and-arcpy-functions">Combining Geomatica and ArcPy Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_image_processing.html"
+                        title="previous chapter"><strong>Geospatial Image Processing</strong></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geomatica_cookbook_complete_workflows.html"
+                        title="next chapter"><strong>Workflow Examples for the Left-side of Your Brain</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/geomatica_cookbook_integrate_arcpy.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="geomatica_cookbook_complete_workflows.html" title="Workflow Examples for the Left-side of Your Brain"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="geomatica_cookbook_image_processing.html" title="Geospatial Image Processing"
+             >previous</a> |</li>
+        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Shawn Melamed.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    </div>
+  </body>
+</html>

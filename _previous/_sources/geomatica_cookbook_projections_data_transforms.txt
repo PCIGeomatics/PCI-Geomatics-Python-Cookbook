@@ -1,0 +1,74 @@
+**Projections & Data Transformations**
+======================================
+This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+
+Check Installation of Geomatica Py Libraries
+---------------------------------------------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        import pci 
+
+        #If successful, the following will be printed to the console:
+        #PCI Pluggable Framework environment successfully loaded
+        #Otherwise, a PCI exception will be printed
+        
+        
+Import Geomartica Py Libraries
+---------------------------------------------------------
+    This example explicitly imports the pansharp2 function from the pansharp2 module and imports
+    all onjects and functions from the ortho2 module
+
+    .. code-block:: python
+
+        from pci.pansharp2 import pansharp2 #Imports the pansharp2 function/object from the pansharp2 module
+        from pci.ortho2 import * #imports all of the functions and objects from the ortho2 module 
+
+        
+Accessing Help About Geomatica Py Function
+---------------------------------------------------------
+    Python prints help documentation to the terminal/console for the specified function. This includes information
+    about the signature of the function (arguments that need to be passed) and information about what the function
+    does. Furthermore, the help document includes information about what input data is required and what output is 
+    produced.
+    
+    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
+    
+
+    .. code-block:: python
+
+        from pci.pansharp2 import pansharp2 
+        
+        help(pansharp2)
+        
+
+Handling Geomatica Py Exceptions
+---------------------------------------------------------
+    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
+    function. The main behaviour of this action is that the script will continue to run if the exception is called.
+    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
+    to process the other files
+
+    .. code-block:: python
+
+        from pci.pansharp2 import pansharp2
+        from pci.exceptions import PCIException
+        import sys
+
+        ms_file = r"c:\NewYorkk_multispectral.pix" #this file is incorrectly spelt and thus, does not exist
+        ms_channels = [1,2,3,4] #pansharpen channels 1 to 4 (Red, green, blue and NIR) 
+        pan_file = r"c:\NewYork_panchromatic.pix"
+        out_file = r"c:\NewYork_pansharpened.pix"
+
+        try:
+            pansharp2(ms_file, ms_channels, [], pan_file, [], out_file, [], "", [], "", "pix", "tiled512")
+        except PCIException, e:
+            print e
+        except Exception, e:
+            print e
+            
+        #This results in python printing a PCI caught exception that the input multispectral file does not exist
+        #The script will continue to run through to the next line of code without exiting, because the exception
+        #is handled with a print statement

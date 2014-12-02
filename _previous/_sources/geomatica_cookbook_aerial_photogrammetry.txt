@@ -1,0 +1,490 @@
+**Digital Aerial Photogrammetry**
+=================================
+This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+
+Create .pix Link File from Raw Aerial Images
+--------------------------------------------
+    This recipe shows how to create a .pix live link file from raw aerial imagery. 
+    This creates the .pix file format for an image, without having to copy the actual
+    pixels. Rather it links back to the .tif image. The pix format is highly recommended
+    for photogrammetric processing with Geomatica functions.
+    
+    .. code-block:: python
+        
+        import os
+        from pci.link import link
+        
+        raw_airphoto = r"c:\airphoto_project\raw_images\00025.tif"
+        pix_link_file = r"c:\airpoto_project\ingested\00025.pix"
+            
+        link( raw_airphoto, pix_link_file, [] )
+
+        
+Discover all airphotos in a directory and create .pix link file - **Batch Processing**
+--------------------------------------------------------------------------------------
+    This recipe demonstrates how to automatically discover all valid raw airphotos and then create a .pix link
+    file for them so that they can be run through Geomatica's photogrammetric processing chain.
+
+    .. code-block:: python
+    
+        raw_airphoto_dir =r"c:\airphoto_project\raw_images"
+
+        input_files_list = []
+
+        for r,d,f in os.walk(raw_airphoto_dir):
+            for file in fnmatch.filter(f, "*.tif"):
+                print "found valid input file: ", file
+                input_files_list.append(os.path.join(r,file))    
+                
+        #Create Link file
+        for raw_image in input_files_list:
+            input_file = raw_image
+            ingest_dir = r"c:\airpoto_project\ingested"
+            link_pix = ingested_dir + os.sep + ntpath.basename(os.path.splitext(raw_image)[0]) + ".pix"
+            
+            link( input, link_pix, [] )
+            
+            
+Setup Digital Airphoto Project for Photogrammetric Processing
+-------------------------------------------------------------
+    This recipe demonstrates how to setup an orthoengine project for airphoto photogrammetric processing.
+    The results of running this recipe will setup a project that is ready for DEM extraction and orthorectification
+
+    .. code-block:: python
+
+        import os, sys
+        from pci.link import *
+        from pci.crproj import *
+        from pci.camimport import *
+        from pci.eoimport import *
+
+        raw_airphoto_dir =r"c:\airphoto_project\raw_images"
+
+        input_files_list = []
+
+        for r,d,f in os.walk(raw_airphoto_dir):
+            for file in fnmatch.filter(f, "*.tif"):
+                print "found valid input file: ", file
+                input_files_list.append(os.path.join(r,file))    
+                
+        #Create Link file
+        for raw_image in input_files_list:
+            input_file = raw_image
+            ingest_dir = r"c:\airpoto_project\ingested"
+            link_pix = ingested_dir + os.sep + ntpath.basename(os.path.splitext(raw_image)[0]) + ".pix"
+            
+            link( input, link_pix, [] )
+
+        #Create OrthoEngine project file
+        mfile = ingest_dir + os.sep + "*.pix"
+        oeproj = ingest_dir + os.sep + "oe_initial.prj"
+        mapunits = "UTM 17 D122"
+
+        crproj( mfile, [], oeproj, "APDU", mapunits )
+
+        #Import Camera Parameters 
+        camfile = raw_airphoto_dir + os.sep + "camera_calib.xml"
+        prepared_oe_proj = ingest_dir + os.sep + "oe_configured.prj"
+
+        camimport( oeproj, camfile, prepared_oe_proj )
+          
+        #Import Exterior Orientation File 
+        eofile = raw_airphoto_dir + os.sep + "eo.txt"
+        mapunits = "UTM 17 D122" #D122 is NAD83
+
+        eoimport( prepared_oe_proj, eofile, [3], mapunits, "", [], [], "" )
+        
+        
+Automatic DEM Extraction from Aerial Imagery - **Batch Processing**
+-------------------------------------------------------------------
+    This recipe demonstrates how to extract a DEM from multiple Aerial images, using an orthoengine project 
+    that was previously setup for digital aerial processing (See above recipe)
+
+    .. code-block:: python
+        
+        import os, sys
+        from pci.cpmmseg import cpmmseg 
+        from pci.epipolar2 import epipolar2
+        from pci.autodem2 import autodem2
+        from pci.dsm2dtm import dsm2dtm
+        
+        #Create math model from OE to ingested images
+        ingest_airphoto_dir = r"c:\airphoto\ingests"
+        prepared_oe_proj = ingest_airphoto_dir + os.sep + "oe_configured.prj"
+
+        ingest_image_list = []
+        for r,d,f in os.walk(ingest_airphoto_dir):
+            for file in fnmatch.filter(f, "*.tif"):
+                print "found valid input file: ", file
+                ingest_image_list.append(os.path.join(r,file))   
+
+        for ingest_image in ingest_image_list:
+            oeproj = final_oe_proj
+            file = ingest_image
+            
+            cpmmseg(oeproj, file, [])
+            
+        #Generate Epipolar Images from Stereo pairs
+        epi_outdir = work_dir + os.sep + 'epipolars'
+
+        epipolar2( ingest_airphoto_dir, [1,2,3], [], [], u"", u"opt", [],
+                   [1], epi_outdir, [0], u"", u"", [1024] )
+
+        #Extract Digital Surface Model (DSM) from multiple stereo airphoto images and mosaic them together
+        dsm_outdir = r"c:\airphoto\dsm_working"
+        deocoded_sm = r"c:\airphoto\dsm_working\airphoto_dsm.pix"                   
+        pxszout = [0.9, 0.9]       
+
+        autodem2( epi_outdir, [1], [], [], [], [], 'high', 'hilly', '32r', [2], 'yes', 
+                  'no', 'no', '', outdir, dsm, '', 'UTM 17 D122', [], [], pxszout, 'blend' )
+
+        #convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM) 
+        dem_file = r"c:\airphoto\dem\airphoto_dem.pix"
+        feature_size = [250]
+        gradient = [30]
+        remove_bumps = [9,5,9,5]
+        fill_pits = [7,5]
+        smooth_dem = [9]
+
+        dsm2dtm( geocoded_dsm, [1], dem_file, [1], [], [], "", feature_size, gradient, "hilly", remove_bumps, fill_pits, smooth_dem, [] ) 
+
+
+Automatic Orthorectification of Aerial Imagery
+----------------------------------------------
+    This recipe provides a working example of how to orthorectify multiple airphoto images from multiple 
+    digital aerial images.
+    
+    .. code-block:: python 
+        
+        from pci.cpmmseg import cpmmseg
+        from pci.ortho2 import ortho2
+        
+        #Create math model from OE to ingested images
+        ingest_airphoto = r"c:\airphoto\ingest\00021.pix"
+        prepared_oe_proj = r"c:\airphoto\working\oe_configured.prj"
+
+        cpmmseg(prepared_oe_proj, ingest_image, [])
+
+        #Orthorectify imagery with a user provided DEM
+        ortho_airphoto = r"c:\airphoto\orthos\o00021.pix"
+        x_res = "0.2" #x resolution set to 20cm
+        y_res = "0.2" #y resolution set to 20cm
+        dem = r"c:\airphoto\dem\user_dem.pix"
+
+        ortho2(ingest_airphoto, [], [], [], "", ortho_airphoto, "PIX", "", "", "", "", 
+                "", "", [], "", "", x_res, y_res, dem, [], [], "", "", [], "", [], "")
+        
+        
+Automatic Orthorectification of Aerial Imagery - **Batch Processing**
+---------------------------------------------------------------------
+    This recipe provides a working example of how to orthorectify multiple airphoto images.
+    It assumes you have already computed the math model required to orthorectify the imagery.
+    
+    .. code-block:: python
+
+        import os, sys
+        from pci.cpmmseg import cpmmseg
+        from pci.ortho2 import ortho2
+
+        ingest_airphoto_dir = r"c:\airphoto\ingests"
+        prepared_oe_proj = ingest_airphoto_dir + os.sep + "oe_configured.prj"
+
+        #Copy math model from prepared orthoengine project file to all ingested images
+        for r,d,f in os.walk(ingest_airphoto_dir):
+            for file in fnmatch.filter(f, "*.pix"):
+                print "found valid input file: ", file
+                ingest_image = os.path.join(r,file))   
+                      
+                cpmmseg(prepared_oe_proj, ingest_image, [])
+                
+        #Orthorectify imagery with a user provided DEM
+        ortho_dir = r"c:\airphoto\orthos"
+        x_res = "0.2" #x resolution set to 20cm
+        y_res = "0.2" #y resolution set to 20cm
+        dem = r"c:\airphoto\dem\user_dem.pix"
+
+        ortho2(ingest_airphoto_dir, [], [], [], "", ortho_dir, "PIX", "", "", "", "", 
+                "", "", [], "", "", x_res, y_res, dem, [], [], "", "", [], "", [], "")
+        
+        
+Digital Aerial Orthorectification with user provided DEM - **Full Workflow**
+----------------------------------------------------------------------------
+    This is a complete orthorectification workflow for digital aerial imagery (not including DEM extraction).
+    It combines multiple concepts from the recipes in this section.
+
+    .. code-block:: python
+
+        import os, sys
+        from pci.link import *
+        from pci.crproj import *
+        from pci.camimport import *
+        from pci.eoimport import *
+        from pci.cpmmseg import cpmmseg
+        from pci.ortho2 import ortho2
+
+        raw_airphoto_dir =r"c:\airphoto_project\raw_images"
+
+        input_files_list = []
+
+        for r,d,f in os.walk(raw_airphoto_dir):
+            for file in fnmatch.filter(f, "*.tif"):
+                print "found valid input file: ", file
+                input_files_list.append(os.path.join(r,file))    
+                
+        #Create Link file
+        for raw_image in input_files_list:
+            input_file = raw_image
+            ingest_dir = r"c:\airpoto_project\ingested"
+            link_pix = ingested_dir + os.sep + ntpath.basename(os.path.splitext(raw_image)[0]) + ".pix"
+            
+            link( input, link_pix, [] )
+
+        #Create OrthoEngine project file
+        mfile = ingest_dir + os.sep + "*.pix"
+        oeproj = ingest_dir + os.sep + "oe_initial.prj"
+        mapunits = "UTM 17 D122"
+
+        crproj( mfile, [], oeproj, "APDU", mapunits )
+
+        #Import Camera Parameters 
+        camfile = raw_airphoto_dir + os.sep + "camera_calib.xml"
+        prepared_oe_proj = ingest_dir + os.sep + "oe_configured.prj"
+
+        camimport( oeproj, camfile, prepared_oe_proj )
+          
+        #Import Exterior Orientation File 
+        eofile = raw_airphoto_dir + os.sep + "eo.txt"
+        mapunits = "UTM 17 D122" #D122 is NAD83
+
+        eoimport( prepared_oe_proj, eofile, [3], mapunits, "", [], [], "" )
+     
+        #Copy math model from prepared orthoengine project file to all ingested images
+        for r,d,f in os.walk(ingest_dir):
+            for file in fnmatch.filter(f, "*.pix"):
+                print "found valid input file: ", file
+                ingest_image = os.path.join(r,file))   
+                      
+                cpmmseg(prepared_oe_proj, ingest_image, [])
+        
+        #Orthorectify imagery with a user provided DEM
+        ortho_dir = r"c:\airphoto\orthos"
+        x_res = "0.2" #x resolution set to 20cm
+        y_res = "0.2" #y resolution set to 20cm
+        dem = r"c:\airphoto\dem\user_dem.pix"
+
+        ortho2(ingest_dir, [], [], [], "", ortho_dir, "PIX", "", "", "", "", 
+                "", "", [], "", "", x_res, y_res, dem, [], [], "", "", [], "", [], "")
+     
+     
+Digital Aerial Orthorectification with DEM Extraction - **Full Workflow**
+------------------------------------------------------------------------------
+    This is a complete orthorectification workflow for digital aerial imagery (including DEM extraction).
+    It combines multiple concepts from the recipes in this section.
+
+    .. code-block:: python
+
+        import os, sys
+        from pci.link import *
+        from pci.crproj import *
+        from pci.camimport import *
+        from pci.eoimport import *
+        from pci.cpmmseg import cpmmseg
+        from pci.ortho2 import ortho2
+
+        raw_airphoto_dir =r"c:\airphoto_project\raw_images"
+
+        input_files_list = []
+
+        for r,d,f in os.walk(raw_airphoto_dir):
+            for file in fnmatch.filter(f, "*.tif"):
+                print "found valid input file: ", file
+                input_files_list.append(os.path.join(r,file))    
+                
+        #Create Link file
+        for raw_image in input_files_list:
+            input_file = raw_image
+            ingest_dir = r"c:\airpoto_project\ingested"
+            link_pix = ingested_dir + os.sep + ntpath.basename(os.path.splitext(raw_image)[0]) + ".pix"
+            
+            link( input, link_pix, [] )
+
+        #Create OrthoEngine project file
+        mfile = ingest_dir + os.sep + "*.pix"
+        oeproj = ingest_dir + os.sep + "oe_initial.prj"
+        mapunits = "UTM 17 D122"
+
+        crproj( mfile, [], oeproj, "APDU", mapunits )
+
+        #Import Camera Parameters 
+        camfile = raw_airphoto_dir + os.sep + "camera_calib.xml"
+        prepared_oe_proj = ingest_dir + os.sep + "oe_configured.prj"
+
+        camimport( oeproj, camfile, prepared_oe_proj )
+          
+        #Import Exterior Orientation File 
+        eofile = raw_airphoto_dir + os.sep + "eo.txt"
+        mapunits = "UTM 17 D122" #D122 is NAD83
+
+        eoimport( prepared_oe_proj, eofile, [3], mapunits, "", [], [], "" )
+        
+        #Create math model from OE to ingested images
+        ingest_image_list = []
+        for r,d,f in os.walk(ingest_dir):
+            for file in fnmatch.filter(f, "*.pix"):
+                print "found valid input file: ", file
+                ingest_image_list.append(os.path.join(r,file))   
+
+        for ingest_image in ingest_image_list:
+            cpmmseg(prepared_oe_proj, ingest_image, [])
+            
+        #Generate Epipolar Images from Stereo pairs
+        epi_outdir = work_dir + os.sep + 'epipolars'
+
+        epipolar2( ingest_dir, [1,2,3], [], [], u"", u"opt", [],
+                   [1], epi_outdir, [0], u"", u"", [1024] )
+
+        #Extract Digital Surface Model (DSM) from multiple stereo airphoto images and mosaic them together
+        dsm_outdir = r"c:\airphoto\dsm_working"
+        deocoded_sm = r"c:\airphoto\dsm_working\airphoto_dsm.pix"                   
+        pxszout = [0.9, 0.9]       
+
+        autodem2( epi_outdir, [1], [], [], [], [], 'high', 'hilly', '32r', [2], 'yes', 
+                  'no', 'no', '', outdir, dsm, '', 'UTM 17 D122', [], [], pxszout, 'blend' )
+
+        #convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM) 
+        dem_file = r"c:\airphoto\dem\airphoto_dem.pix"
+        feature_size = [250]
+        gradient = [30]
+        remove_bumps = [9,5,9,5]
+        fill_pits = [7,5]
+        smooth_dem = [9]
+
+        dsm2dtm( geocoded_dsm, [1], dem_file, [1], [], [], "", feature_size, gradient, "hilly", remove_bumps, fill_pits, smooth_dem, [] )
+
+        #Orthorectify imagery with a user provided DEM
+        ortho_dir = r"c:\airphoto\orthos"
+        x_res = "0.2" #x resolution set to 20cm
+        y_res = "0.2" #y resolution set to 20cm
+ 
+        ortho2(ingest_airphoto_dir, [], [], [], "", ortho_dir, "PIX", "", "", "", "", 
+                "", "", [], "", "", x_res, y_res, dem_file, [], [], "", "", [], "", [], "")
+        
+        
+Create Camera Calibration (.xml) file
+-------------------------------------
+    This recipe demonstrates how to quickly create a camera calibration file in the XML format 
+    required by Geomatica's automated aerial processing algorithms
+
+    
+    Note: It really is not necessary to use this block of code. Just simply create your own camera
+    calibration file before running the script by copying the block after **Create Camera Calibration 
+    XML file** section and save it as an xml file.
+    
+    .. code-block:: python
+            
+        import os
+
+        #Set camera calibration location
+        cam_dir = raw_input("Please provide the directory for the Camera Calibration file: ")
+        cam_file = cam_dir + os.sep + "camera_calib.xml"
+        target = open(cam_file, 'w+')
+
+        #Get Camera Calibration Values
+        x = 0
+        while x == 0:
+            cam_sensor = raw_input("What Camera Sensor are you using (UltraCam/DMC/Other)? ")
+            
+            if cam_sensor.lower() == "ultracam":
+                print "Progressing to UltraCam setup mode..."
+                x = 1
+            elif cam_sensor.lower() == "dmc":
+                print "Progressing to DMC setup mode..."
+                x = 1
+            elif cam_sensor.lower() == "other":
+                print "Progressing to generic camera setup mode..."
+                x = 1
+            else:    
+                print "Your answer could not be verified. Please respond with: ultracam, dmc or other"
+                x = 0
+                
+        if cam_sensor.lower() == "ultracam":
+            focal_length = raw_input("Please provide the focal length in mm: ")
+            sym_ppx =  raw_input("Please provide the principal Point offset x: ")
+            sym_ppy =  raw_input("Please provide the principal Point offset y: ")
+            chip_width = raw_input("Please provide the chip size width in mm: ")
+            chip_length = raw_input("Please provide the chip size length in mm: ")
+        elif cam_sensor.lower() == "dmc":
+            focal_length = raw_input("Please provide the focal length in mm: ")
+            chip_width = raw_input("Please provide the chip size width in mm: ")
+            chip_length = raw_input("Please provide the chip size length in mm: ")
+        else:
+            focal_length = raw_input("Please provide the focal length in mm: ")
+            sym_ppx =  raw_input("Please provide the principal Point offset x: ")
+            sym_ppy =  raw_input("Please provide the principal Point offset y: ")
+            chip_width = raw_input("Please provide the chip size width in mm: ")
+            chip_length = raw_input("Please provide the chip size length in mm: ")
+            
+            radial_distortion = raw_input("Do you have radial distortion values? (y/n)")
+            if radial_distortion == "y":
+                rldc_r0 = raw_input("please provide RLDC R0 value: ")
+                rldc_r1 = raw_input("please provide RLDC R1 value: ")
+                rldc_r2 = raw_input("please provide RLDC R2 value: ")
+                rldc_r3 = raw_input("please provide RLDC R3 value: ")
+                rldc_r4 = raw_input("please provide RLDC R4 value: ")
+                rldc_r5 = raw_input("please provide RLDC R5 value: ")
+                rldc_r6 = raw_input("please provide RLDC R6 value: ")
+                rldc_r7 = raw_input("please provide RLDC R7 value: ")
+            else:
+                print "Setting radial coefficients to 0 (zero)"
+                rldc_r0 = 0
+                rldc_r1 = 0
+                rldc_r2 = 0
+                rldc_r3 = 0
+                rldc_r4 = 0
+                rldc_r5 = 0
+                rldc_r6 = 0
+                rldc_r7 = 0    
+                
+            decentering_distortion = raw_input("Do you have decentering distortion values? (y/n)")
+            if decentering_distortion == "y":
+                ddc_p1 = raw_input("please provide DDC P1 value: ")
+                ddc_p2 = raw_input("please provide DDC P2 value: ")
+                ddc_p3 = raw_input("please provide DDC P3 value: ")
+                ddc_p4 = raw_input("please provide DDC P4 value: ")
+            else:
+                print "Setting decentering coefficients to 0 (zero)"
+                ddc_p1 = 0
+                ddc_p2 = 0
+                ddc_p3 = 0
+                ddc_p4 = 0
+                
+        #Create Camera Calibration XML file
+
+        target.write("<CAMERA NAME=\"" + cam_sensor.upper() + "\">\n")
+        target.write("<LENS_SERIAL/>\n")
+        target.write("<CALIB_SOURCE/>\n")
+        target.write("<CALIB_DATE/>\n")
+        target.write("<FL>" + str(focal_length) + "</FL>\n")
+        target.write("<SYMMETRY PPX=\"" + str(sym_ppx) + "\" PPY=\"" + str(sym_ppy) + "\"/>\n")
+        target.write("<RLDC name=\"R0\">" + str(rldc_r0) + "</RLDC>\n")
+        target.write("<RLDC name=\"R1\">" + str(rldc_r1) + "</RLDC>\n")
+        target.write("<RLDC name=\"R2\">" + str(rldc_r2) + "</RLDC>\n")
+        target.write("<RLDC name=\"R3\">" + str(rldc_r3) + "</RLDC>\n")
+        target.write("<RLDC name=\"R4\">" + str(rldc_r4) + "</RLDC>\n")
+        target.write("<RLDC name=\"R5\">" + str(rldc_r5) + "</RLDC>\n")
+        target.write("<RLDC name=\"R6\">" + str(rldc_r6) + "</RLDC>\n")
+        target.write("<RLDC name=\"R7\">" + str(rldc_r7) + "</RLDC>\n")
+        target.write("<DDC name=\"P1\">" + str(ddc_p1) + "</DDC>\n")
+        target.write("<DDC name=\"P2\">" + str(ddc_p2) + "</DDC>\n")
+        target.write("<DDC name=\"P3\">" + str(ddc_p3) + "</DDC>\n")
+        target.write("<DDC name=\"P4\">" + str(ddc_p4) + "</DDC>\n")
+        target.write("<DIGITAL>\n")
+        target.write("<CHIP_SIZE WIDTH=\"" + str(chip_width) + "\" HEIGHT=\"" + str(chip_length) + "\"/>\n")
+        target.write("<YSCALE>1.000</YSCALE>\n")
+        target.write("</DIGITAL>\n")
+        target.write("</CAMERA>")
+
+        print ""
+        print "completed writing Camera Calibration file"
+        print ""
+        print "Camera calibration file located here: " + cam_file    

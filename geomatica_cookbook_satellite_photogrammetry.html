@@ -59,17 +59,18 @@ orthorectification, batch processing, advanced conditions and more...</p>
 <div class="section" id="ingest-older-raw-satellite-images">
 <h2>Ingest Older Raw Satellite Images<a class="headerlink" href="#ingest-older-raw-satellite-images" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe demonstrates how to ingest an image from a Formosat-2 sensor. The use of specific CD* functions
-to ingest data is only required for older sensors. However, this is required before the images can be viewed
-or processed</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.cdformosat</span> <span class="kn">import</span> <span class="o">*</span>
+<div><p>This recipe demonstrates how to ingest an image from a Formosat-2 sensor. The use of
+specific CD* functions to ingest data is only required for older sensors.
+However, running the CD* functions for older sensors is required before the images can be
+viewed or processed</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.cdformosat</span> <span class="kn">import</span> <span class="n">cdformosat</span>
 
-<span class="n">in_file</span> <span class="o">=</span> <span class="s">r&quot;c:\formosat2\FS2_G025_MS_L1A_20071024_000000\FS2_G025_MS_L1A_20071024_000000.tif&quot;</span>
-<span class="n">out_file</span> <span class="o">=</span> <span class="s">r&quot;c:</span><span class="se">\\</span><span class="s">formosat2\ingested\FS2_G025_MS_L1A_20071024_000000\FS2_G025_MS_L1A_20071024_000000.pix&quot;</span>
+<span class="n">in_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Formosat\FS2_G025_MS_L1A_20071024_021110.tif&quot;</span>
+<span class="n">out_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Formosat\Ingest\Formosat.pix&quot;</span>
 <span class="n">linkfile</span> <span class="o">=</span> <span class="s">u&quot;NO&quot;</span>
 <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
 
-<span class="n">cdformosat</span><span class="p">(</span><span class="n">fili</span><span class="p">,</span> <span class="n">filo</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">)</span>
+<span class="n">cdformosat</span><span class="p">(</span><span class="n">in_file</span><span class="p">,</span> <span class="n">out_file</span><span class="p">,</span> <span class="n">linkfile</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -78,14 +79,15 @@ or processed</p>
 <h2>Import Satellite Images from New Sensors<a class="headerlink" href="#import-satellite-images-from-new-sensors" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This recipe demonstrates how to import a satellite image from a newer satellite sensor into a .pix file.
-This is NOT required for viewing the imagery and performing many different types of processes on the data,
+This is NOT required for viewing the imagery and performing many types of processes on the data,
 but is often useful for photogrammetric processing.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.fimport</span> <span class="kn">import</span> <span class="n">fimport</span>
 
-<span class="n">raw_kompsat2_image</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\MSC_070611154402_04650_23191328_1R\MSC_070611154402_04650_23191328M1P17G_1R.eph&quot;</span>
-<span class="n">imported_image</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\kompsat2_image.pix&quot;</span>
+<span class="n">raw_kompsat2_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Kompsat\MSC_080407140610_09045_24220801PMSN14_1G.eph&quot;</span>
+<span class="n">imported_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Kompsat\Ingest\kompsat2_image.pix&quot;</span>
 
-<span class="n">fimport</span><span class="p">(</span><span class="n">raw_kompsat2_file</span><span class="p">,</span> <span class="n">imported_image</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;TILED512&quot;</span><span class="p">)</span>
+<span class="n">fimport</span><span class="p">(</span><span class="n">raw_kompsat2_image</span><span class="p">,</span> <span class="n">imported_image</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;TILED512&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Complete&quot;</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -94,19 +96,20 @@ but is often useful for photogrammetric processing.</p>
 <h2>Create .pix Link File for Satellite Images from New Sensors<a class="headerlink" href="#create-pix-link-file-for-satellite-images-from-new-sensors" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This recipe demonstrates how to create a .pix link file from an input image (often raw satellite
-image from a newer sensor). A link file creates a .pix file, but rather than copying the imagery, it
-only links back to the original image file. However, the file will have all the same file support as
-a regular .pix file.</p>
-<p>Importing the file (fimport) creates a copy of the input image in .pix format, which uses more disk space
-and takes more time to process. The link file is a nice alternative to quickly import data into the .pix
-format without using a lot of diskspace or processing time. The only caveat is that the relative location
-of the link .pix file</p>
+image from a newer sensor). A link file creates a .pix file, but rather than copying the imagery,
+it only links back to the original image file. However, the file will have all the same file
+support as a regular .pix file.</p>
+<p>Importing the file (fimport) creates a copy of the input image in .pix format, which uses more
+disk space and takes more time to process. The link file is a nice alternative to quickly import
+data into the .pix format while saving on diskspace and processing time. It is important to keep
+in mind that the relative path between the link file and the raw imagery must be maintained. Otherwise
+the link will be broken.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
 
-<span class="n">raw_ms_geoeye</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\RAWDATA\po_311159_0000000\po_311159_bgrn_0000000.tif&quot;</span>
-<span class="n">link_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\pix_link\po_311159_0000000\po_311159_bgrn_0000000.pix&quot;</span>
+<span class="n">raw_ms_geoeye</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\po_311159_0000000\po_311159_bgrn_0000000.tif&quot;</span>
+<span class="n">link_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\Output\link_GeoEye.pix&quot;</span>
 
-<span class="n">link</span><span class="p">(</span> <span class="n">raw_ms_geoeye</span><span class="p">,</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+<span class="n">link</span><span class="p">(</span> <span class="n">raw_ms_geoeye</span><span class="p">,</span> <span class="n">link_image</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -115,10 +118,10 @@ of the link .pix file</p>
 <h2>Import satellite images from auxiliary files<a class="headerlink" href="#import-satellite-images-from-auxiliary-files" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Some raw satellite images are loaded with auxiliary text or xml files, such as, Landsat-8
-and Kompsat-3. This concept can sometimes confuse scripters when it comes to importing the
+and Kompsat-3 images. This concept can sometimes confuse scripters when it comes to importing the
 imagery through code.</p>
 <p>This recipe demonstrates how to ingest panchromatic, multispectral and thermal imagery from
-landsat-8 imagery, using the auxiliary text file</p>
+landsat-8 imagery, using the auxiliary text file.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.fimport</span> <span class="kn">import</span> <span class="n">fimport</span>
 
 <span class="c">#import landsat-8 multispectral imagery</span>
@@ -154,29 +157,28 @@ on statistical accuracy. In this case, root mean square error (RMSE) will be use
 <span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c">#Create Link File to hold new GCP segment(s)</span>
-<span class="n">raw_geoeye_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\RAWDATA\po_311159_0000000\po_000000_bgrn_0000000.tif&quot;</span>
-<span class="n">link_pix_file</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\pix_link\po_311159_0000000\po_311159_bgrn_0000000.pix&quot;</span>
+<span class="n">raw_geoeye_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\po_311159_0000000\po_311159_bgrn_0000000.tif&quot;</span>
+<span class="n">link_pix_file</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\Output\po_311159_bgrn_0000000.pix&quot;</span>
 
-<span class="n">link</span><span class="p">(</span> <span class="n">raw_geoeye_image</span><span class="p">,</span> <span class="n">link_pix_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+<span class="n">link</span><span class="p">(</span><span class="n">raw_geoeye_image</span><span class="p">,</span> <span class="n">link_pix_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#Run GCP Collection and store new GCP segment in link pix file</span>
-<span class="n">raw_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>       <span class="c">#When available NIR channel is recommended</span>
-<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\reference\reference_image.pix&quot;</span>
-<span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\reference\dem_file.pix&quot;</span>
+<span class="n">raw_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>       <span class="c">#When available NIR channel is recommended</span>
+<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;c:\geoeye\Ref\S-55-40_lr_2000.tif&quot;</span>
+<span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\po_311159_0000000\dem\gmted2010.pix&quot;</span>
 <span class="n">gcp_search_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>
 
 <span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span><span class="n">link_pix_file</span><span class="p">,</span> <span class="n">raw_match_chan</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">reference_image</span><span class="p">,</span> <span class="n">ref_match_chan</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span>
                 <span class="p">[],</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="n">gcp_search_radius</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
-
 <span class="c">#autogcp2 function returns the new gcp segment, which can then be directly passed to the gcp refinement function</span>
 
 <span class="c">#Setup required parameters for automatic GCP refinement</span>
-<span class="n">model_type</span> <span class="o">=</span> <span class="s">u&quot;RF&quot;</span>    <span class="c">#rational function model is often best for newer sensors with good RPCs</span>
+<span class="n">model_type</span> <span class="o">=</span> <span class="s">u&quot;RF&quot;</span>    <span class="c">#rational function model</span>
 <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>           <span class="c">#a polynomial order of 0 is best for most DigitalGlobe sensors (due to very accurate RPCs)</span>
 <span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]</span>  <span class="c">#Continue to reject worse GCPs until RMSE falls below 0.5 pixel in x and y directions</span>
 
-<span class="n">gcprefn</span><span class="p">(</span><span class="n">link_pix_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+<span class="n">gcprefn</span><span class="p">(</span><span class="n">link_pix_file</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
 
 <span class="c">#accurate GCPs should now be stored in the link pix file and can be used for further photogrammetric processing</span>
 </pre></div>
@@ -186,14 +188,15 @@ on statistical accuracy. In this case, root mean square error (RMSE) will be use
 <div class="section" id="automatic-gcp-collection-and-refinement-batch-processing">
 <h2>Automatic GCP Collection and Refinement - <strong>Batch Processing</strong><a class="headerlink" href="#automatic-gcp-collection-and-refinement-batch-processing" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe demonstrates how to automatically discover all valid images in a folder and subfolders, then
-import the images as a pci link file and finally, collect and refine GCPs on all discovered images.</p>
+<div><p>This recipe demonstrates how to automatically discover all valid images in a folder and
+subfolders, import the images as a pci link file, and collect and refine GCPs on all discovered
+images.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">fnmatch</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
 <span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">raw_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\GeoEye\RAWDATA&quot;</span>
+<span class="n">raw_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\geoeye\RAWDATA&quot;</span>
 <span class="n">file_filter</span> <span class="o">=</span> <span class="s">&#39;*_bgrn_*.tif&#39;</span> <span class="c">#Looks for the Multispectral image only</span>
 <span class="n">input_files_list</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -205,19 +208,19 @@ import the images as a pci link file and finally, collect and refine GCPs on all
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_files_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c">#handles condition if the input list is empty</span>
     <span class="k">for</span> <span class="n">raw_file</span> <span class="ow">in</span> <span class="n">input_files_list</span><span class="p">:</span> <span class="c">#iterates through each image file found.</span>
         <span class="c">#Create .pix link file to store the GCP segement that holds the GCPs</span>
-        <span class="n">ingest_link_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\ingest&quot;</span>
+        <span class="n">ingest_link_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\output\ingest&quot;</span>
         <span class="n">ingest_link_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">raw_file</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span> <span class="c">#gets the filename of the raw image (without extension)</span>
         <span class="n">ingest_link_file</span> <span class="o">=</span> <span class="n">ingest_link_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingest_link_filename</span>
 
-        <span class="n">link</span><span class="p">(</span> <span class="n">raw_file</span><span class="p">,</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+        <span class="n">link</span><span class="p">(</span><span class="n">raw_file</span><span class="p">,</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
-        <span class="c">#Setup required parameters for automatic GCP Collection</span>
+        <span class="c">#Perform automatic GCP Collection</span>
         <span class="n">dbic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>      <span class="c"># Channel from input raw file that is used for automatic GCP Collection</span>
-        <span class="n">filref</span> <span class="o">=</span> <span class="s">r&quot;c:\reference_image.pix&quot;</span>
-        <span class="n">filedem</span> <span class="o">=</span> <span class="s">r&quot;c:\dem_file.pix&quot;</span>
+        <span class="n">filref</span> <span class="o">=</span> <span class="s">r&quot;c:\geoeye\Ref\S-55-40_lr_2000.tif&quot;</span>
+        <span class="n">filedem</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\dem\gmted2010.pix&quot;</span>
         <span class="n">searchr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>      <span class="c"># Search radius. Default is to search in pixels</span>
 
-        <span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span><span class="n">raw_file</span><span class="p">,</span> <span class="n">dbic</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">filref</span><span class="p">,</span> <span class="p">[],</span> <span class="n">filedem</span><span class="p">,</span> <span class="p">[],</span>
+        <span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span><span class="n">ingest_link_file</span><span class="p">,</span> <span class="n">dbic</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">filref</span><span class="p">,</span> <span class="p">[],</span> <span class="n">filedem</span><span class="p">,</span> <span class="p">[],</span>
                            <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="n">searchr</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
         <span class="c">#Refine the GCPs based on RMSE</span>
@@ -225,7 +228,7 @@ import the images as a pci link file and finally, collect and refine GCPs on all
         <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]</span>
 
-        <span class="n">gcprefn</span><span class="p">(</span><span class="n">raw_file</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+        <span class="n">gcprefn</span><span class="p">(</span><span class="n">ingest_link_file</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
 
 <span class="k">else</span><span class="p">:</span>
     <span class="k">print</span> <span class="s">&quot;No image files found in &quot;</span> <span class="o">+</span> <span class="n">root_dir</span> <span class="o">+</span> <span class="s">&quot; that match your filter criteria.&quot;</span>
@@ -295,24 +298,24 @@ the search radius until more than 10 GCPs are found or the search radius exceeds
 <div class="section" id="automatic-gcp-collection-and-refinement-from-road-vector-layer">
 <h2>Automatic GCP Collection and refinement from road vector layer<a class="headerlink" href="#automatic-gcp-collection-and-refinement-from-road-vector-layer" title="Permalink to this headline">¶</a></h2>
 <p>This recipe demonstrates how to automatically collect GCPs from a road vector layer
-on a supported image file</p>
+on a raw input image</p>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.fftmvec</span> <span class="kn">import</span> <span class="o">*</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pci.fftmvec</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.imageinv</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.fimport</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.iii</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.pcimod</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c">#Import the raw Kompsat-2 image to .pix file</span>
-<span class="n">raw_kompsat2_file</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\Kompsat-2\MSC_070611154402_04650_23191328_1R\MSC_070611154402_04650_23191328M1P17G_1R.eph&quot;</span>
-<span class="n">imported_k2_image</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\Kompsat-2\ingest\kompsat2.pix&quot;</span>
+<span class="n">raw_kompsat2_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Kompsat-2\Raw_Scenes_1G\MSC_070611154402_04650_23191328_1G\MSC_070611154402_04650_23191328M4P17R_1G.eph&quot;</span>
+<span class="n">imported_k2_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Kompsat-2\working\kompsat2.pix&quot;</span>
 
 <span class="n">fimport</span><span class="p">(</span><span class="n">raw_kompsat2_file</span><span class="p">,</span> <span class="n">imported_k2_image</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;TILED512&quot;</span><span class="p">)</span>
 
 <span class="c">#Invert the Near-Infrared channel - Helps FFTMVEC to successfully collect GCPs</span>
-<span class="n">inverse_image</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\kompsat-2\ingest\inv_k2.pix&quot;</span>
+<span class="n">inverse_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Kompsat-2\working\inv_k2.pix&quot;</span>
 <span class="n">inv_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="c">#Near-Infrared channel</span>
 
 <span class="n">imageinv</span><span class="p">(</span><span class="n">imported_k2_image</span><span class="p">,</span> <span class="n">inverse_image</span><span class="p">,</span> <span class="n">inv_channel</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
@@ -322,12 +325,12 @@ on a supported image file</p>
 <span class="n">iii</span><span class="p">(</span><span class="n">inverse_image</span><span class="p">,</span> <span class="n">imported_k2_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[])</span>
 
 <span class="c">#Run FFTMVEC to automatically collect GCPs from road vectors</span>
-<span class="n">roadvec</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\Kompsat-2\reference\roads.shp&quot;</span>
+<span class="n">roadvec</span> <span class="o">=</span> <span class="s">r&quot;C:\Kompsat-2\Reference\roads\toronto_vector.pix&quot;</span>
 <span class="n">gcp_seg</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#fftmvec provides the output gcp segment number to this parameter</span>
-<span class="n">fftmvec</span><span class="p">(</span><span class="n">imported_k2_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[],</span> <span class="n">roadvec</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">15</span><span class="p">],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">)</span>
+<span class="n">fftmvec</span><span class="p">(</span><span class="n">imported_k2_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[],</span> <span class="n">roadvec</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">15</span><span class="p">],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">)</span>
 
 <span class="c">#Refine GCPs - remove bad GCPs until RMSE falls below 1 pixel in x and y direction</span>
-<span class="n">dbgc</span> <span class="o">=</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="n">dbgc</span> <span class="o">=</span> <span class="n">gcp_seg</span>
 <span class="n">modeltyp</span> <span class="o">=</span> <span class="s">u&quot;RF&quot;</span>
 <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
@@ -350,7 +353,6 @@ improved processing</p>
 into smaller subsets and performing GCP and tie point collection independently on each subset
 can improve bundle adjustment performance and in some cases accuracy.
 The projects can then be merged together</p>
-<p>The projects can then be merged together</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pci.autotie2</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.tprefn</span> <span class="kn">import</span> <span class="o">*</span>
@@ -364,105 +366,18 @@ The projects can then be merged together</p>
 <div class="section" id="merge-multiple-orthoengine-projects-with-tie-points">
 <h2>Merge multiple OrthoEngine projects with tie points<a class="headerlink" href="#merge-multiple-orthoengine-projects-with-tie-points" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe demonstrates how to merge multiple orthoEngine projects. It also performs automatic
-tie point collection between the images at the edges of each OrthoEngine project that is being
-merged to improve coregistration between the overlap regions of the OrthoEngine projects being
-merged.</p>
+<div><p>This recipe demonstrates how to merge multiple OrthoEngine projects. It also performs automatic
+tie point collection between the images at the connection points between the OrthoEngine project
+being merged to improve coregistration between them.</p>
 <p>This can be useful when performing a bundle adjustment on big projects. Breaking big projects
 into smaller subsets and performing GCP and tie point collection independently on each subset
-can improve bundle adjustment performance and in some cases accuracy.</p>
+can improve bundle adjustment performance and in some cases, accuracy.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pci.autotie2</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.tprefn</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.crproj</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
-</pre></div>
-</div>
-</div></blockquote>
-</div>
-<div class="section" id="automatic-bundle-adjustment-and-orthorectification-gcps-previously-collected">
-<h2>Automatic Bundle Adjustment and Orthorectification (GCPs previously collected)<a class="headerlink" href="#automatic-bundle-adjustment-and-orthorectification-gcps-previously-collected" title="Permalink to this headline">¶</a></h2>
-<p>This recipe demonstrates how to automatically collect tie points from overlapping
-regions of images and perform a block bundle adjustment to ensure relative alignment
-between images</p>
-<blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pci.autotie2</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.tprefn</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.crproj</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="c">#Create OrthoEngine Project, which is required for the bundle adjustment</span>
-<span class="n">image_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\Kompsat-2\ingested&quot;</span>
-<span class="n">work_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\Kompsat-2\TPWork&quot;</span>
-<span class="n">dbgc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="c">#Import GCPs from GCP segment 8 (see GCP collection recipes)</span>
-<span class="n">oeproj</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;import_oemodel.prj&quot;</span>
-<span class="n">projection</span> <span class="o">=</span> <span class="s">&quot;UTM 17 T D000&quot;</span> <span class="c">#D000 is WGS84</span>
-
-<span class="n">crproj</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">dbgc</span><span class="p">,</span> <span class="n">oeproj</span><span class="p">,</span> <span class="s">u&quot;RFI1&quot;</span><span class="p">,</span> <span class="n">projection</span><span class="p">)</span>
-
-<span class="c">#Run Automatic Tie Point Collection</span>
-<span class="n">tp_oeproj</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;output_oetp.prj&quot;</span>
-<span class="n">match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="c">#NIR channel is often yeilds best matching results</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\Kompsat-2\DEM\torontodem.pix&quot;</span>
-
-<span class="n">autotie2</span><span class="p">(</span> <span class="n">oeproj</span><span class="p">,</span> <span class="n">tp_oeproj</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">match_chan</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
-
-<span class="c">#Run automatic Tie Point Refinement</span>
-<span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-
-<span class="n">tprefn</span><span class="p">(</span><span class="n">tp_oeproj</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-
-<span class="c">#Copy Math Model out to file</span>
-<span class="n">cpmmseg</span><span class="p">(</span><span class="n">tp_oeproj</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
-
-<span class="c">#orthorectify images</span>
-<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\Kompsat-2\orthos&quot;</span>
-<span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;4&quot;</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">]</span>
-
-<span class="n">ortho2</span><span class="p">(</span> <span class="n">image_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_dir</span><span class="p">,</span> <span class="s">&quot;TIF&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
-</pre></div>
-</div>
-</div></blockquote>
-</div>
-<div class="section" id="automatic-dem-extraction-with-model-refinement-gcps-previously-collected">
-<h2>Automatic DEM Extraction with Model Refinement(GCPs previously collected)<a class="headerlink" href="#automatic-dem-extraction-with-model-refinement-gcps-previously-collected" title="Permalink to this headline">¶</a></h2>
-<p>This recipe demonstrates how to automatically collect tie points from overlapping
-regions of images and perform a block bundle adjustment to ensure relative alignment
-between images</p>
-<blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span class="c">#Update the geometric accuracy of the input stereo pair based on the GCPs (previously collected)</span>
-<span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\geoeye\ingested&quot;</span>
-<span class="n">gcp_seg</span> <span class="o">=</span> <span class="mi">4</span>
-
-<span class="n">rfmodel</span><span class="p">(</span> <span class="n">ingest_dir</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
-
-<span class="c">#Generate the epipolar images, which are used to triangulate the 3D coordinates for the DEM</span>
-<span class="n">pairing_method</span> <span class="o">=</span> <span class="s">&quot;max&quot;</span>
-<span class="n">epi_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\geoeye\epipolars&quot;</span>
-
-<span class="n">epipolar2</span><span class="p">(</span><span class="n">ingest_dir</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;max&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">epi_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
-
-<span class="c">#Automatically extract a Digital Surface Model from satellite stereo pairs</span>
-<span class="n">out_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\geoeye\epi_dems&quot;</span>
-<span class="n">geocoded_dsm</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\geoeye\geoeye_dsm.pix&quot;</span>
-<span class="n">dem_res</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span> <span class="p">]</span>
-
-<span class="n">autodem2</span><span class="p">(</span><span class="n">epi_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">geocoded_dsm</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
-         <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">dem_res</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-
-<span class="c">#convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM)</span>
-<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;D:\Python_Cookbook\geoeye\geoeye_dem.pix&quot;</span>
-<span class="n">feature_size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">]</span>
-<span class="n">gradient</span> <span class="o">=</span> <span class="p">[</span><span class="mi">35</span><span class="p">]</span>
-<span class="n">remove_bumps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
-<span class="n">fill_pits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
-<span class="n">smooth_dem</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">]</span>
-
-<span class="n">dsm2dtm</span><span class="p">(</span> <span class="n">geocoded_dsm</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dem_file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">feature_size</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="s">&quot;hilly&quot;</span><span class="p">,</span> <span class="n">remove_bumps</span><span class="p">,</span> <span class="n">fill_pits</span><span class="p">,</span> <span class="n">smooth_dem</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -492,12 +407,105 @@ math model (RPCs), which is then used to orthorectify the imagery</p>
 </div>
 </div></blockquote>
 </div>
+<div class="section" id="automatic-bundle-adjustment-and-orthorectification-gcps-previously-collected">
+<h2>Automatic Bundle Adjustment and Orthorectification (GCPs previously collected)<a class="headerlink" href="#automatic-bundle-adjustment-and-orthorectification-gcps-previously-collected" title="Permalink to this headline">¶</a></h2>
+<p>This recipe demonstrates how to automatically collect tie points from overlapping
+regions of images and perform a block bundle adjustment to ensure relative alignment
+between images</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pci.autotie2</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.tprefn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.crproj</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#Create OrthoEngine Project, which is required for the bundle adjustment</span>
+<span class="n">image_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\ompsat\ingest&quot;</span>
+<span class="n">work_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\kompsat\working\TiePoints&quot;</span>
+<span class="n">dbgc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="c">#Import GCPs from GCP segment 4 (see GCP collection recipes)</span>
+<span class="n">oeproj</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;import_oemodel.prj&quot;</span>
+<span class="n">projection</span> <span class="o">=</span> <span class="s">&quot;UTM 17 T D000&quot;</span> <span class="c">#D000 is WGS84</span>
+
+<span class="n">crproj</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">dbgc</span><span class="p">,</span> <span class="n">oeproj</span><span class="p">,</span> <span class="s">u&quot;RFI1&quot;</span><span class="p">,</span> <span class="n">projection</span><span class="p">)</span>
+
+<span class="c">#Run Automatic Tie Point Collection</span>
+<span class="n">tp_oeproj</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;output_oetp.prj&quot;</span>
+<span class="n">match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="c">#NIR channel is often yeilds best matching results</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\dem\gmted2010.pix&quot;</span>
+
+<span class="n">autotie2</span><span class="p">(</span> <span class="n">oeproj</span><span class="p">,</span> <span class="n">tp_oeproj</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">match_chan</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
+
+<span class="c">#Run automatic Tie Point Refinement</span>
+<span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+
+<span class="n">tprefn</span><span class="p">(</span><span class="n">tp_oeproj</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c">#Copy Math Model out to file</span>
+<span class="n">cpmmseg</span><span class="p">(</span><span class="n">tp_oeproj</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+<span class="c">#orthorectify images</span>
+<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\Kompsat\orthos&quot;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;4&quot;</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">]</span>
+<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;TIF&quot;</span>
+
+<span class="n">ortho2</span><span class="p">(</span> <span class="n">image_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_dir</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="automatic-dem-extraction-with-model-refinement-gcps-previously-collected">
+<h2>Automatic DEM Extraction with Model Refinement(GCPs previously collected)<a class="headerlink" href="#automatic-dem-extraction-with-model-refinement-gcps-previously-collected" title="Permalink to this headline">¶</a></h2>
+<p>This recipe demonstrates how to automatically extract a Digital Surface Model (DSM) from
+satellite imagery and  automatically filter out the surface features to create a bare-earth
+Digital Terrain Model (DTM)</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.rfmodel</span> <span class="kn">import</span> <span class="n">rfmodel</span>
+<span class="kn">from</span> <span class="nn">pci.epipolar2</span> <span class="kn">import</span> <span class="n">epipolar2</span>
+<span class="kn">from</span> <span class="nn">pci.autodem2</span> <span class="kn">import</span> <span class="n">autodem2</span>
+<span class="kn">from</span> <span class="nn">pci.dsm2dtm</span> <span class="kn">import</span> <span class="n">dsm2dtm</span>
+
+<span class="c">#Update the geometric accuracy of the input stereo pair based on the GCPs (previously collected)</span>
+<span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\ingest&quot;</span>
+<span class="n">gcp_seg</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+
+<span class="n">rfmodel</span><span class="p">(</span><span class="n">ingest_dir</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c">#Generate the epipolar images, which are used to triangulate the 3D coordinates for the DEM</span>
+<span class="n">pairing_method</span> <span class="o">=</span> <span class="s">&quot;max&quot;</span>
+<span class="n">epi_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\epipolars&quot;</span>
+
+<span class="n">epipolar2</span><span class="p">(</span><span class="n">ingest_dir</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;max&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">epi_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+<span class="c">#Automatically extract a Digital Surface Model from satellite stereo pairs</span>
+<span class="n">out_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\working\dsms&quot;</span>
+<span class="n">geocoded_dsm</span> <span class="o">=</span> <span class="s">r&quot;c:\geoeye\dsm_new\geoeye_dsm.pix&quot;</span>
+<span class="n">dem_res</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span> <span class="p">]</span>
+
+<span class="n">autodem2</span><span class="p">(</span><span class="n">epi_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span>
+         <span class="n">geocoded_dsm</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">dem_res</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c">#convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM)</span>
+<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\dsm_new\geoeye_dem.pix&quot;</span>
+<span class="n">feature_size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">150</span><span class="p">]</span>
+<span class="n">gradient</span> <span class="o">=</span> <span class="p">[</span><span class="mi">35</span><span class="p">]</span>
+<span class="n">remove_bumps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">fill_pits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">smooth_dem</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">]</span>
+
+<span class="n">dsm2dtm</span><span class="p">(</span> <span class="n">geocoded_dsm</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dem_file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">feature_size</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="s">&quot;hilly&quot;</span><span class="p">,</span>
+         <span class="n">remove_bumps</span><span class="p">,</span> <span class="n">fill_pits</span><span class="p">,</span> <span class="n">smooth_dem</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
 <div class="section" id="satellite-photogrammetric-batch-workflow-with-user-provided-dem-full-workflow">
 <h2>Satellite Photogrammetric Batch Workflow with user provided DEM - <strong>Full Workflow</strong><a class="headerlink" href="#satellite-photogrammetric-batch-workflow-with-user-provided-dem-full-workflow" title="Permalink to this headline">¶</a></h2>
-<p>This recipe is a complete batch satellite photogrammetric workflow that performs the following: Discovery and ingestion of multiple raw satellite
-images, automatically collects GCPs from a reference image, refines GCPs based on their accuracy, automatically
-collects Tie Points and refines them based on accuracy, performs a block bundle adjustment and orthorectifies
-the images.</p>
+<p>This recipe is a complete batch satellite photogrammetric workflow that performs the following: Discovers and ingests
+multiple raw satellite images, automatically collects GCPs from a reference image, refines GCPs based
+on their statistical accuracy, automatically collects tie points and refines them based on statistical
+accuracy, performs a block bundle adjustment and finally, orthorectifies the imagery.</p>
 <blockquote>
 <div><div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">fnmatch</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
@@ -510,7 +518,7 @@ the images.</p>
 <span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.exceptions</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">raw_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\RAWDATA&quot;</span>
+<span class="n">raw_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\RAWDATA&quot;</span>
 <span class="n">file_filter</span> <span class="o">=</span> <span class="s">&#39;*_bgrn_*.tif&#39;</span> <span class="c">#Looks for the Multispectral image only</span>
 
 <span class="n">input_files_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -523,7 +531,7 @@ the images.</p>
     <span class="k">for</span> <span class="n">raw_file</span> <span class="ow">in</span> <span class="n">input_files_list</span><span class="p">:</span>
 
         <span class="c">#Create link files of raw images so that they can store GCP segments</span>
-        <span class="n">ingest_link_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\ingest&quot;</span>
+        <span class="n">ingest_link_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\ingest&quot;</span>
         <span class="n">ingest_link_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">raw_file</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span> <span class="c">#gets the filename of the raw image (without extension)</span>
         <span class="n">ingest_link_file</span> <span class="o">=</span> <span class="n">ingest_link_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingest_link_filename</span>
 
@@ -539,12 +547,12 @@ the images.</p>
 
         <span class="c">#Setup required parameters for automatic GCP Collection</span>
         <span class="n">in_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>      <span class="c"># Channel from input raw file that is used for automatic GCP Collection</span>
-        <span class="n">ref_image</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\Ref\S-55-40_lr_2000.tif&quot;</span>
-        <span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\dem\gmted2010.pix&quot;</span>
+        <span class="n">ref_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\Ref\S-55-40_lr_2000.tif&quot;</span>
+        <span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\dem\gmted2010.pix&quot;</span>
         <span class="n">searchr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>      <span class="c"># Search radius. Default is to search in pixels</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">lasc</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span><span class="n">ingest_link_file</span><span class="p">,</span> <span class="n">in_channel</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">ref_image</span><span class="p">,</span> <span class="p">[],</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span>
+            <span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span><span class="n">ingest_link_file</span><span class="p">,</span> <span class="n">in_channel</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">ref_image</span><span class="p">,</span> <span class="p">[],</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span>
                             <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="n">searchr</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">print</span> <span class="n">e</span>
@@ -553,13 +561,12 @@ the images.</p>
 
 
         <span class="c">#Setup required parameters for automatic GCP refinement</span>
-        <span class="n">dbgc</span> <span class="o">=</span> <span class="n">lasc</span>
-        <span class="n">modeltyp</span> <span class="o">=</span> <span class="s">u&quot;RF&quot;</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>      <span class="c"># For rational function models (RF), you need to specify a polynomial order to use for calculating error</span>
+        <span class="n">model_type</span> <span class="o">=</span> <span class="s">u&quot;RF&quot;</span> <span class="c">#Rational Function Model</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">]</span>     <span class="c"># Continue to reject worse GCPs until RMSE falls below 0.5 pixel in x and y directions</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">gcprefn</span><span class="p">(</span><span class="n">ingest_link_file</span><span class="p">,</span> <span class="n">dbgc</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">modeltyp</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+            <span class="n">gcprefn</span><span class="p">(</span><span class="n">ingest_link_file</span><span class="p">,</span> <span class="n">gcp_seg</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">reject</span><span class="p">,</span> <span class="s">u&quot;NO&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
         <span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">print</span> <span class="n">e</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
@@ -570,11 +577,11 @@ the images.</p>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
 <span class="c">#Create OrthoEngine Project, which is required for the bundle adjustment</span>
-<span class="n">work_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\bundle_adj&quot;</span>
+<span class="n">work_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\working&quot;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
 
-<span class="n">dbgc</span> <span class="o">=</span> <span class="p">[</span><span class="n">lasc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">dbgc</span> <span class="o">=</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
 <span class="n">oeproj</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;import_oemodel.prj&quot;</span>
 <span class="n">projection</span> <span class="o">=</span> <span class="s">&quot;UTM 55 G D000&quot;</span> <span class="c">#D000 is WGS84</span>
 
@@ -582,7 +589,7 @@ the images.</p>
 
 <span class="c">#Run Automatic Tie Point Collection</span>
 <span class="n">tp_oeproj</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;output_oetp.prj&quot;</span>
-<span class="n">tp_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="c">#NIR channel is often yields best matching results</span>
+<span class="n">tp_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="c">#NIR channel often yields best matching results</span>
 
 <span class="n">autotie2</span><span class="p">(</span> <span class="n">oeproj</span><span class="p">,</span> <span class="n">tp_oeproj</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">tp_match_chan</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
 
@@ -595,7 +602,7 @@ the images.</p>
 <span class="n">cpmmseg</span><span class="p">(</span><span class="n">tp_oeproj</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
 <span class="c">#orthorectify images</span>
-<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\orthos&quot;</span>
+<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\orthos&quot;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ortho_dir</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ortho_dir</span><span class="p">)</span>
 
@@ -609,10 +616,11 @@ the images.</p>
 </div>
 <div class="section" id="satellite-photogrammetric-batch-workflow-with-dem-extraction-full-workflow">
 <h2>Satellite Photogrammetric Batch Workflow with DEM Extraction - <strong>Full Workflow</strong><a class="headerlink" href="#satellite-photogrammetric-batch-workflow-with-dem-extraction-full-workflow" title="Permalink to this headline">¶</a></h2>
-<p>This recipe is a complete batch satellite photogrammetric workflow that performs the following: Discovery and ingestion of multiple raw satellite
-images, automatically collects GCPs from a reference image, refines GCPs based on their accuracy, automatically
-collects Tie Points and refines them based on accuracy, performs a block bundle adjustment, DEM extraction and orthorectifies
-the images.</p>
+<p>This recipe is a complete batch satellite photogrammetric workflow that performs the following:
+Discovers and ingests multiple raw satellite images, automatically collects GCPs from a reference
+image, refines GCPs based on their statistical accuracy, automatically collects tie points and
+refines them based on statistical accuracy, performs a block bundle adjustment, performs
+DEM extraction and finally, orthorectifies the imagery.</p>
 <blockquote>
 <div><div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">fnmatch</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
@@ -628,7 +636,7 @@ the images.</p>
 <span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.exceptions</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">raw_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\RAWDATA&quot;</span>
+<span class="n">raw_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\RAWDATA&quot;</span>
 <span class="n">file_filter</span> <span class="o">=</span> <span class="s">&#39;*_bgrn_*.tif&#39;</span> <span class="c">#Looks for the Multispectral image only</span>
 
 <span class="n">input_files_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -641,7 +649,7 @@ the images.</p>
     <span class="k">for</span> <span class="n">raw_file</span> <span class="ow">in</span> <span class="n">input_files_list</span><span class="p">:</span>
 
         <span class="c">#Create link files of raw images so that they can store GCP segments</span>
-        <span class="n">ingest_link_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\ingest&quot;</span>
+        <span class="n">ingest_link_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\ingest&quot;</span>
         <span class="n">ingest_link_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">raw_file</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span> <span class="c">#gets the filename of the raw image (without extension)</span>
         <span class="n">ingest_link_file</span> <span class="o">=</span> <span class="n">ingest_link_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingest_link_filename</span>
 
@@ -657,8 +665,8 @@ the images.</p>
 
         <span class="c">#Setup required parameters for automatic GCP Collection</span>
         <span class="n">in_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>      <span class="c"># Channel from input raw file that is used for automatic GCP Collection</span>
-        <span class="n">ref_image</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\Ref\S-55-40_lr_2000.tif&quot;</span>
-        <span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\dem\gmted2010.pix&quot;</span>
+        <span class="n">ref_image</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\Ref\S-55-40_lr_2000.tif&quot;</span>
+        <span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\dem\gmted2010.pix&quot;</span>
         <span class="n">searchr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>      <span class="c"># Search radius. Default is to search in pixels</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -688,7 +696,7 @@ the images.</p>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
 <span class="c">#Create OrthoEngine Project, which is required for the bundle adjustment</span>
-<span class="n">work_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\bundle_adj&quot;</span>
+<span class="n">work_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\Working\bundle&quot;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
 
@@ -714,18 +722,18 @@ the images.</p>
 
 <span class="c">#Generate the epipolar images, which are used to triangulate the 3D coordinates for the DEM</span>
 <span class="n">pairing_method</span> <span class="o">=</span> <span class="s">&quot;max&quot;</span>
-<span class="n">epi_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\epipolars&quot;</span>
+<span class="n">epi_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\epipolars&quot;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">epi_dir</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">epi_dir</span><span class="p">)</span>
 
 <span class="n">epipolar2</span><span class="p">(</span><span class="n">ingest_link_dir</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;max&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">epi_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
 <span class="c">#Automatically extract a Digital Surface Model from satellite stereo pairs</span>
-<span class="n">epi_dem_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\epi_dems&quot;</span>
+<span class="n">epi_dem_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\epi_dems&quot;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">epi_dem_dir</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">epi_dem_dir</span><span class="p">)</span>
 
-<span class="n">geocoded_dsm</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\dsm_new\geoeye_dsm.pix&quot;</span>
+<span class="n">geocoded_dsm</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\dsm_new\geoeye_dsm.pix&quot;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">geocoded_dsm</span><span class="p">)):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">geocoded_dsm</span><span class="p">))</span>
 
@@ -735,7 +743,7 @@ the images.</p>
          <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">dem_res</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 
 <span class="c">#convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM)</span>
-<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\dsm_new\geoeye_dem.pix&quot;</span>
+<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\dsm_new\geoeye_dem.pix&quot;</span>
 <span class="n">feature_size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">150</span><span class="p">]</span>
 <span class="n">gradient</span> <span class="o">=</span> <span class="p">[</span><span class="mi">35</span><span class="p">]</span>
 <span class="n">remove_bumps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
@@ -745,7 +753,7 @@ the images.</p>
 <span class="n">dsm2dtm</span><span class="p">(</span> <span class="n">geocoded_dsm</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dem_file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">feature_size</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="s">&quot;hilly&quot;</span><span class="p">,</span> <span class="n">remove_bumps</span><span class="p">,</span> <span class="n">fill_pits</span><span class="p">,</span> <span class="n">smooth_dem</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#orthorectify images</span>
-<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\geoeye\orthos&quot;</span>
+<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\geoeye\orthos&quot;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ortho_dir</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ortho_dir</span><span class="p">)</span>
 
@@ -755,7 +763,7 @@ the images.</p>
         <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dem_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
 
 <span class="c">#Clean up unnecessary files and directories</span>
-<span class="n">del_dirs_list</span><span class="p">[</span><span class="n">epi_dem_dir</span><span class="p">,</span> <span class="n">epi_dir</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">ingest_link_dir</span><span class="p">]</span>
+<span class="n">del_dirs_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">epi_dem_dir</span><span class="p">,</span> <span class="n">epi_dir</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">ingest_link_dir</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">del_dir</span> <span class="ow">in</span> <span class="n">del_dirs_list</span><span class="p">:</span>
     <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">del_dir</span><span class="p">)</span>
 </pre></div>
@@ -783,9 +791,9 @@ the images.</p>
 <li><a class="reference internal" href="#automatic-gcp-collection-and-refinement-from-road-vector-layer">Automatic GCP Collection and refinement from road vector layer</a></li>
 <li><a class="reference internal" href="#subset-an-orthoengine-project">Subset an OrthoEngine Project</a></li>
 <li><a class="reference internal" href="#merge-multiple-orthoengine-projects-with-tie-points">Merge multiple OrthoEngine projects with tie points</a></li>
+<li><a class="reference internal" href="#satellite-orthorectification-with-gcps-previously-collected-batch-processing">Satellite Orthorectification with GCPs previously collected - <strong>Batch Processing</strong></a></li>
 <li><a class="reference internal" href="#automatic-bundle-adjustment-and-orthorectification-gcps-previously-collected">Automatic Bundle Adjustment and Orthorectification (GCPs previously collected)</a></li>
 <li><a class="reference internal" href="#automatic-dem-extraction-with-model-refinement-gcps-previously-collected">Automatic DEM Extraction with Model Refinement(GCPs previously collected)</a></li>
-<li><a class="reference internal" href="#satellite-orthorectification-with-gcps-previously-collected-batch-processing">Satellite Orthorectification with GCPs previously collected - <strong>Batch Processing</strong></a></li>
 <li><a class="reference internal" href="#satellite-photogrammetric-batch-workflow-with-user-provided-dem-full-workflow">Satellite Photogrammetric Batch Workflow with user provided DEM - <strong>Full Workflow</strong></a></li>
 <li><a class="reference internal" href="#satellite-photogrammetric-batch-workflow-with-dem-extraction-full-workflow">Satellite Photogrammetric Batch Workflow with DEM Extraction - <strong>Full Workflow</strong></a></li>
 </ul>

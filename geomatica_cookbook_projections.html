@@ -52,7 +52,8 @@
             
   <div class="section" id="projections">
 <h1><strong>Projections</strong><a class="headerlink" href="#projections" title="Permalink to this headline">¶</a></h1>
-<p>This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.</p>
+<p>This section provides some basic recipes for reprojecting rasters and vectors, as well as, resampling
+imagery from the native resolution to a new user-defined resolution (ground sampling distance (GSD)).</p>
 <div class="section" id="create-projection-for-an-existing-image-file">
 <h2>Create projection for an existing image file<a class="headerlink" href="#create-projection-for-an-existing-image-file" title="Permalink to this headline">¶</a></h2>
 <blockquote>
@@ -66,14 +67,14 @@ Use the Python interpreter in the terminal/console for quickly checking the inst
 <div class="section" id="reproject-an-image-from-one-coordinate-system-to-a-different-coordinate-system">
 <h2>Reproject an image from one coordinate system to a different coordinate system<a class="headerlink" href="#reproject-an-image-from-one-coordinate-system-to-a-different-coordinate-system" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This example explicitly imports the pansharp2 function from the pansharp2 module and imports
-all onjects and functions from the ortho2 module</p>
+<div><p>This recipe uses a single Geomatica function to reproject an image from a UTM NAD83
+projected coordinate system to a Latitude and Longitude WGS84 geographic coordinate system</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.reproj2</span> <span class="kn">import</span> <span class="n">reproj2</span>
 
-<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\image.pix&quot;</span> <span class="c">#UTM WGS84 projection</span>
-<span class="n">reproj_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\reproj_image.pix</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;C:\projection\landsat8_ms.pix&quot;</span> <span class="c">#UTM NAD83 projection</span>
+<span class="n">reproj_file</span> <span class="o">=</span> <span class="s">r&quot;C:\projection\reproj_image2.pix&quot;</span>
 <span class="n">resolution</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="n">map_units</span> <span class="o">=</span> <span class="s">&quot;Long/Lat E122&quot;</span> <span class="c">#output will be longitude and latitude with NAD83 Ellipse</span>
+<span class="n">map_units</span> <span class="o">=</span> <span class="s">&quot;Long/Lat D000&quot;</span> <span class="c">#output will be longitude and latitude with WGS84</span>
 
 <span class="n">reproj2</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">reproj_file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
         <span class="p">[],</span> <span class="n">resolution</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span><span class="p">,</span> <span class="n">map_units</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
@@ -84,17 +85,15 @@ all onjects and functions from the ortho2 module</p>
 <div class="section" id="reproject-a-vector-layer-from-one-coordinate-system-to-a-different-coordinate-system">
 <h2>Reproject a vector layer from one coordinate system to a different coordinate system<a class="headerlink" href="#reproject-a-vector-layer-from-one-coordinate-system-to-a-different-coordinate-system" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Python prints help documentation to the terminal/console for the specified function. This includes information
-about the signature of the function (arguments that need to be passed) and information about what the function
-does. Furthermore, the help document includes information about what input data is required and what output is
-produced.</p>
-<p>It is best to access this directly with the python interpreter in Geomatica&#8217;s Focus or using a terminal/console</p>
+<div><p>This recipe uses a single Geomatica function to reproject a vector layer from a UTM NAD83
+projected coordinate system to a Latitude and Longitude WGS84 geographic coordinate system</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.reproj2</span> <span class="kn">import</span> <span class="n">reproj2</span>
 
-<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\vectors.pix&quot;</span> <span class="c">#UTM WGS84 projection</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;C:\projection\toronto_vector.pix&quot;</span> <span class="c">#UTM NAD83 projection</span>
 <span class="n">vector_layers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">reproj_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\reproj_vectors.pix</span>
-<span class="n">map_units</span> <span class="o">=</span> <span class="s">&quot;Long/Lat E122&quot;</span> <span class="c">#output will be longitude and latitude with NAD83 Ellipse</span>
+<span class="n">reproj_file</span> <span class="o">=</span> <span class="s">r&quot;C:\projection\reproj_vectors.pix&quot;</span>
+<span class="n">resolution</span><span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
+<span class="n">map_units</span> <span class="o">=</span> <span class="s">&quot;Long/Lat D000&quot;</span> <span class="c">#output will be longitude and latitude with WGS83</span>
 
 <span class="n">reproj2</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="p">[],</span> <span class="n">vector_layers</span><span class="p">,</span> <span class="s">&quot;VEC&quot;</span><span class="p">,</span> <span class="n">reproj_file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
         <span class="p">[],</span> <span class="n">resolution</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">map_units</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
@@ -105,10 +104,8 @@ produced.</p>
 <div class="section" id="resample-image-channels">
 <h2>Resample Image channels<a class="headerlink" href="#resample-image-channels" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-function. The main behaviour of this action is that the script will continue to run if the exception is called.
-This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-to process the other files</p>
+<div><p>This recipe demonstrates how to change the ground sampling distance (GSD) or image resolution
+from the inpu resolution to 4m resolution, using a cubic convolution resampling method.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.resamp</span> <span class="kn">import</span> <span class="n">resamp</span>
 
 <span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\image.pix&quot;</span> <span class="c">#2m resolution data</span>

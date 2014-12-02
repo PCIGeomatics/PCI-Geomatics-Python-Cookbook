@@ -1,23 +1,30 @@
 **Geospatial Image Processing**
 ===============================
-This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+This section provides some basic recipes for image processing with Geomatica's python functions.
+Included in this section are recipes for pansharpening and atmospheric correction.
+
+Many more to come... 
 
 Pansharpen satellite images
 --------------------------------------            
-    This recipe provides a simple way to pansharpen level 2 aerial imagery in order 
-    to convert it to level 3 imagery.
+    This recipe provides a simple way to pansharpen the multispectral and
+    panchromatic bands of a satellite image. Specifically, this recipe is pansharpening
+    Landsat-8 ortho images downloaded directly from the 
+    `USGS Global Visual Viewer (glovis) <http://glovis.usgs.gov/>`_
+    
+    Note: the images must be coregistered
        
     .. code-block:: python
     
         from pci.pansharp2 import pansharp2
-        
-        ms_file = "c:\geoeye_raw\po_311159_0000000\po_311159_bgrn_0000000.tif"
-        pan_file = "c:\geoeye_raw\po_311159_0000000\po_311159_pan_0000000.tif"
+
+        ms_file = r"C:\landsat8\LC80150292013111LGN01\LC80150292013111LGN01_MTL.txt-MS"
+        pan_file = r"C:\landsat8\LC80150292013111LGN01\LC80150292013111LGN01_MTL.txt-PAN"
         ms_channels = [] #takes all input channels by default
         pan_channel = [] 
-        pansharp_file ="c:\geoeye_processed\psh_po_311159_0000000.pix" 
-        
-        
+        pansharp_file = r"C:\landsat8\pansharp\psh_landsat8.pix" 
+
+
         pansharp2(ms_file, ms_channels, [], pan_file, pan_channel, pansharp_file, 
                   [], "", "", "", "", "")
         
@@ -39,67 +46,7 @@ Co-register MS with PAN image and then pansharpen
        
     .. code-block:: python
     
-        from pci.link import link
-        from pci.autogcp2 import autogcp2
-        from pci.gcprefn import gcprefn
-        from pci.rfmodel import rfmodel
-        from pci.ortho2 import ortho2
-        from pci.pansharp2 import pansharp2
-        
-        #get raw inputs
-        ms_raw_file = r"c:\kompsat3\K3_20131003174133_07365_20171339_L1R_Aux.xml-MS"
-        ms_channels = "[1,2,3,4]
-        pan_raw_file = r"c:\kompsat3\K3_20131003174133_07365_20171339_L1R_Aux.xml-PAN"
-        pan_channel = [1]
-        
-        #create link .pix file for MS image
-        ms_link_file = r"c:\kompsat3_working\ms_kompsat3.pix"
-        
-        link(ms_raw_file, ms_link_file, [])
-        
-        
-        #Perform Automatic GCP collection on MS image using PAN image as reference
-        raw_match_chan = [4]       
-        ref_match_chan = [1]
-        reference_image = pan_raw_file #this line is redundant, but makes code easier to read
-        dem = r"C:\kompsat3\reference\dem_file.pix"
-        gcp_search_radius = [50]
-
-        gcp_seg = autogcp2(ms_link_file, raw_match_chan, u"", [], [], reference_image, ref_match_chan, dem,
-                        [], [], u"", u"", [], u"", u"", gcp_search_radius, u"", [], u"", [])
-                        
-
-        #Automatically refine GCPs based on RMSE
-        model_type = u"RF"    #rational function model is often best for newer sensors with good RPCs
-        order = [0]           
-        reject = [5,0.5,0.5]  #Continue to reject worse GCPs until RMSE falls below 0.5 pixel in x and y directions
-        refined_gcps = []
-        
-        gcprefn(ms_link_file, [gcp_seg], [], [], model_type, order, 
-                reject, u"NO", refined_gcps, [])
-        
-        
-        #Calculate the mathematical model from GCPs (rational function model)
-        gcp_seg = [refined_gcps[0]] #use GCPs from the output GCP segment from GCPREFN
-
-        rfmodel( ms_link_file, gcp_seg, [], [1], "" )
-
-        
-        #co-register the MS image to PAN image
-        ortho_ms_file = r"c:\kompsat3\ortho\ortho_ms_kompsat3.pix"
-        mapunits = ""
-        res_x = "2.8"
-        res_y = "2.8"
-        
-        ortho2( ms_link_file, [], [], [], "", ortho_ms_file, "tif", "", [], "", "", "", "", [],
-               "", mapunits, "4", "4", dem, [], [], "", "", [], "", [], "" )
-        
-        
-        #pansharpen the now coregistered MS and PAN imagery
-        pansharp_file ="c:\kompsat3_processed\psh_kompsat3.pix"
-        
-        pansharp2(ortho_ms_file, [], [], pan_raw_file, [], pansharp_file, 
-                  [], "", "", "", "", "")
+        #UNDER CONSTRUCTION
 
 
 Level 2 to Level 3 Airphoto Processing (Pansharpening)
@@ -152,7 +99,9 @@ Level 2 to Level 3 Airphoto Processing (Pansharpening)
                 
         #optionally convert it to a TIF image
         level3_image_tif = r"E:\Esri_cloud_Aerial\demo_DryRun\output_level3\00025-PSH.tif"
-        fexport(level3_image, level3_image_tif, [], [], [], [], [], [], "TIF", "")
+        channels = [1,2,3,4]
+
+        fexport(level3_image, level3_image_tif, [], channels, [], [], [], [], "TIF", "")
             
 
 Cloud Masking & Haze Removal
@@ -167,13 +116,16 @@ Cloud Masking & Haze Removal
 
 Calculate Top-of-atmosphere (TOA) Reflectance image
 ---------------------------------------------------           
-    This recipe provides a simple way to pansharpen level 2 aerial imagery in order 
-    to convert it to level 3 imagery.
+    This recipe performs a top-of-atmosphere (TOA) calculation for satellite imagery. The output
+    image is a TOA reflectance image, where pixels will be provided a value between 0 and 100%
        
     .. code-block:: python
         
-        raw_dn_image = r"c:\kompsat3\K3_20131003174133_07365_20171339_L1R_Aux.xml-MS"
+        from pci.dn2toa import dn2toa
+        
+        #Run Top of Atmosphere Reflectance computation
+        raw_dn_image = r"D:\PCI_Work\Demos\Demos\GXL\GXL-S\K3\RAW\K3_20131003174133_07365_20171339_L1R_Bundle\K3_20131003174133_07365_20171339_L1R_Aux.xml-MS"
         channels = [1,2,3,4]
-        toa_image = r"c:\kompsat3_toa\kompsat3_toa.pix"
+        toa_image = r"D:\PCI_Work\Demos\Demos\GXL\GXL-S\K3\toa\kompsat3_toa.pix"
         
         dn2toa(raw_dn_image, channels, "", "", "", [], "Reflectance", toa_image, "", "")       

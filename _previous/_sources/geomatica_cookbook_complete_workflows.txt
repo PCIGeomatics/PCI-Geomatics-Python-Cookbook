@@ -1,0 +1,674 @@
+**Workflow Examples for the Left-side of Your Brain**
+=====================================================
+This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+
+Co-register image stack
+-----------------------
+    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
+    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+
+    .. code-block:: python
+
+        '''**************************************************************
+        
+               -= PCI Geomatics(C) Platform Solutions =-
+              Formosat-2 Automatic Co-Registration Workflow
+        
+        ***************************************************************'''
+        
+        from pci.autogcp2 import autogcp2
+        from pci.rfmodel import rfmodel
+        from pci.gcprefn import gcprefn
+        from pci.satmodel import *
+        from pci.ortho2 import ortho2
+        from pci.fimport import *
+        from pci.cdformosat import *
+        from pci.exceptions import *
+        from pathcheck import *
+        from sys import argv
+
+        import calendar, time
+
+        import ntpath
+        import locale
+        import os
+
+        locale.setlocale( locale.LC_ALL, "" )
+        locale.setlocale( locale.LC_NUMERIC, "C" )
+
+        def fail_log(fail_file, out_dir):
+        # ------------------------------------------------
+        #  Create a log file
+        # ------------------------------------------------
+        # The Log file creates a list of the files that failed to orthorectify.
+        # The log is stored in a text file and is located in the output directory
+        # specified by the user.  
+         
+            fail_log = open(out_dir + "/fail_log.txt", "a+")
+            fail_log.write(fail_file + "\n")
+            fail_log.close()
+            
+
+        def ingest_formosat(in_file, out_file, channel_list): 
+        # ------------------------------------------------
+        #  Ingest Formosat with Rigorous Model
+        # ------------------------------------------------
+
+            fili = in_file
+            filo = out_file
+            linkfile = u"NO"
+            cdic = channel_list
+            tex1 = u""
+            
+            try:
+                cdformosat(fili, filo, linkfile, cdic, tex1)
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+
+               
+        def gcp_work(in_file, ref_image, dem_file):
+        # ------------------------------------------------
+        #  GCP Collection and Refinement
+        # ------------------------------------------------
+        # This section performs automatic GCP collection from a reference source.
+        # In the first iteration of the workflow, the reference image must be a 3rd party
+        # reference dataset (e.g. Landsat). In this first iteration, only the first image
+        # in the image stack will be orthorectified (based on GCPs collected from the 3rd
+        # reference image.  
+        # In the second iteration, the script will use the ortho from the first image in
+        # the stack as a reference to collect GCPs for the remaining images in the stack
+            
+            print "Starting GCP Collection"
+            print ""
+            
+            mfile = in_file
+            dbic = [1]      # Integer
+            srcbgd = u"" 
+            mmseg = []      # Integer
+            dbgc = []      # Integer
+            filref = ref_image 
+            dbic_ref = []      # Integer
+            filedem = dem_file
+            dbec = []      # Integer
+            backelev = []     # Float
+            elevref = u"" 
+            elevunit = u"" 
+            elfactor = []     # Float
+            smplsrc = u"" 
+            algo = u"" 
+            searchr = [50]      # Integer
+            searchun = u"" 
+            minscore = [0.75]     # Float
+            proc = u"" 
+            numgcps = []      # Integer
+
+            try:
+                autogcp2(mfile, dbic, srcbgd, mmseg, dbgc, filref, dbic_ref, filedem, dbec, backelev, elevref, elevunit, elfactor, smplsrc, algo, searchr, searchun, minscore, proc, numgcps)
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+
+            print ""
+            print "Automatic GCP Refinement Started"
+            print ""
+            
+            file =  in_file
+            dbgc = [3]      # Integer
+            mmseg = []      # Integer
+            orbit = []      # Integer
+            modeltyp = u"SAT" 
+            order = [0]      # Integer
+            reject = [5,0.5,0.5]     # Float
+            writecp = u"NO" 
+            lasc = []      # Integer
+            imstat = []     # Float
+
+            try:
+                gcprefn(file, dbgc, mmseg, orbit, modeltyp, order, reject, writecp, lasc, imstat)
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+
+             
+        def rigorous_ortho(in_mfile, out_ortho_mfile, dem_file, output_folder):
+        # ------------------------------------------------
+        #  Calculate Rigorous Model and Orthorectify
+        # ------------------------------------------------
+        # This function simply calculates the physical model (toutin's model) and then orthorectifies
+        # all of the data that is passed to this function.
+
+            print "Starting Rigorous Model Calculation"
+            print ""
+         
+            mfile = in_mfile
+            dbgc = [4]      # Integer
+            mmseg = []      # Integer
+            orbit = []
+            mapunits = u"" 
+
+            try:
+                satmodel(mfile, dbgc, orbit, mmseg,  mapunits)
+            except PCIException, e:
+
+                fail_log(in_mfile, output_folder) 
+                
+            except Exception, e:
+                print e
+                
+                fail_log(in_mfile, output_folder) 
+
+            print "Starting Orthorectification"
+            print ""
+
+            mfile = in_mfile 
+            dbic = []      # Integer
+            mmseg = []      # Integer
+            dbiw = []      # Integer
+            srcbgd = u"" 
+            filo = out_ortho_mfile 
+            ftype = u"" 
+            foptions = u"" 
+            outbgd = []     # Float
+            ulx = u"" 
+            uly = u"" 
+            lrx = u"" 
+            lry = u"" 
+            edgeclip = []      # Integer
+            tipostrn = u"" 
+            mapunits = u"" 
+            bxpxsz = u"8" 
+            bypxsz = u"8" 
+            filedem = dem_file
+            dbec = []      # Integer
+            backelev = []     # Float
+            elevref = u"" 
+            elevunit = u"" 
+            elfactor = []     # Float
+            proc = u"" 
+            sampling = []      # Integer
+            resample = u"" 
+
+            try:
+                ortho2(mfile, dbic, mmseg, dbiw, srcbgd, filo, ftype, foptions, outbgd, ulx, uly, lrx, lry, edgeclip, tipostrn, mapunits, bxpxsz, bypxsz, filedem, dbec, backelev, elevref, elevunit, elfactor, proc, sampling, resample)
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+          
+
+        # ------------------------------------------------
+        #  User Input Parameters 
+        # ------------------------------------------------
+        # This section provides user prompts, which allows the user to provide the
+        # paths to input data, reference data and where the output data shouold be
+        # written to.
+
+        print ""  
+        print '***************************************************************'
+        print '                   Setup Working Environment'
+        print '***************************************************************'
+
+        print ""
+        in_dir = raw_input('Specify the input directory: ')
+        verify_dir(in_dir)
+
+        files_list = get_inputs(in_dir, '*.tif', 'NO')
+        print ""
+
+        out_root_dir = raw_input('Specify the output directory where outputs will be written to: ')
+        print ""
+
+        verify_dir(out_root_dir)
+        print ""
+
+        ref = raw_input("Specify the reference image for auto co-registration: ")
+        print ''
+
+        dem = raw_input("Specify the DEM (Digital Elevation Model) for auto co-registration: ")
+        print ''
+
+        for validate in [ref, dem]: # Validates that the reference data exists
+            validate_files(validate)
+            
+        print ""
+        print "User Parameters Verified!" 
+        print ""
+
+        start_time = calendar.timegm(time.gmtime()) #Current time in seconds since epoch
+
+        # ------------------------------------------------
+        #  Co-Registration control
+        # ------------------------------------------------
+        # This block calls the functions used to co-register the data in the stack
+        # Two iterations are required. In the first iteration of the workflow, the reference 
+        # image must be a 3rd party reference dataset (e.g. Landsat). In this first iteration, 
+        # only the first image in the image stack will be orthorectified (based on GCPs 
+        # collected from the 3rd reference image.  
+        # In the second iteration, the script will use the ortho from the first image in
+        # the stack as a reference to collect GCPs for the remaining images in the stack for
+        # orthorectification
+
+        for iter in range(0,2):
+            if iter == 0:
+                print ""
+                print "First iteration through Co-registration Workflow"
+                print ""
+                
+                master_ingest_dir = out_root_dir + '/master/ingest/'
+                verify_dir(master_ingest_dir)
+                
+                master_ingest_filename = str(ntpath.basename(files_list[0]))
+                master_ingest_file = master_ingest_dir + master_ingest_filename + '.pix'
+                
+                print "Input file is: ", str(files_list[0])
+                print "Ingest file set to: ", master_ingest_file
+                ingest_formosat(files_list[0], master_ingest_file, [1,2,3,4] )
+                
+                gcp_work(master_ingest_file, ref, dem)
+                
+                master_ortho_dir = out_root_dir + '/master/ortho/'
+                verify_dir(master_ortho_dir)
+                
+                master_ortho_filename = "o" + master_ingest_filename
+                master_ortho_file = master_ingest_dir + master_ortho_filename + '.pix'
+                
+                rigorous_ortho(master_ingest_file, master_ortho_file, dem, out_root_dir)
+                
+            else:
+                print ""
+                print "Second iteration through Co-registration Workflow"
+                print ""
+                
+                stack_ingest_dir = out_root_dir + '/stack/ingest/'
+                verify_dir(stack_ingest_dir)
+                
+                stack_ortho_dir = out_root_dir + '/stack/ortho/'
+                verify_dir(stack_ortho_dir)
+                
+                for input_image in files_list:
+
+                    stack_ingest_filename = str(ntpath.basename(input_image))
+                    stack_ingest_file = stack_ingest_dir + stack_ingest_filename + '.pix'
+                    
+                    print "Input file is: ", input_image
+                    print ""
+                    print "Ingest file set to: ", master_ingest_file
+                    ingest_formosat( input_image, stack_ingest_file, [1,2,3,4] )
+
+                    gcp_work(stack_ingest_file, master_ortho_file, dem)
+
+                    stack_ortho_filename = "o" + stack_ingest_filename
+                    stack_ortho_file = stack_ortho_dir + stack_ortho_filename + '.pix'
+                    
+                    rigorous_ortho(stack_ingest_file, stack_ortho_file, dem, out_root_dir)
+
+
+        print ""
+        print "***************************************************************"
+        print "               Completed Co-Registration Run"
+        print "***************************************************************"
+        print ""        
+
+        end_time = calendar.timegm(time.gmtime()) #Current time in seconds since epoch
+
+        process_time = end_time - start_time
+
+        print "Total Processing took " + str(process_time) + " seconds."
+         
+        
+Automatically identify and calculate volume of new stockpiles
+-------------------------------------------------------------
+    Python prints help documentation to the terminal/console for the specified function. This includes information
+    about the signature of the function (arguments that need to be passed) and information about what the function
+    does. Furthermore, the help document includes information about what input data is required and what output is 
+    produced.
+    
+    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
+    
+
+    .. code-block:: python
+
+        #**************************************************** 
+        #
+        # Automatic Extraction and Volumetric Calculation of 
+        # New Stock Piles
+        #        
+        #         Mining and Construction Application
+        #
+        #****************************************************
+
+        ''' Workflow - Primary Operations
+        1. Ingest Imagery (Geomatica)
+        2. Generate DSMs EPIPOLAR2 & AUTODEM2 (Geomatica)
+        3. Calculate Change Image CHDETOP (Geomatica)
+        4. Extract New Stockpiles EXPOLRAS (Geomatica)
+        5. Calculate Sum of all pixels under each polygon Zonal Statistics (ArcPy)
+        6. Calculate unit conversion coefficient (m^3)
+        7. Convert to Polygon with Volume measures in Attributes Table'''
+
+        from pci.camimport import camimport
+        from pci.eoimport import *
+        from pci.epipolar2 import *
+        from pci.autodem2 import *
+        from pci.crproj import crproj
+        from pci.exceptions import *
+        from pci.link import link
+        from pci.cpmmseg import cpmmseg
+        from pci.chdetop import *
+        from pci.expolras import *
+        from pci.iia import *
+        from pci.fexport import *
+        from pci.ras2poly import *
+        from pathcheck import *
+        from sys import argv
+        import locale
+        import os
+        import shutil
+        import calendar, time
+        import ntpath
+
+        import arcpy
+        from arcpy import env
+        from arcpy.sa import *
+        import arcpy.mapping
+        print "ArcPy loaded successfully!"
+
+        def set_working_env():
+            #**************************************************** 
+            #           Get and verify User Parameters
+            #**************************************************** 
+            
+            #Get Input data locations from users
+            test_raw_dir = raw_input("Folder to your raw images for building \"Test\" DSM: ")
+            ref_raw_dir = raw_input("Folder to your raw images for building \"Reference\" DSM: ")
+            mask = raw_input("Provide mask file: ")
+            in_dir_list = [test_raw_dir, ref_raw_dir] 
+            
+            #create Output_root_folder
+            output_root_dir = raw_input("Specify the output root directory: ")
+            verify_dir(output_root_dir)
+            
+            #create working directories
+            working_dir_test = output_root_dir + os.sep + 'working' + os.sep + 'test'
+            verify_dir(working_dir_test)
+            working_dir_ref = output_root_dir + os.sep + 'working' + os.sep + 'ref'
+            verify_dir(working_dir_ref)
+            working_dir_analysis = output_root_dir + os.sep + 'working' + os.sep + 'analysis'
+            verify_dir(working_dir_analysis)
+            
+            #create results directory and 
+            results_dir = output_root_dir + os.sep + 'output'
+            verify_dir(results_dir)
+                
+            return in_dir_list, working_dir_test, working_dir_ref, working_dir_analysis, \
+            results_dir, mask
+                
+                
+        def ap_ingest(raw_dir, working_dir):
+            #**************************************************** 
+            #            Import/Ingest Raw Airphotos
+            #**************************************************** 
+            
+            raw_image_list = get_inputs(raw_dir, "*.tif", "NO")
+            
+            verify_dir(working_dir)
+            
+            ingested_dir = working_dir + os.sep + "ingested"
+            verify_dir(ingested_dir)
+            
+            #Create Link file
+            for raw_image in raw_image_list:
+                fili = raw_image
+                file_no_extension = os.path.splitext(raw_image)[0]
+                ingested_image = ingested_dir + os.sep + ntpath.basename(file_no_extension)
+                filo = ingested_image + ".pix"
+                
+                try:
+                    link( fili, filo, [] )
+                except PCIException, e:
+                    print e
+                except Exception, e:
+                    print e
+            
+            #return ingested_dir, working_dir
+            
+
+        def config_oe_prj(raw_dir, working_dir):
+            #Create OrthoEngine project file
+            mfile = working_dir + os.sep + "ingested" + os.sep + "*.pix"
+            oeproj = working_dir + os.sep + "oe_ref.prj"
+            mapunits = "UTM 17 D122"
+            
+            try:
+                crproj( mfile, [], oeproj, "APDU", mapunits )
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+            
+            #Import Camera Parameters 
+            camfile = raw_dir + os.sep + "camera_calib.xml"
+            oe_final = working_dir + os.sep + "oe_configured.prj"
+            
+            try:
+                camimport( oeproj, camfile, oe_final )
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e    
+            
+            #Import Exterior Orientation File 
+            eofile = raw_dir + os.sep + "eo.txt"
+            mapunits = "UTM 17 D122"
+            
+            try:
+                eoimport( oe_final, eofile, [3], mapunits, "", [], [], "" )
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+                
+            return oe_final
+            
+                
+        def extract_dsm(final_oe_proj, work_dir, dsm_type):
+            #**************************************************** 
+            #            Extract Digital Surface Model
+            #****************************************************
+            ingested_dir = work_dir + os.sep + "ingested"
+            ingest_image_list = get_inputs(ingested_dir, "*.pix", "NO")
+            
+            #Create math model from OE to ingested images
+            for ingest_image in ingest_image_list:
+                oeproj = final_oe_proj
+                file = ingest_image
+                
+                try:
+                    cpmmseg(oeproj, file, [])
+                except PCIException, e:
+                    print e
+                except Exception, e:
+                    print e
+            
+            #Set Epipolar Parameters
+            mfile = ingested_dir  
+            epi_outdir = work_dir + os.sep + 'epipolars'
+            
+            verify_dir(epi_outdir)
+
+            try:
+                epipolar2( mfile, [1,2,3], [], [], u"", u"opt", [],
+                          [1], epi_outdir, [0], u"", u"", [1024] )
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+
+            dsm_outdir = work_dir + os.sep + 'dsm_working'
+            mfile = epi_outdir 
+            outdir = dsm_outdir  
+            filedem = work_dir + os.sep + "dsm_" + dsm_type + ".pix"                   
+            pxszout = [0.9, 0.9]       
+            
+            verify_dir(dsm_outdir)
+            
+            autodem2( mfile, [1], [], [], [], [], 'high',
+                    'hilly', '32r', [2], 'yes', 'no', 'no', '', outdir,
+                    filedem, '', 'UTM 17 D122', [], [], pxszout, 'blend' )
+            
+            #This block is here, because of a bug. It is a workaround.
+            filedem_no_extension = os.path.splitext(filedem)[0]
+            new_filedem = filedem_no_extension + "_temp.pix"
+            shutil.move(filedem, new_filedem )
+            
+            return new_filedem
+            
+        def change_extract(test_dem, ref_dem, mask_file, analysis_dir):
+            #**************************************************** 
+            #           Change Detection and Extraction
+            #****************************************************
+            dsm_diff = analysis_dir + os.sep + "stock_diff.pix"
+            new_stockpiles = analysis_dir + os.sep + "stockpiles.pix"
+            
+            try:
+                #Transfer the vector mask to the test image 
+                iia( mask_file, test_dem, [2], [] ) 
+                
+                #Run Optical Change Detection to get DSM difference image (elevation change)
+                chdetop( test_dem, [1], ref_dem, [1], dsm_diff, "chandiff", "", "", [3], test_dem, "pix", "" )
+                
+                #Extract stockpiles as polygons, as determined by elevation change in the AOI (determined by mask)
+                expolras( dsm_diff, [1], "pixelvalue", [1.2, 100], [35], [], new_stockpiles, "pix", "" )
+            
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+
+            #Export the analysis files for use in ArcPy 
+            
+            tif_stock_diff = analysis_dir + os.sep + "stock_diff.tif"
+            shp_stockpiles = analysis_dir + os.sep + "stockpiles.shp"
+            
+            try:
+                fexport( dsm_diff, tif_stock_diff, [870, 1404, 350, 350], 
+                         [1], [], [], [], [], "TIF", "" )
+                
+                fexport( new_stockpiles, shp_stockpiles, [], [], [], [2], [], [], "shp", "" )
+            
+            except PCIException, e:
+                print e
+            except Exception, e:
+                print e
+                
+            return tif_stock_diff, shp_stockpiles
+            
+
+        def calc_area(stock_diff, stockpiles_vec, analysis_dir):
+            #**************************************************** 
+            #           Calculate volume for each stockpile
+            #****************************************************   
+            env.worspace = analysis_dir
+            arcpy_work_dir = analysis_dir + os.sep + "arcpy_work"
+            verify_dir(arcpy_work_dir)
+            
+            # Execute ZonalStatistics
+            arcpy.CheckOutExtension("Spatial")
+            outZonalStatistics = ZonalStatistics(stockpiles_vec, "PixelCount", stock_diff, "SUM", "NODATA")
+              
+            zonal_stats_file = arcpy_work_dir + os.sep + "stockpile_sum.tif"
+            outZonalStatistics.save(zonal_stats_file)
+
+            #Convert sum to volume measure in m^3 (pixel size is 0.9m)
+            outTimes = Raster(zonal_stats_file) * 0.81
+            
+            zonal_stats_m_cubed = arcpy_work_dir + os.sep + "stockpile_vol_m3.tif"
+            outTimes.save(zonal_stats_m_cubed)
+            
+            #Convert raster from 64bit to 32bit float
+            zonal_stats_m_cubed_32 = arcpy_work_dir + os.sep + "stockpile_vol_m3_32f.tif"
+            arcpy.CopyRaster_management(zonal_stats_m_cubed, zonal_stats_m_cubed_32,"","0","0","","","32_BIT_FLOAT")
+            
+            #Convert raster to polygons
+            stockpiles = analysis_dir + os.sep + "stockpiles_vol_m3.pix"
+            expolras( zonal_stats_m_cubed_32, [1], "pixelvalue", [10], [], [], stockpiles, "pix", "" )
+
+
+        def prepare_output(root_dir):
+
+            print "Preparing output files"
+            
+            in_file = r"D:\live_webinar\GeomaticaArcGIS_Mining\Misc\ag\NewStockPiles_Volume.mxd"
+            output_file = root_dir + os.sep + "NewStockPiles.mxd" 
+            
+            shutil.copy( in_file, output_file )
+            
+            print ""
+            print ""
+            print "Opening ArcGIS Project and Centering on Construction Site..."
+            os.startfile(output_file)
+            
+            '''final_layers_dir = results_dir + os.sep + 'final_layers'''
+
+
+        #**************************************************** 
+        #                   Start Script
+        #****************************************************
+        #Run the set_working_env function, responsible for acquiring input information,
+        #setting up output and working directories. The directories of interest are passed
+        #back to the following variables
+        in_dirs, working_test, working_ref, working_analysis, result_root_dir, mask = set_working_env()
+
+        start_time = calendar.timegm(time.gmtime()) #Current time in seconds since epoch
+
+        for input_dir in in_dirs:
+            #print in_dirs.index(input_dir)
+            if in_dirs.index(input_dir) == 0:
+                ap_ingest(input_dir, working_test)
+                final_oe_prj = config_oe_prj(input_dir, working_test)
+                out_dsm_test = extract_dsm(final_oe_prj, working_test, 'test')
+            elif in_dirs.index(input_dir) == 1:
+                ap_ingest(input_dir, working_ref)
+                final_oe_prj = config_oe_prj(input_dir, working_ref)
+                out_dsm_ref = extract_dsm(final_oe_prj, working_ref, 'ref')
+            else:
+                print "Something went wrong"
+                sys.exit()    
+        '''
+        out_dsm_test = working_test + os.sep + "dsm_test_temp.pix"
+        out_dsm_ref = working_ref + os.sep + "dsm_ref_temp.pix"'''
+                
+        stockpile_diff_file, vec_stockpiles = change_extract( out_dsm_test, out_dsm_ref, mask, working_analysis )
+        calc_area(stockpile_diff_file, vec_stockpiles, working_analysis)
+        prepare_output(result_root_dir)
+            
+        end_time = calendar.timegm(time.gmtime()) #Current time in seconds since epoch
+        process_time = end_time - start_time
+        print ""
+        print "Total Processing Took: " + str(process_time)
+        
+
+Orthorectification, pansharpening and mosaicking of satellite imagery
+-------------------------------------------------------------------
+    Python prints help documentation to the terminal/console for the specified function. This includes information
+    about the signature of the function (arguments that need to be passed) and information about what the function
+    does. Furthermore, the help document includes information about what input data is required and what output is 
+    produced.
+    
+    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
+    
+
+    .. code-block:: python
+
+        #**************************************************** 
+        #
+        # Automatic Extraction and Volumetric Calculation of 
+        # New Stock Piles
+        #        
+        #         Mining and Construction Application
+        #
+        #**********
