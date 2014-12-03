@@ -92,7 +92,7 @@ img {
     max-width: 100%;
 }
 
-img .logo {
+img.logo {
 	height: 70px;
 }
 
