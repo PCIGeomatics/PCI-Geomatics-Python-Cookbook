@@ -118,7 +118,6 @@ $(function() {
     sidebarbutton.attr('title', _('Collapse sidebar'));
     sidebarbutton.css({
         'color': '#FFFFFF',
-        'border-left': '1px solid ' + dark_color,
         'font-size': '1.2em',
         'cursor': 'pointer',
         'height': bodywrapper.height(),
