@@ -8,8 +8,8 @@
     
     <title>Satellite Photogrammetry &mdash; Geomatica Cookbook 1.0.0 documentation</title>
     
-    <link rel="stylesheet" href="css/default.css" type="text/css" />
-    <link rel="stylesheet" href="css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -20,13 +20,13 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/underscore.js"></script>
-    <script type="text/javascript" src="js/doctools.js"></script>
-    <script type="text/javascript" src="js/sidebar.js"></script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="static/sidebar.js"></script>
     <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
     <link rel="next" title="Digital Aerial Photogrammetry" href="geomatica_cookbook_aerial_photogrammetry.html" />
-    <link rel="prev" title="Geomatica Py General" href="geomatica_cookbook_general.html" /> 
+    <link rel="prev" title="Integration with ArcGIS (ArcPy)" href="geomatica_cookbook_integrate_arcpy.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -39,7 +39,7 @@
           <a href="geomatica_cookbook_aerial_photogrammetry.html" title="Digital Aerial Photogrammetry"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="geomatica_cookbook_general.html" title="Geomatica Py General"
+          <a href="geomatica_cookbook_integrate_arcpy.html" title="Integration with ArcGIS (ArcPy)"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
       </ul>
@@ -353,12 +353,7 @@ improved processing</p>
 into smaller subsets and performing GCP and tie point collection independently on each subset
 can improve bundle adjustment performance and in some cases accuracy.
 The projects can then be merged together</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pci.autotie2</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.tprefn</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.crproj</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#UNDER CONSTRUCTION</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -372,12 +367,7 @@ being merged to improve coregistration between them.</p>
 <p>This can be useful when performing a bundle adjustment on big projects. Breaking big projects
 into smaller subsets and performing GCP and tie point collection independently on each subset
 can improve bundle adjustment performance and in some cases, accuracy.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pci.autotie2</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.tprefn</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.crproj</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#UNDER CONSTRUCTION</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -778,6 +768,9 @@ DEM extraction and finally, orthorectifies the imagery.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/PCI_Logo_med.png" alt="Logo"/>
+            </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><strong>Satellite Photogrammetry</strong></a><ul>
@@ -801,8 +794,8 @@ DEM extraction and finally, orthorectifies the imagery.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="geomatica_cookbook_general.html"
-                        title="previous chapter"><strong>Geomatica Py General</strong></a></p>
+  <p class="topless"><a href="geomatica_cookbook_integrate_arcpy.html"
+                        title="previous chapter"><strong>Integration with ArcGIS (ArcPy)</strong></a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="geomatica_cookbook_aerial_photogrammetry.html"
                         title="next chapter"><strong>Digital Aerial Photogrammetry</strong></a></p>
@@ -840,7 +833,7 @@ DEM extraction and finally, orthorectifies the imagery.</p>
           <a href="geomatica_cookbook_aerial_photogrammetry.html" title="Digital Aerial Photogrammetry"
              >next</a> |</li>
         <li class="right" >
-          <a href="geomatica_cookbook_general.html" title="Geomatica Py General"
+          <a href="geomatica_cookbook_integrate_arcpy.html" title="Integration with ArcGIS (ArcPy)"
              >previous</a> |</li>
         <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
       </ul>

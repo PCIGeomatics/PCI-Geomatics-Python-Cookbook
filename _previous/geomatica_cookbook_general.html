@@ -26,7 +26,7 @@
     <script type="text/javascript" src="js/sidebar.js"></script>
     <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
     <link rel="next" title="Satellite Photogrammetry" href="geomatica_cookbook_satellite_photogrammetry.html" />
-    <link rel="prev" title="Welcome to the Geomatica Py Cookbook!" href="index.html" /> 
+    <link rel="prev" title="Welcome to the Geomatica Python Cookbook!" href="index.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -39,7 +39,7 @@
           <a href="geomatica_cookbook_satellite_photogrammetry.html" title="Satellite Photogrammetry"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to the Geomatica Py Cookbook!"
+          <a href="index.html" title="Welcome to the Geomatica Python Cookbook!"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
       </ul>
@@ -52,19 +52,21 @@
             
   <div class="section" id="geomatica-py-general">
 <h1><strong>Geomatica Py General</strong><a class="headerlink" href="#geomatica-py-general" title="Permalink to this headline">¶</a></h1>
-<p>This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.</p>
+<p>This section provides some basic recipes for testing your installation, importing Geomatica&#8217;s Python
+library (modules), accessing help, error handling and etc.</p>
 <div class="section" id="check-installation-of-geomatica-py-libraries">
 <h2>Check Installation of Geomatica Py Libraries<a class="headerlink" href="#check-installation-of-geomatica-py-libraries" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
+Use Python&#8217;s interactive mode in the terminal/console for quickly checking the install and licensing.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pci</span>
-
-<span class="c">#If successful, the following will be printed to the console:</span>
-<span class="c">#PCI Pluggable Framework environment successfully loaded</span>
-<span class="c">#Otherwise, a PCI exception will be printed</span>
 </pre></div>
 </div>
+<p>If successful...</p>
+<img alt="images/geomatica_success.png" src="images/geomatica_success.png" />
+<p>If failure...</p>
+<img alt="images/geomatica_fail.png" src="images/geomatica_fail.png" />
+<p>Note: Depending on the error, a different error message may be printed</p>
 </div></blockquote>
 </div>
 <div class="section" id="import-geomatica-py-libraries">
@@ -115,10 +117,46 @@ to process the other files</p>
     <span class="k">print</span> <span class="n">e</span>
 <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">e</span>
+</pre></div>
+</div>
+<p>This results in python printing a PCI caught exception that the input multispectral file does not exist
+The script will continue to run through to the next line of code without exiting, because the exception
+is handled with a print statement</p>
+<img alt="images/error_handling.png" src="images/error_handling.png" />
+</div></blockquote>
+</div>
+<div class="section" id="input-methods">
+<h2>Input Methods<a class="headerlink" href="#input-methods" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This recipe demonstrates three (3) different methods that users running a script can
+input information, such as, locations to input files.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#Method 1 - In the script directly</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;c:\raw_imagery\image.tif&quot;</span>
 
-<span class="c">#This results in python printing a PCI caught exception that the input multispectral file does not exist</span>
-<span class="c">#The script will continue to run through to the next line of code without exiting, because the exception</span>
-<span class="c">#is handled with a print statement</span>
+
+<span class="c">#Method 2 - With a user prompt</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Please provide the path to the input image &quot;</span><span class="p">)</span>
+
+<span class="sd">&#39;&#39;&#39;The script will pause until the user provides an input path. At which point, the</span>
+<span class="sd">variable &quot;input_file&quot; will be assigned the user provided path.&#39;&#39;&#39;</span>
+
+
+<span class="c">#Method 3 - Passing information s arguments when launching the script (usually the preferred method)</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
+
+<span class="n">script</span><span class="p">,</span> <span class="n">input_image</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">=</span> <span class="n">argv</span>
+
+<span class="k">print</span> <span class="s">&quot;input image is: &quot;</span> <span class="o">+</span> <span class="n">input_image</span>
+<span class="k">print</span> <span class="s">&quot;output directory is: &quot;</span> <span class="o">+</span> <span class="n">output_dir</span>
+
+<span class="sd">&#39;&#39;&#39;The user running the script will be expected to provide the path to the input file</span>
+<span class="sd">and output directory after providing the location of the script. Each argument is</span>
+<span class="sd">separated by a white space&quot;</span>
+
+<span class="sd">For example:</span>
+
+<span class="sd">python c:\python_script\myscript.py c:\raw_imagery\image.tif&quot;</span>
+<span class="sd">&#39;&#39;&#39;</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -138,13 +176,14 @@ to process the other files</p>
 <li><a class="reference internal" href="#import-geomatica-py-libraries">Import Geomatica Py Libraries</a></li>
 <li><a class="reference internal" href="#accessing-help-about-geomatica-py-function">Accessing Help About Geomatica Py Function</a></li>
 <li><a class="reference internal" href="#handling-geomatica-py-exceptions">Handling Geomatica Py Exceptions</a></li>
+<li><a class="reference internal" href="#input-methods">Input Methods</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to the Geomatica Py Cookbook!</a></p>
+                        title="previous chapter">Welcome to the Geomatica Python Cookbook!</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="geomatica_cookbook_satellite_photogrammetry.html"
                         title="next chapter"><strong>Satellite Photogrammetry</strong></a></p>
@@ -182,7 +221,7 @@ to process the other files</p>
           <a href="geomatica_cookbook_satellite_photogrammetry.html" title="Satellite Photogrammetry"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to the Geomatica Py Cookbook!"
+          <a href="index.html" title="Welcome to the Geomatica Python Cookbook!"
              >previous</a> |</li>
         <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
       </ul>

@@ -1,45 +1,53 @@
 **Files & Layers**
 =======================
-This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+This section provides details about creating and modifying .pix files (Geomatica's working file format).
+Recipes in this section also demonstrate how to import foreign file formats into .pix and 
+conversely, exporting .pix files to foreign file formats.
+
+The PCIDSK (.pix) file format is a very powerful, flexible and clean file format. As a database
+file, it can store hundreds of raster channels of varying bit-depths, vector segments, bitmaps
+and many other layer types in a single file. Unlike, flat files where projection, attribute information,
+metadata and imagery/vectors are all stored in separate files, the pix file holds everything in 
+one, easy to use file.
 
 Create .pix (PCIDSK) file with empty channels defined
 -----------------------------------------------------
-    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+    This recipe demonstrates how to create a projected .pix file with empty image channels 
+    defined. Imagery can then be directly copied into these empty channels.
 
     .. code-block:: python
 
         from pci.cimpro2 import cimpro2
-        
-        new_file = r"c:\newfile\empty_file.pix"
+
+        new_file = r"C:\FilesLayer\empty_file.pix"
         create_channels = [4,0,1,2] #creates 4 8bit, 0 16bit signed, 1 16bit unsigned and 2 32bit real channels
-        data_layout = "tiled512" #creates data structure for file as 512x512 pixel tiles 
+        data_layout = "PIXEL" #creates data structure for file as 512x512 pixel tiles
         projection = "UTM"
         zone = [55]
         row = "G"
         datum = "D000" #D000 is WGS84. Also note that D122 is NAD83
         top_left_x = "514418.000"
-        top left_y = "5262616.000"
+        top_left_y = "5262616.000"
         bottom_right_x = "527908.000"
         bottom_right_y = "5246564.000"
         res_x = "2.0"
         res_y = "2.0"
-        
-        cimpro2(new_file, "", create_channels, data_layout, projection, zone, row, datum, 
-                "N", top_left_x, top_left_y, bottom_right_x, bottom_right_y, res_x, res_y, 
-                "", "", "", "", "", "", "", "", "", "", "", "", "", [], [], [])
+
+        cimpro2(new_file, "", create_channels, data_layout, projection, zone, row, datum,
+                "N", top_left_x, top_left_y, bottom_right_x, bottom_right_y, res_x, res_y,
+                "", "", "", "", "", "", "", "", "", "", "", "", "", "", [], [])
         
 
 Create .pix (PCIDSK) file with no projection defined
 ----------------------------------------------------
-    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+    This recipe creates a .pix file with empty channels defined by pixels and lines, but
+    a coordinate system is not defined
 
     .. code-block:: python
 
         from pci.cim import cim       
         
-        new_file = r"c:\newfile\empty_file.pix"
+        new_file = r"c:\new_file\empty_file.pix"
         file_size = [1024,1024] #specifies the number of pixels and lines for the output image file
         res = [15,15]
         create_channels = [7,1,2,5] #creates 7 8bit, 1 16bit signed, 2 16bit unsigned and 5 32bit real channels
@@ -50,13 +58,9 @@ Create .pix (PCIDSK) file with no projection defined
 
 Add or delete new channel to an existing .pix file
 --------------------------------------------------
-    Python prints help documentation to the terminal/console for the specified function. This includes information
-    about the signature of the function (arguments that need to be passed) and information about what the function
-    does. Furthermore, the help document includes information about what input data is required and what output is 
-    produced.
-    
-    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
-    
+    This recipe demonstrates how to quickly add a 8bit, 16bit unsigned, 16bit signed and or 32bit
+    floating point channels to an existing .pix file. This can be very useful for when building custom
+    models.
 
     .. code-block:: python
 
@@ -77,8 +81,9 @@ Add or delete new channel to an existing .pix file
                    
 Copy image channels to an existing file with different projection 
 -----------------------------------------------------------------
-    This example explicitly imports the pansharp2 function from the pansharp2 module and imports
-    all onjects and functions from the ortho2 module
+    This recipe demonstrates how to copy an raster channel from one file to another with different
+    projections. It requires that the user reproject the source image to the same projection and bounds
+    as the destination image, create an empty channel in the destination file and finally, copy the pixels.
 
     .. code-block:: python
         
@@ -92,7 +97,7 @@ Copy image channels to an existing file with different projection
         #Add a new channel with correct bit-depth to destination file
         add_channel = [0,0,0,1]  
         
-        pcimod(destination_file, "ADD", pcival) #Adds a single 32 bit channel to the ndvi_2.pix file
+        pcimod(destination_file, "ADD", add_channel) #Adds a single 32 bit channel to the ndvi_2.pix file
         
         
         #reproject the source channel to the same projection and extents of destination file
@@ -103,13 +108,13 @@ Copy image channels to an existing file with different projection
         information. You can get the georeferencing information by running PROREP in terminal
         '''
         
-        ndvi_channel = 5 #NDVI was calculated for this image and is stored in channel 5
+        ndvi_channel = [5] #NDVI was calculated for this image and is stored in channel 5
         reproj_source_file = r"c:\data\ndvi_1_temp_reproj.pix"
         reproj_method = "BR" #Bounds and resolutions are unchanged, calculates pixels and lines
         resolution = [2.0, 2.0]
         map_units = "UTM 55 G D000"
         top_left_x = "514418.000"
-        top left_y = "5262616.000"
+        top_left_y = "5262616.000"
         bottom_right_x = "527908.000"
         bottom_right_y = "5246564.000"
         
@@ -127,8 +132,9 @@ Copy image channels to an existing file with different projection
         
 Import from foreign file to .pix or .pix link file
 ---------------------------------------------------
-    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+    To get the most out of Geomatics's python functions, it is often best to use the .pix format.
+    This recipe demonstrates how to convert a foreign file (i.e. raw satellite file format) to
+    .pix and the lightweight .pix link file.
 
     .. code-block:: python
 
@@ -143,35 +149,35 @@ Import from foreign file to .pix or .pix link file
 
         
         #Import foreign file to .pix link file (link to original image)
-        pix_link_file = 
+        pix_link_file = r"c:\kompsat-2\import\kompsat-2_link.pix"
         
         link(foreign_file, pix_link_file, [])
         
 
 Export rasters or vectors to foreign file format
 -------------------------------------------------
-    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+    This recipe demonstrates how to export rasters and vectors from the .pix format to 
+    a foreign file format, such as, .shp, .tif, etc.
 
     .. code-block:: python
 
         from pci.fexport import fexport 
         
         #export image raster(s) to jpeg2000 format
-        pix_file = r"c:\data\imagery.pix"
-        foreign_file = r"c:\data\imagery.jp2"
+        pix_file = r"D:\kompsat-2.pix"
+        foreign_file = r"C:\kompsat-2.jp2"
         channels = [1,2,3,4]
-        format = "jpeg2000"
-        compression = "10" #result should b about 10% the size of the input image
-        
+        format = "jp2"
+        compression = "10" #result should be about 10% the size of the input image
+
         fexport(pix_file, foreign_file, [], channels, [], [], [], [], format, compression)
         
         
         #export vector layer
         pix_file = r"c:\data\vector.pix"
-        foreign_file = r"c:\data\shp\vector.shp"
         vector_layer = [2]
+        format = "shp"
                 
-        fexport(pix_file, foreign_file, [], [], [], vector_layer, [], [], "SHP", "")
+        fexport(pix_file, foreign_file, [], [], [], vector_layer, [], [], format, "")
                 
         #Note you can perform fexport to convert from a foreign file format to a different foreign file format

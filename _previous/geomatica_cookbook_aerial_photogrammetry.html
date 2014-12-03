@@ -52,14 +52,17 @@
             
   <div class="section" id="digital-aerial-photogrammetry">
 <h1><strong>Digital Aerial Photogrammetry</strong><a class="headerlink" href="#digital-aerial-photogrammetry" title="Permalink to this headline">¶</a></h1>
-<p>This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.</p>
+<p>This section provides some basic recipes for performing photogrammetric operations with digital
+aerial imagery, using Geomatica&#8217;s python library.</p>
+<p>In this section you will find recipes for ingesting aerial imagery, extracting Digital Elevation
+Models (DEMs) from multiple aerial images in a block and orthorectification.</p>
 <div class="section" id="create-pix-link-file-from-raw-aerial-images">
 <h2>Create .pix Link File from Raw Aerial Images<a class="headerlink" href="#create-pix-link-file-from-raw-aerial-images" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe shows how to create a .pix live link file from raw aerial imagery.
-This creates the .pix file format for an image, without having to copy the actual
-pixels. Rather it links back to the .tif image. The pix format is highly recommended
-for photogrammetric processing with Geomatica functions.</p>
+<div><p>This recipe demonstrates how to create a .pix link file from raw aerial imagery.
+This creates the .pix file format for an image, which links back to the .tif file rather than
+copying the actual pixels.</p>
+<p>The pix format is highly recommended for photogrammetric processing with Geomatica functions.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
 
@@ -76,7 +79,11 @@ for photogrammetric processing with Geomatica functions.</p>
 <blockquote>
 <div><p>This recipe demonstrates how to automatically discover all valid raw airphotos and then create a .pix link
 file for them so that they can be run through Geomatica&#8217;s photogrammetric processing chain.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">raw_airphoto_dir</span> <span class="o">=</span><span class="s">r&quot;c:\airphoto_project\raw_images&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">fnmatch</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
+
+
+<span class="n">raw_airphoto_dir</span> <span class="o">=</span><span class="s">r&quot;C:\aerial\photos&quot;</span>
 
 <span class="n">input_files_list</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -88,10 +95,10 @@ file for them so that they can be run through Geomatica&#8217;s photogrammetric 
 <span class="c">#Create Link file</span>
 <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">input_files_list</span><span class="p">:</span>
     <span class="n">input_file</span> <span class="o">=</span> <span class="n">raw_image</span>
-    <span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airpoto_project\ingested&quot;</span>
-    <span class="n">link_pix</span> <span class="o">=</span> <span class="n">ingested_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">raw_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
+    <span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\aerial\Ingested&quot;</span>
+    <span class="n">link_pix</span> <span class="o">=</span> <span class="n">ingest_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">raw_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
 
-    <span class="n">link</span><span class="p">(</span> <span class="nb">input</span><span class="p">,</span> <span class="n">link_pix</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+    <span class="n">link</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">link_pix</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -99,15 +106,19 @@ file for them so that they can be run through Geomatica&#8217;s photogrammetric 
 <div class="section" id="setup-digital-airphoto-project-for-photogrammetric-processing">
 <h2>Setup Digital Airphoto Project for Photogrammetric Processing<a class="headerlink" href="#setup-digital-airphoto-project-for-photogrammetric-processing" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe demonstrates how to setup an orthoengine project for airphoto photogrammetric processing.
-The results of running this recipe will setup a project that is ready for DEM extraction and orthorectification</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<div><p>This recipe demonstrates how to setup an Orthoengine project for airphoto photogrammetric processing.
+Running this script will result in a digital airphoto project that is ready for DEM extraction
+and orthorectification</p>
+<p>Note: this script requires the user to provide the camera calibration parameters in a formated camera
+calibration xml file</p>
+<p><a class="reference download internal" href="_downloads/camera_calib.xml"><code class="xref download docutils literal"><span class="pre">Template</span> <span class="pre">Camera</span> <span class="pre">Calibration</span> <span class="pre">XML</span> <span class="pre">file</span></code></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">fnmatch</span>
 <span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.crproj</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.camimport</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.eoimport</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">raw_airphoto_dir</span> <span class="o">=</span><span class="s">r&quot;c:\airphoto_project\raw_images&quot;</span>
+<span class="n">raw_airphoto_dir</span> <span class="o">=</span><span class="s">r&quot;C:\Aerial\photos\Subset&quot;</span>
 
 <span class="n">input_files_list</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -119,10 +130,10 @@ The results of running this recipe will setup a project that is ready for DEM ex
 <span class="c">#Create Link file</span>
 <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">input_files_list</span><span class="p">:</span>
     <span class="n">input_file</span> <span class="o">=</span> <span class="n">raw_image</span>
-    <span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airpoto_project\ingested&quot;</span>
-    <span class="n">link_pix</span> <span class="o">=</span> <span class="n">ingested_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">raw_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
+    <span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\Subset&quot;</span>
+    <span class="n">link_pix</span> <span class="o">=</span> <span class="n">ingest_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">raw_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
 
-    <span class="n">link</span><span class="p">(</span> <span class="nb">input</span><span class="p">,</span> <span class="n">link_pix</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+    <span class="n">link</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">link_pix</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#Create OrthoEngine project file</span>
 <span class="n">mfile</span> <span class="o">=</span> <span class="n">ingest_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;*.pix&quot;</span>
@@ -149,16 +160,16 @@ The results of running this recipe will setup a project that is ready for DEM ex
 <div class="section" id="automatic-dem-extraction-from-aerial-imagery-batch-processing">
 <h2>Automatic DEM Extraction from Aerial Imagery - <strong>Batch Processing</strong><a class="headerlink" href="#automatic-dem-extraction-from-aerial-imagery-batch-processing" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe demonstrates how to extract a DEM from multiple Aerial images, using an orthoengine project
-that was previously setup for digital aerial processing (See above recipe)</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<div><p>This recipe demonstrates how to extract a DEM from multiple Aerial images, using an OrthoEngine project
+that was previously setup for digital aerial image processing (See above recipe)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">fnmatch</span>
 <span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="n">cpmmseg</span>
 <span class="kn">from</span> <span class="nn">pci.epipolar2</span> <span class="kn">import</span> <span class="n">epipolar2</span>
 <span class="kn">from</span> <span class="nn">pci.autodem2</span> <span class="kn">import</span> <span class="n">autodem2</span>
 <span class="kn">from</span> <span class="nn">pci.dsm2dtm</span> <span class="kn">import</span> <span class="n">dsm2dtm</span>
 
 <span class="c">#Create math model from OE to ingested images</span>
-<span class="n">ingest_airphoto_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\ingests&quot;</span>
+<span class="n">ingest_airphoto_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested&quot;</span>
 <span class="n">prepared_oe_proj</span> <span class="o">=</span> <span class="n">ingest_airphoto_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;oe_configured.prj&quot;</span>
 
 <span class="n">ingest_image_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -174,21 +185,23 @@ that was previously setup for digital aerial processing (See above recipe)</p>
     <span class="n">cpmmseg</span><span class="p">(</span><span class="n">oeproj</span><span class="p">,</span> <span class="nb">file</span><span class="p">,</span> <span class="p">[])</span>
 
 <span class="c">#Generate Epipolar Images from Stereo pairs</span>
-<span class="n">epi_outdir</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&#39;epipolars&#39;</span>
+<span class="n">epi_outdir</span> <span class="o">=</span> <span class="n">ingest_airphoto_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&#39;epipolars&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">epi_outdir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">epi_outdir</span><span class="p">)</span>
 
 <span class="n">epipolar2</span><span class="p">(</span> <span class="n">ingest_airphoto_dir</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;opt&quot;</span><span class="p">,</span> <span class="p">[],</span>
            <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">epi_outdir</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1024</span><span class="p">]</span> <span class="p">)</span>
 
 <span class="c">#Extract Digital Surface Model (DSM) from multiple stereo airphoto images and mosaic them together</span>
-<span class="n">dsm_outdir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dsm_working&quot;</span>
-<span class="n">deocoded_sm</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dsm_working\airphoto_dsm.pix&quot;</span>
+<span class="n">dsm_outdir</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested&quot;</span>
+<span class="n">geocoded_dsm</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\airphoto_dsm.pix&quot;</span>
 <span class="n">pxszout</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
 
 <span class="n">autodem2</span><span class="p">(</span> <span class="n">epi_outdir</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&#39;high&#39;</span><span class="p">,</span> <span class="s">&#39;hilly&#39;</span><span class="p">,</span> <span class="s">&#39;32r&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s">&#39;yes&#39;</span><span class="p">,</span>
-          <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">dsm</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;UTM 17 D122&#39;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">pxszout</span><span class="p">,</span> <span class="s">&#39;blend&#39;</span> <span class="p">)</span>
+          <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">dsm_outdir</span><span class="p">,</span> <span class="n">geocoded_dsm</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;UTM 17 D122&#39;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">pxszout</span><span class="p">,</span> <span class="s">&#39;blend&#39;</span> <span class="p">)</span>
 
 <span class="c">#convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM)</span>
-<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dem\airphoto_dem.pix&quot;</span>
+<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\airphoto_dem.pix&quot;</span>
 <span class="n">feature_size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">250</span><span class="p">]</span>
 <span class="n">gradient</span> <span class="o">=</span> <span class="p">[</span><span class="mi">30</span><span class="p">]</span>
 <span class="n">remove_bumps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
@@ -203,24 +216,24 @@ that was previously setup for digital aerial processing (See above recipe)</p>
 <div class="section" id="automatic-orthorectification-of-aerial-imagery">
 <h2>Automatic Orthorectification of Aerial Imagery<a class="headerlink" href="#automatic-orthorectification-of-aerial-imagery" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe provides a working example of how to orthorectify multiple airphoto images from multiple
-digital aerial images.</p>
+<div><p>This recipe provides a working example of how to orthorectify a single aerial image,
+using an OrthoEngine project that was previously setup for digital aerial image processing (See above recipe)</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="n">cpmmseg</span>
 <span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
 
 <span class="c">#Create math model from OE to ingested images</span>
-<span class="n">ingest_airphoto</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\ingest\00021.pix&quot;</span>
-<span class="n">prepared_oe_proj</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\working\oe_configured.prj&quot;</span>
+<span class="n">ingest_airphoto</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\A17563-001.pix&quot;</span>
+<span class="n">prepared_oe_proj</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\oe_configured.prj&quot;</span>
 
-<span class="n">cpmmseg</span><span class="p">(</span><span class="n">prepared_oe_proj</span><span class="p">,</span> <span class="n">ingest_image</span><span class="p">,</span> <span class="p">[])</span>
+<span class="n">cpmmseg</span><span class="p">(</span><span class="n">prepared_oe_proj</span><span class="p">,</span> <span class="n">ingest_airphoto</span><span class="p">,</span> <span class="p">[])</span>
 
 <span class="c">#Orthorectify imagery with a user provided DEM</span>
-<span class="n">ortho_airphoto</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\orthos\o00021.pix&quot;</span>
+<span class="n">ortho_airphoto</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Orthos\A17563-001.pix&quot;</span>
 <span class="n">x_res</span> <span class="o">=</span> <span class="s">&quot;0.2&quot;</span> <span class="c">#x resolution set to 20cm</span>
 <span class="n">y_res</span> <span class="o">=</span> <span class="s">&quot;0.2&quot;</span> <span class="c">#y resolution set to 20cm</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dem\user_dem.pix&quot;</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\DEM\1962_Saskatchewan_DEM.pix&quot;</span>
 
-<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_airphoto</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_airphoto</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_airphoto</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_airphoto</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
         <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">x_res</span><span class="p">,</span> <span class="n">y_res</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -229,30 +242,30 @@ digital aerial images.</p>
 <div class="section" id="automatic-orthorectification-of-aerial-imagery-batch-processing">
 <h2>Automatic Orthorectification of Aerial Imagery - <strong>Batch Processing</strong><a class="headerlink" href="#automatic-orthorectification-of-aerial-imagery-batch-processing" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe provides a working example of how to orthorectify multiple airphoto images.
-It assumes you have already computed the math model required to orthorectify the imagery.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<div><p>This recipe provides a working example of how to orthorectify multiple aerial images,
+using an OrthoEngine project that was previously setup for digital aerial image processing (See above recipe)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">fnmatch</span>
 <span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="n">cpmmseg</span>
 <span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
 
-<span class="n">ingest_airphoto_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\ingests&quot;</span>
+<span class="n">ingest_airphoto_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\test\ShawnPy\Data\Aerial\Ingested&quot;</span>
 <span class="n">prepared_oe_proj</span> <span class="o">=</span> <span class="n">ingest_airphoto_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;oe_configured.prj&quot;</span>
 
 <span class="c">#Copy math model from prepared orthoengine project file to all ingested images</span>
 <span class="k">for</span> <span class="n">r</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">ingest_airphoto_dir</span><span class="p">):</span>
     <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&quot;*.pix&quot;</span><span class="p">):</span>
         <span class="k">print</span> <span class="s">&quot;found valid input file: &quot;</span><span class="p">,</span> <span class="nb">file</span>
-        <span class="n">ingest_image</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">file</span><span class="p">))</span>
+        <span class="n">ingest_image</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">file</span><span class="p">)</span>
 
         <span class="n">cpmmseg</span><span class="p">(</span><span class="n">prepared_oe_proj</span><span class="p">,</span> <span class="n">ingest_image</span><span class="p">,</span> <span class="p">[])</span>
 
 <span class="c">#Orthorectify imagery with a user provided DEM</span>
-<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\orthos&quot;</span>
+<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\test\ShawnPy\Data\Aerial\Orthos&quot;</span>
 <span class="n">x_res</span> <span class="o">=</span> <span class="s">&quot;0.2&quot;</span> <span class="c">#x resolution set to 20cm</span>
 <span class="n">y_res</span> <span class="o">=</span> <span class="s">&quot;0.2&quot;</span> <span class="c">#y resolution set to 20cm</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dem\user_dem.pix&quot;</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\test\ShawnPy\Data\Aerial\dtm\PCI_Hamilton14_DTM_45cm.pix&quot;</span>
 
-<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_airphoto_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_dir</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_airphoto_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_dir</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
         <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">x_res</span><span class="p">,</span> <span class="n">y_res</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -262,8 +275,8 @@ It assumes you have already computed the math model required to orthorectify the
 <h2>Digital Aerial Orthorectification with user provided DEM - <strong>Full Workflow</strong><a class="headerlink" href="#digital-aerial-orthorectification-with-user-provided-dem-full-workflow" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This is a complete orthorectification workflow for digital aerial imagery (not including DEM extraction).
-It combines multiple concepts from the recipes in this section.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+This script combines multiple concepts from the previous recipes in this section.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">fnmatch</span>
 <span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.crproj</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.camimport</span> <span class="kn">import</span> <span class="o">*</span>
@@ -271,7 +284,7 @@ It combines multiple concepts from the recipes in this section.</p>
 <span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="n">cpmmseg</span>
 <span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
 
-<span class="n">raw_airphoto_dir</span> <span class="o">=</span><span class="s">r&quot;c:\airphoto_project\raw_images&quot;</span>
+<span class="n">raw_airphoto_dir</span> <span class="o">=</span><span class="s">r&quot;C:\Aerial\photos\Subset&quot;</span>
 
 <span class="n">input_files_list</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -283,10 +296,10 @@ It combines multiple concepts from the recipes in this section.</p>
 <span class="c">#Create Link file</span>
 <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">input_files_list</span><span class="p">:</span>
     <span class="n">input_file</span> <span class="o">=</span> <span class="n">raw_image</span>
-    <span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airpoto_project\ingested&quot;</span>
-    <span class="n">link_pix</span> <span class="o">=</span> <span class="n">ingested_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">raw_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
+    <span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\Subset&quot;</span>
+    <span class="n">link_pix</span> <span class="o">=</span> <span class="n">ingest_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">raw_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
 
-    <span class="n">link</span><span class="p">(</span> <span class="nb">input</span><span class="p">,</span> <span class="n">link_pix</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+    <span class="n">link</span><span class="p">(</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">link_pix</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#Create OrthoEngine project file</span>
 <span class="n">mfile</span> <span class="o">=</span> <span class="n">ingest_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;*.pix&quot;</span>
@@ -311,17 +324,17 @@ It combines multiple concepts from the recipes in this section.</p>
 <span class="k">for</span> <span class="n">r</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">ingest_dir</span><span class="p">):</span>
     <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&quot;*.pix&quot;</span><span class="p">):</span>
         <span class="k">print</span> <span class="s">&quot;found valid input file: &quot;</span><span class="p">,</span> <span class="nb">file</span>
-        <span class="n">ingest_image</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">file</span><span class="p">))</span>
+        <span class="n">ingest_image</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">file</span><span class="p">)</span>
 
         <span class="n">cpmmseg</span><span class="p">(</span><span class="n">prepared_oe_proj</span><span class="p">,</span> <span class="n">ingest_image</span><span class="p">,</span> <span class="p">[])</span>
 
 <span class="c">#Orthorectify imagery with a user provided DEM</span>
-<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\orthos&quot;</span>
+<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Orthos\subset&quot;</span>
 <span class="n">x_res</span> <span class="o">=</span> <span class="s">&quot;0.2&quot;</span> <span class="c">#x resolution set to 20cm</span>
 <span class="n">y_res</span> <span class="o">=</span> <span class="s">&quot;0.2&quot;</span> <span class="c">#y resolution set to 20cm</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dem\user_dem.pix&quot;</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\dtm\PCI_Hamilton14_DTM_45cm.pix&quot;</span>
 
-<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_dir</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_dir</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
         <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">x_res</span><span class="p">,</span> <span class="n">y_res</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -331,16 +344,19 @@ It combines multiple concepts from the recipes in this section.</p>
 <h2>Digital Aerial Orthorectification with DEM Extraction - <strong>Full Workflow</strong><a class="headerlink" href="#digital-aerial-orthorectification-with-dem-extraction-full-workflow" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This is a complete orthorectification workflow for digital aerial imagery (including DEM extraction).
-It combines multiple concepts from the recipes in this section.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+This script combines multiple concepts from the previous recipes in this section.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">fnmatch</span>
 <span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.crproj</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.camimport</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.eoimport</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pci.cpmmseg</span> <span class="kn">import</span> <span class="n">cpmmseg</span>
+<span class="kn">from</span> <span class="nn">pci.autodem2</span> <span class="kn">import</span> <span class="n">autodem2</span>
+<span class="kn">from</span> <span class="nn">pci.epipolar2</span> <span class="kn">import</span> <span class="n">epipolar2</span>
+<span class="kn">from</span> <span class="nn">pci.dsm2dtm</span> <span class="kn">import</span> <span class="n">dsm2dtm</span>
 <span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
 
-<span class="n">raw_airphoto_dir</span> <span class="o">=</span><span class="s">r&quot;c:\airphoto_project\raw_images&quot;</span>
+<span class="n">raw_airphoto_dir</span> <span class="o">=</span><span class="s">r&quot;C:\Aerial\photos\Subset&quot;</span>
 
 <span class="n">input_files_list</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -352,10 +368,10 @@ It combines multiple concepts from the recipes in this section.</p>
 <span class="c">#Create Link file</span>
 <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">input_files_list</span><span class="p">:</span>
     <span class="n">input_file</span> <span class="o">=</span> <span class="n">raw_image</span>
-    <span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airpoto_project\ingested&quot;</span>
-    <span class="n">link_pix</span> <span class="o">=</span> <span class="n">ingested_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">raw_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
+    <span class="n">ingest_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\Subset&quot;</span>
+    <span class="n">link_pix</span> <span class="o">=</span> <span class="n">ingest_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">raw_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
 
-    <span class="n">link</span><span class="p">(</span> <span class="nb">input</span><span class="p">,</span> <span class="n">link_pix</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+    <span class="n">link</span><span class="p">(</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">link_pix</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#Create OrthoEngine project file</span>
 <span class="n">mfile</span> <span class="o">=</span> <span class="n">ingest_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;*.pix&quot;</span>
@@ -387,35 +403,35 @@ It combines multiple concepts from the recipes in this section.</p>
     <span class="n">cpmmseg</span><span class="p">(</span><span class="n">prepared_oe_proj</span><span class="p">,</span> <span class="n">ingest_image</span><span class="p">,</span> <span class="p">[])</span>
 
 <span class="c">#Generate Epipolar Images from Stereo pairs</span>
-<span class="n">epi_outdir</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&#39;epipolars&#39;</span>
+<span class="n">epi_outdir</span> <span class="o">=</span> <span class="n">ingest_dir</span>  <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&#39;epipolars&#39;</span>
 
 <span class="n">epipolar2</span><span class="p">(</span> <span class="n">ingest_dir</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;opt&quot;</span><span class="p">,</span> <span class="p">[],</span>
            <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">epi_outdir</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="s">u&quot;&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1024</span><span class="p">]</span> <span class="p">)</span>
 
 <span class="c">#Extract Digital Surface Model (DSM) from multiple stereo airphoto images and mosaic them together</span>
-<span class="n">dsm_outdir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dsm_working&quot;</span>
-<span class="n">deocoded_sm</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dsm_working\airphoto_dsm.pix&quot;</span>
+<span class="n">dsm_outdir</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\Subset\DEM&quot;</span>
+<span class="n">geocoded_sm</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\Subset\DEM\airphoto_dsm.pix&quot;</span>
 <span class="n">pxszout</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
 
 <span class="n">autodem2</span><span class="p">(</span> <span class="n">epi_outdir</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&#39;high&#39;</span><span class="p">,</span> <span class="s">&#39;hilly&#39;</span><span class="p">,</span> <span class="s">&#39;32r&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s">&#39;yes&#39;</span><span class="p">,</span>
-          <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">dsm</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;UTM 17 D122&#39;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">pxszout</span><span class="p">,</span> <span class="s">&#39;blend&#39;</span> <span class="p">)</span>
+          <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">dsm_outdir</span><span class="p">,</span> <span class="n">geocoded_sm</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;UTM 17 D122&#39;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">pxszout</span><span class="p">,</span> <span class="s">&#39;blend&#39;</span> <span class="p">)</span>
 
 <span class="c">#convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM)</span>
-<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\dem\airphoto_dem.pix&quot;</span>
+<span class="n">dem_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Ingested\Subset\DEM\airphoto_dem.pix&quot;</span>
 <span class="n">feature_size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">250</span><span class="p">]</span>
 <span class="n">gradient</span> <span class="o">=</span> <span class="p">[</span><span class="mi">30</span><span class="p">]</span>
 <span class="n">remove_bumps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
 <span class="n">fill_pits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
 <span class="n">smooth_dem</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">]</span>
 
-<span class="n">dsm2dtm</span><span class="p">(</span> <span class="n">geocoded_dsm</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dem_file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">feature_size</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="s">&quot;hilly&quot;</span><span class="p">,</span> <span class="n">remove_bumps</span><span class="p">,</span> <span class="n">fill_pits</span><span class="p">,</span> <span class="n">smooth_dem</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+<span class="n">dsm2dtm</span><span class="p">(</span> <span class="n">geocoded_sm</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dem_file</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">feature_size</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="s">&quot;hilly&quot;</span><span class="p">,</span> <span class="n">remove_bumps</span><span class="p">,</span> <span class="n">fill_pits</span><span class="p">,</span> <span class="n">smooth_dem</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#Orthorectify imagery with a user provided DEM</span>
-<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\orthos&quot;</span>
+<span class="n">ortho_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\Aerial\Orthos\subset&quot;</span>
 <span class="n">x_res</span> <span class="o">=</span> <span class="s">&quot;0.2&quot;</span> <span class="c">#x resolution set to 20cm</span>
 <span class="n">y_res</span> <span class="o">=</span> <span class="s">&quot;0.2&quot;</span> <span class="c">#y resolution set to 20cm</span>
 
-<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_airphoto_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_dir</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">ortho_dir</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
         <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">x_res</span><span class="p">,</span> <span class="n">y_res</span><span class="p">,</span> <span class="n">dem_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -426,9 +442,11 @@ It combines multiple concepts from the recipes in this section.</p>
 <blockquote>
 <div><p>This recipe demonstrates how to quickly create a camera calibration file in the XML format
 required by Geomatica&#8217;s automated aerial processing algorithms</p>
-<p>Note: It really is not necessary to use this block of code. Just simply create your own camera
-calibration file before running the script by copying the block after <strong>Create Camera Calibration
-XML file</strong> section and save it as an xml file.</p>
+<p>In most cases it will be easier to acquire a template of the XML file (See link below) and edit it manually. However,
+this script provides an example of a logical process for creating a GUI that accepts the user inputs
+required for creating the camera calibration xml file in a user-friendly fashion; it limits the
+input fields based on the sensor type.</p>
+<p><a class="reference download internal" href="_downloads/camera_calib.xml"><code class="xref download docutils literal"><span class="pre">Template</span> <span class="pre">Camera</span> <span class="pre">Calibration</span> <span class="pre">XML</span> <span class="pre">file</span></code></a></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c">#Set camera calibration location</span>

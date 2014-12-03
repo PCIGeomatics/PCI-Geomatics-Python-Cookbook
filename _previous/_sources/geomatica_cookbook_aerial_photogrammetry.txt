@@ -1,13 +1,18 @@
 **Digital Aerial Photogrammetry**
 =================================
-This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+This section provides some basic recipes for performing photogrammetric operations with digital 
+aerial imagery, using Geomatica's python library.
+
+In this section you will find recipes for ingesting aerial imagery, extracting Digital Elevation 
+Models (DEMs) from multiple aerial images in a block and orthorectification.
 
 Create .pix Link File from Raw Aerial Images
 --------------------------------------------
-    This recipe shows how to create a .pix live link file from raw aerial imagery. 
-    This creates the .pix file format for an image, without having to copy the actual
-    pixels. Rather it links back to the .tif image. The pix format is highly recommended
-    for photogrammetric processing with Geomatica functions.
+    This recipe demonstrates how to create a .pix link file from raw aerial imagery. 
+    This creates the .pix file format for an image, which links back to the .tif file rather than 
+    copying the actual pixels. 
+    
+    The pix format is highly recommended for photogrammetric processing with Geomatica functions.
     
     .. code-block:: python
         
@@ -27,53 +32,63 @@ Discover all airphotos in a directory and create .pix link file - **Batch Proces
 
     .. code-block:: python
     
-        raw_airphoto_dir =r"c:\airphoto_project\raw_images"
+        import os, fnmatch, sys
+        from pci.link import link
+
+
+        raw_airphoto_dir =r"C:\aerial\photos"
 
         input_files_list = []
 
         for r,d,f in os.walk(raw_airphoto_dir):
             for file in fnmatch.filter(f, "*.tif"):
                 print "found valid input file: ", file
-                input_files_list.append(os.path.join(r,file))    
-                
+                input_files_list.append(os.path.join(r,file))
+
         #Create Link file
         for raw_image in input_files_list:
             input_file = raw_image
-            ingest_dir = r"c:\airpoto_project\ingested"
-            link_pix = ingested_dir + os.sep + ntpath.basename(os.path.splitext(raw_image)[0]) + ".pix"
-            
-            link( input, link_pix, [] )
+            ingest_dir = r"C:\aerial\Ingested"
+            link_pix = ingest_dir + os.sep + os.path.basename(os.path.splitext(raw_image)[0]) + ".pix"
+
+            link(input_file, link_pix, [] )
             
             
 Setup Digital Airphoto Project for Photogrammetric Processing
 -------------------------------------------------------------
-    This recipe demonstrates how to setup an orthoengine project for airphoto photogrammetric processing.
-    The results of running this recipe will setup a project that is ready for DEM extraction and orthorectification
+    This recipe demonstrates how to setup an Orthoengine project for airphoto photogrammetric processing.
+    Running this script will result in a digital airphoto project that is ready for DEM extraction 
+    and orthorectification
 
+    Note: this script requires the user to provide the camera calibration parameters in a formated camera 
+    calibration xml file 
+    
+    :download:`Template Camera Calibration XML file <downloads/camera_calib.xml>`
+    
     .. code-block:: python
 
-        import os, sys
+        import os, sys, fnmatch
         from pci.link import *
         from pci.crproj import *
         from pci.camimport import *
         from pci.eoimport import *
 
-        raw_airphoto_dir =r"c:\airphoto_project\raw_images"
+        raw_airphoto_dir =r"C:\Aerial\photos\Subset"
 
         input_files_list = []
 
         for r,d,f in os.walk(raw_airphoto_dir):
             for file in fnmatch.filter(f, "*.tif"):
                 print "found valid input file: ", file
-                input_files_list.append(os.path.join(r,file))    
-                
+                input_files_list.append(os.path.join(r,file))
+
         #Create Link file
         for raw_image in input_files_list:
             input_file = raw_image
-            ingest_dir = r"c:\airpoto_project\ingested"
-            link_pix = ingested_dir + os.sep + ntpath.basename(os.path.splitext(raw_image)[0]) + ".pix"
-            
-            link( input, link_pix, [] )
+            ingest_dir = r"C:\Aerial\Ingested\Subset"
+            link_pix = ingest_dir + os.sep + os.path.basename(os.path.splitext(raw_image)[0]) + ".pix"
+
+            link(input_file, link_pix, [] )
 
         #Create OrthoEngine project file
         mfile = ingest_dir + os.sep + "*.pix"
@@ -82,13 +97,13 @@ Setup Digital Airphoto Project for Photogrammetric Processing
 
         crproj( mfile, [], oeproj, "APDU", mapunits )
 
-        #Import Camera Parameters 
+        #Import Camera Parameters
         camfile = raw_airphoto_dir + os.sep + "camera_calib.xml"
         prepared_oe_proj = ingest_dir + os.sep + "oe_configured.prj"
 
         camimport( oeproj, camfile, prepared_oe_proj )
-          
-        #Import Exterior Orientation File 
+
+        #Import Exterior Orientation File
         eofile = raw_airphoto_dir + os.sep + "eo.txt"
         mapunits = "UTM 17 D122" #D122 is NAD83
 
@@ -97,49 +112,51 @@ Setup Digital Airphoto Project for Photogrammetric Processing
         
 Automatic DEM Extraction from Aerial Imagery - **Batch Processing**
 -------------------------------------------------------------------
-    This recipe demonstrates how to extract a DEM from multiple Aerial images, using an orthoengine project 
-    that was previously setup for digital aerial processing (See above recipe)
+    This recipe demonstrates how to extract a DEM from multiple Aerial images, using an OrthoEngine project 
+    that was previously setup for digital aerial image processing (See above recipe)
 
     .. code-block:: python
         
-        import os, sys
-        from pci.cpmmseg import cpmmseg 
+        import os, sys, fnmatch
+        from pci.cpmmseg import cpmmseg
         from pci.epipolar2 import epipolar2
         from pci.autodem2 import autodem2
         from pci.dsm2dtm import dsm2dtm
-        
+
         #Create math model from OE to ingested images
-        ingest_airphoto_dir = r"c:\airphoto\ingests"
+        ingest_airphoto_dir = r"C:\Aerial\Ingested"
         prepared_oe_proj = ingest_airphoto_dir + os.sep + "oe_configured.prj"
 
         ingest_image_list = []
         for r,d,f in os.walk(ingest_airphoto_dir):
             for file in fnmatch.filter(f, "*.tif"):
                 print "found valid input file: ", file
-                ingest_image_list.append(os.path.join(r,file))   
+                ingest_image_list.append(os.path.join(r,file))
 
         for ingest_image in ingest_image_list:
             oeproj = final_oe_proj
             file = ingest_image
-            
+
             cpmmseg(oeproj, file, [])
-            
+
         #Generate Epipolar Images from Stereo pairs
-        epi_outdir = work_dir + os.sep + 'epipolars'
+        epi_outdir = ingest_airphoto_dir + os.sep + 'epipolars'
+        if not os.path.exists(epi_outdir):
+            os.makedirs(epi_outdir)
 
         epipolar2( ingest_airphoto_dir, [1,2,3], [], [], u"", u"opt", [],
                    [1], epi_outdir, [0], u"", u"", [1024] )
 
         #Extract Digital Surface Model (DSM) from multiple stereo airphoto images and mosaic them together
-        dsm_outdir = r"c:\airphoto\dsm_working"
-        deocoded_sm = r"c:\airphoto\dsm_working\airphoto_dsm.pix"                   
-        pxszout = [0.9, 0.9]       
+        dsm_outdir = r"C:\Aerial\Ingested"
+        geocoded_dsm = r"C:\Aerial\Ingested\airphoto_dsm.pix"
+        pxszout = [0.9, 0.9]
 
-        autodem2( epi_outdir, [1], [], [], [], [], 'high', 'hilly', '32r', [2], 'yes', 
-                  'no', 'no', '', outdir, dsm, '', 'UTM 17 D122', [], [], pxszout, 'blend' )
+        autodem2( epi_outdir, [1], [], [], [], [], 'high', 'hilly', '32r', [2], 'yes',
+                  'no', 'no', '', dsm_outdir, geocoded_dsm, '', 'UTM 17 D122', [], [], pxszout, 'blend' )
 
-        #convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM) 
-        dem_file = r"c:\airphoto\dem\airphoto_dem.pix"
+        #convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM)
+        dem_file = r"C:\Aerial\Ingested\airphoto_dem.pix"
         feature_size = [250]
         gradient = [30]
         remove_bumps = [9,5,9,5]
@@ -151,70 +168,70 @@ Automatic DEM Extraction from Aerial Imagery - **Batch Processing**
 
 Automatic Orthorectification of Aerial Imagery
 ----------------------------------------------
-    This recipe provides a working example of how to orthorectify multiple airphoto images from multiple 
-    digital aerial images.
+    This recipe provides a working example of how to orthorectify a single aerial image, 
+    using an OrthoEngine project that was previously setup for digital aerial image processing (See above recipe)
     
     .. code-block:: python 
         
         from pci.cpmmseg import cpmmseg
         from pci.ortho2 import ortho2
-        
-        #Create math model from OE to ingested images
-        ingest_airphoto = r"c:\airphoto\ingest\00021.pix"
-        prepared_oe_proj = r"c:\airphoto\working\oe_configured.prj"
 
-        cpmmseg(prepared_oe_proj, ingest_image, [])
+        #Create math model from OE to ingested images
+        ingest_airphoto = r"C:\Aerial\Ingested\A17563-001.pix"
+        prepared_oe_proj = r"C:\Aerial\Ingested\oe_configured.prj"
+
+        cpmmseg(prepared_oe_proj, ingest_airphoto, [])
 
         #Orthorectify imagery with a user provided DEM
-        ortho_airphoto = r"c:\airphoto\orthos\o00021.pix"
+        ortho_airphoto = r"C:\Aerial\Orthos\A17563-001.pix"
         x_res = "0.2" #x resolution set to 20cm
         y_res = "0.2" #y resolution set to 20cm
-        dem = r"c:\airphoto\dem\user_dem.pix"
+        dem = r"C:\Aerial\DEM\1962_Saskatchewan_DEM.pix"
 
-        ortho2(ingest_airphoto, [], [], [], "", ortho_airphoto, "PIX", "", "", "", "", 
+        ortho2(ingest_airphoto, [], [], [], "", ortho_airphoto, "PIX", "", [], "", "",
                 "", "", [], "", "", x_res, y_res, dem, [], [], "", "", [], "", [], "")
         
         
 Automatic Orthorectification of Aerial Imagery - **Batch Processing**
 ---------------------------------------------------------------------
-    This recipe provides a working example of how to orthorectify multiple airphoto images.
-    It assumes you have already computed the math model required to orthorectify the imagery.
+    This recipe provides a working example of how to orthorectify multiple aerial images, 
+    using an OrthoEngine project that was previously setup for digital aerial image processing (See above recipe)
     
     .. code-block:: python
 
-        import os, sys
+        import os, sys, fnmatch
         from pci.cpmmseg import cpmmseg
         from pci.ortho2 import ortho2
 
-        ingest_airphoto_dir = r"c:\airphoto\ingests"
+        ingest_airphoto_dir = r"C:\test\ShawnPy\Data\Aerial\Ingested"
         prepared_oe_proj = ingest_airphoto_dir + os.sep + "oe_configured.prj"
 
         #Copy math model from prepared orthoengine project file to all ingested images
         for r,d,f in os.walk(ingest_airphoto_dir):
             for file in fnmatch.filter(f, "*.pix"):
                 print "found valid input file: ", file
-                ingest_image = os.path.join(r,file))   
-                      
+                ingest_image = os.path.join(r,file)
+
                 cpmmseg(prepared_oe_proj, ingest_image, [])
-                
+
         #Orthorectify imagery with a user provided DEM
-        ortho_dir = r"c:\airphoto\orthos"
+        ortho_dir = r"C:\test\ShawnPy\Data\Aerial\Orthos"
         x_res = "0.2" #x resolution set to 20cm
         y_res = "0.2" #y resolution set to 20cm
-        dem = r"c:\airphoto\dem\user_dem.pix"
+        dem = r"C:\test\ShawnPy\Data\Aerial\dtm\PCI_Hamilton14_DTM_45cm.pix"
 
-        ortho2(ingest_airphoto_dir, [], [], [], "", ortho_dir, "PIX", "", "", "", "", 
+        ortho2(ingest_airphoto_dir, [], [], [], "", ortho_dir, "PIX", "", [], "", "",
                 "", "", [], "", "", x_res, y_res, dem, [], [], "", "", [], "", [], "")
         
         
 Digital Aerial Orthorectification with user provided DEM - **Full Workflow**
 ----------------------------------------------------------------------------
     This is a complete orthorectification workflow for digital aerial imagery (not including DEM extraction).
-    It combines multiple concepts from the recipes in this section.
+    This script combines multiple concepts from the previous recipes in this section.
 
     .. code-block:: python
 
-        import os, sys
+        import os, sys, fnmatch
         from pci.link import *
         from pci.crproj import *
         from pci.camimport import *
@@ -222,22 +239,22 @@ Digital Aerial Orthorectification with user provided DEM - **Full Workflow**
         from pci.cpmmseg import cpmmseg
         from pci.ortho2 import ortho2
 
-        raw_airphoto_dir =r"c:\airphoto_project\raw_images"
+        raw_airphoto_dir =r"C:\Aerial\photos\Subset"
 
         input_files_list = []
 
         for r,d,f in os.walk(raw_airphoto_dir):
             for file in fnmatch.filter(f, "*.tif"):
                 print "found valid input file: ", file
-                input_files_list.append(os.path.join(r,file))    
-                
+                input_files_list.append(os.path.join(r,file))
+
         #Create Link file
         for raw_image in input_files_list:
             input_file = raw_image
-            ingest_dir = r"c:\airpoto_project\ingested"
-            link_pix = ingested_dir + os.sep + ntpath.basename(os.path.splitext(raw_image)[0]) + ".pix"
-            
-            link( input, link_pix, [] )
+            ingest_dir = r"C:\Aerial\Ingested\Subset"
+            link_pix = ingest_dir + os.sep + os.path.basename(os.path.splitext(raw_image)[0]) + ".pix"
+
+            link( input_file, link_pix, [] )
 
         #Create OrthoEngine project file
         mfile = ingest_dir + os.sep + "*.pix"
@@ -246,67 +263,70 @@ Digital Aerial Orthorectification with user provided DEM - **Full Workflow**
 
         crproj( mfile, [], oeproj, "APDU", mapunits )
 
-        #Import Camera Parameters 
+        #Import Camera Parameters
         camfile = raw_airphoto_dir + os.sep + "camera_calib.xml"
         prepared_oe_proj = ingest_dir + os.sep + "oe_configured.prj"
 
         camimport( oeproj, camfile, prepared_oe_proj )
-          
-        #Import Exterior Orientation File 
+
+        #Import Exterior Orientation File
         eofile = raw_airphoto_dir + os.sep + "eo.txt"
         mapunits = "UTM 17 D122" #D122 is NAD83
 
         eoimport( prepared_oe_proj, eofile, [3], mapunits, "", [], [], "" )
-     
+
         #Copy math model from prepared orthoengine project file to all ingested images
         for r,d,f in os.walk(ingest_dir):
             for file in fnmatch.filter(f, "*.pix"):
                 print "found valid input file: ", file
-                ingest_image = os.path.join(r,file))   
-                      
+                ingest_image = os.path.join(r,file)
+
                 cpmmseg(prepared_oe_proj, ingest_image, [])
-        
+
         #Orthorectify imagery with a user provided DEM
-        ortho_dir = r"c:\airphoto\orthos"
+        ortho_dir = r"C:\Aerial\Orthos\subset"
         x_res = "0.2" #x resolution set to 20cm
         y_res = "0.2" #y resolution set to 20cm
-        dem = r"c:\airphoto\dem\user_dem.pix"
+        dem = r"C:\Aerial\dtm\PCI_Hamilton14_DTM_45cm.pix"
 
-        ortho2(ingest_dir, [], [], [], "", ortho_dir, "PIX", "", "", "", "", 
+        ortho2(ingest_dir, [], [], [], "", ortho_dir, "PIX", "", [], "", "",
                 "", "", [], "", "", x_res, y_res, dem, [], [], "", "", [], "", [], "")
      
      
 Digital Aerial Orthorectification with DEM Extraction - **Full Workflow**
 ------------------------------------------------------------------------------
     This is a complete orthorectification workflow for digital aerial imagery (including DEM extraction).
-    It combines multiple concepts from the recipes in this section.
+    This script combines multiple concepts from the previous recipes in this section.
 
     .. code-block:: python
 
-        import os, sys
+        import os, sys, fnmatch
         from pci.link import *
         from pci.crproj import *
         from pci.camimport import *
         from pci.eoimport import *
         from pci.cpmmseg import cpmmseg
+        from pci.autodem2 import autodem2
+        from pci.epipolar2 import epipolar2
+        from pci.dsm2dtm import dsm2dtm
         from pci.ortho2 import ortho2
 
-        raw_airphoto_dir =r"c:\airphoto_project\raw_images"
+        raw_airphoto_dir =r"C:\Aerial\photos\Subset"
 
         input_files_list = []
 
         for r,d,f in os.walk(raw_airphoto_dir):
             for file in fnmatch.filter(f, "*.tif"):
                 print "found valid input file: ", file
-                input_files_list.append(os.path.join(r,file))    
-                
+                input_files_list.append(os.path.join(r,file))
+
         #Create Link file
         for raw_image in input_files_list:
             input_file = raw_image
-            ingest_dir = r"c:\airpoto_project\ingested"
-            link_pix = ingested_dir + os.sep + ntpath.basename(os.path.splitext(raw_image)[0]) + ".pix"
-            
-            link( input, link_pix, [] )
+            ingest_dir = r"C:\Aerial\Ingested\Subset"
+            link_pix = ingest_dir + os.sep + os.path.basename(os.path.splitext(raw_image)[0]) + ".pix"
+
+            link( input_file, link_pix, [] )
 
         #Create OrthoEngine project file
         mfile = ingest_dir + os.sep + "*.pix"
@@ -315,70 +335,72 @@ Digital Aerial Orthorectification with DEM Extraction - **Full Workflow**
 
         crproj( mfile, [], oeproj, "APDU", mapunits )
 
-        #Import Camera Parameters 
+        #Import Camera Parameters
         camfile = raw_airphoto_dir + os.sep + "camera_calib.xml"
         prepared_oe_proj = ingest_dir + os.sep + "oe_configured.prj"
 
         camimport( oeproj, camfile, prepared_oe_proj )
-          
-        #Import Exterior Orientation File 
+
+        #Import Exterior Orientation File
         eofile = raw_airphoto_dir + os.sep + "eo.txt"
         mapunits = "UTM 17 D122" #D122 is NAD83
 
         eoimport( prepared_oe_proj, eofile, [3], mapunits, "", [], [], "" )
-        
+
         #Create math model from OE to ingested images
         ingest_image_list = []
         for r,d,f in os.walk(ingest_dir):
             for file in fnmatch.filter(f, "*.pix"):
                 print "found valid input file: ", file
-                ingest_image_list.append(os.path.join(r,file))   
+                ingest_image_list.append(os.path.join(r,file))
 
         for ingest_image in ingest_image_list:
             cpmmseg(prepared_oe_proj, ingest_image, [])
-            
+
         #Generate Epipolar Images from Stereo pairs
-        epi_outdir = work_dir + os.sep + 'epipolars'
+        epi_outdir = ingest_dir  + os.sep + 'epipolars'
 
         epipolar2( ingest_dir, [1,2,3], [], [], u"", u"opt", [],
                    [1], epi_outdir, [0], u"", u"", [1024] )
 
         #Extract Digital Surface Model (DSM) from multiple stereo airphoto images and mosaic them together
-        dsm_outdir = r"c:\airphoto\dsm_working"
-        deocoded_sm = r"c:\airphoto\dsm_working\airphoto_dsm.pix"                   
-        pxszout = [0.9, 0.9]       
+        dsm_outdir = r"C:\Aerial\Ingested\Subset\DEM"
+        geocoded_sm = r"C:\Aerial\Ingested\Subset\DEM\airphoto_dsm.pix"
+        pxszout = [0.9, 0.9]
 
-        autodem2( epi_outdir, [1], [], [], [], [], 'high', 'hilly', '32r', [2], 'yes', 
-                  'no', 'no', '', outdir, dsm, '', 'UTM 17 D122', [], [], pxszout, 'blend' )
+        autodem2( epi_outdir, [1], [], [], [], [], 'high', 'hilly', '32r', [2], 'yes',
+                  'no', 'no', '', dsm_outdir, geocoded_sm, '', 'UTM 17 D122', [], [], pxszout, 'blend' )
 
-        #convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM) 
-        dem_file = r"c:\airphoto\dem\airphoto_dem.pix"
+        #convert DSM to DEM (Automatically remove surface features such as trees and buildings from DSM)
+        dem_file = r"C:\Aerial\Ingested\Subset\DEM\airphoto_dem.pix"
         feature_size = [250]
         gradient = [30]
         remove_bumps = [9,5,9,5]
         fill_pits = [7,5]
         smooth_dem = [9]
 
-        dsm2dtm( geocoded_dsm, [1], dem_file, [1], [], [], "", feature_size, gradient, "hilly", remove_bumps, fill_pits, smooth_dem, [] )
+        dsm2dtm( geocoded_sm, [1], dem_file, [1], [], [], "", feature_size, gradient, "hilly", remove_bumps, fill_pits, smooth_dem, [] )
 
         #Orthorectify imagery with a user provided DEM
-        ortho_dir = r"c:\airphoto\orthos"
+        ortho_dir = r"C:\Aerial\Orthos\subset"
         x_res = "0.2" #x resolution set to 20cm
         y_res = "0.2" #y resolution set to 20cm
- 
-        ortho2(ingest_airphoto_dir, [], [], [], "", ortho_dir, "PIX", "", "", "", "", 
+
+        ortho2(ingest_dir, [], [], [], "", ortho_dir, "PIX", "", [], "", "",
                 "", "", [], "", "", x_res, y_res, dem_file, [], [], "", "", [], "", [], "")
         
         
 Create Camera Calibration (.xml) file
--------------------------------------
+--------------------------------------
     This recipe demonstrates how to quickly create a camera calibration file in the XML format 
     required by Geomatica's automated aerial processing algorithms
 
+    In most cases it will be easier to acquire a template of the XML file (See link below) and edit it manually. However,
+    this script provides an example of a logical process for creating a GUI that accepts the user inputs
+    required for creating the camera calibration xml file in a user-friendly fashion; it limits the 
+    input fields based on the sensor type.
     
-    Note: It really is not necessary to use this block of code. Just simply create your own camera
-    calibration file before running the script by copying the block after **Create Camera Calibration 
-    XML file** section and save it as an xml file.
+    :download:`Template Camera Calibration XML file <downloads/camera_calib.xml>`
     
     .. code-block:: python
             

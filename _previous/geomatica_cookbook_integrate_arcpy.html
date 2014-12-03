@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Integration with ArcPy &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    <title>Integration with ArcGIS (ArcPy) &mdash; Geomatica Cookbook 1.0.0 documentation</title>
     
     <link rel="stylesheet" href="css/default.css" type="text/css" />
     <link rel="stylesheet" href="css/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="js/doctools.js"></script>
     <script type="text/javascript" src="js/sidebar.js"></script>
     <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
-    <link rel="next" title="Workflow Examples for the Left-side of Your Brain" href="geomatica_cookbook_complete_workflows.html" />
-    <link rel="prev" title="Geospatial Image Processing" href="geomatica_cookbook_image_processing.html" /> 
+    <link rel="next" title="Satellite Photogrammetry" href="geomatica_cookbook_satellite_photogrammetry.html" />
+    <link rel="prev" title="Geomatica Py General" href="geomatica_cookbook_general.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -36,10 +36,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="geomatica_cookbook_complete_workflows.html" title="Workflow Examples for the Left-side of Your Brain"
+          <a href="geomatica_cookbook_satellite_photogrammetry.html" title="Satellite Photogrammetry"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="geomatica_cookbook_image_processing.html" title="Geospatial Image Processing"
+          <a href="geomatica_cookbook_general.html" title="Geomatica Py General"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
       </ul>
@@ -50,9 +50,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="integration-with-arcpy">
-<h1><strong>Integration with ArcPy</strong><a class="headerlink" href="#integration-with-arcpy" title="Permalink to this headline">¶</a></h1>
-<p>This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.</p>
+  <div class="section" id="integration-with-arcgis-arcpy">
+<h1><strong>Integration with ArcGIS (ArcPy)</strong><a class="headerlink" href="#integration-with-arcgis-arcpy" title="Permalink to this headline">¶</a></h1>
+<p>This section provides information about how to setup Geomatica&#8217;s and ArcPy&#8217;s python libraries so that they
+can be used together cleanly. Some basic error handling concepts are also exposed in this section for both
+Geomatica and ArcPy.</p>
+<p>At the bottom of this page, you will find a simple example that demonstrates how to combine ArcPy
+functions with Geomatica&#8217;s python functions for creating powerful integrated workflows.</p>
 <p><a class="reference external" href="http://arcpy.wordpress.com/">ArcPy Cookbook</a></p>
 <div class="section" id="installing-arcgis-64bit-background-geoprocesses">
 <h2>Installing ArcGIS <em>64bit Background Geoprocesses</em><a class="headerlink" href="#installing-arcgis-64bit-background-geoprocesses" title="Permalink to this headline">¶</a></h2>
@@ -151,204 +155,85 @@ for more examples of error handling with ArcPy.</p>
 <div class="section" id="combining-geomatica-and-arcpy-functions">
 <h2>Combining Geomatica and ArcPy Functions<a class="headerlink" href="#combining-geomatica-and-arcpy-functions" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Use Geomatica to automatically extract a 3D Digital Surface Model (DSM) from high
-resolution aerial imagery. Then use ArcPy to calculte</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.epipolar2</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.autodem2</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.fexport</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.exceptions</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pathcheck</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
-<span class="kn">import</span> <span class="nn">arcpy</span>
-<span class="kn">from</span> <span class="nn">arcpy</span> <span class="kn">import</span> <span class="n">env</span>
-<span class="kn">import</span> <span class="nn">arcpy.mapping</span>
+<div><p>This recipe uses Geomatica&#8217;s library to automatically interpolate a DSM from LIDAR data.
+Then use ArcPy to calculate 3D visibility polygons from specific points of interest (POIs)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">arcpy.mapping</span>
 <span class="kn">import</span> <span class="nn">locale</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">calendar</span><span class="o">,</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">arcpy</span>
+<span class="kn">from</span> <span class="nn">pci.vdemingest</span> <span class="kn">import</span> <span class="n">vdemingest</span>
+<span class="kn">from</span> <span class="nn">pci.vdemsetup</span> <span class="kn">import</span> <span class="n">vdemsetup</span>
+<span class="kn">from</span> <span class="nn">pci.vdemint</span> <span class="kn">import</span> <span class="n">vdemint</span>
+<span class="kn">from</span> <span class="nn">arcpy</span> <span class="kn">import</span> <span class="n">env</span>
 
 <span class="n">arcpy</span><span class="o">.</span><span class="n">CheckOutExtension</span><span class="p">(</span><span class="s">&quot;3D&quot;</span><span class="p">)</span> <span class="c">#Licensing the ArcGIS 3D Analyst extension</span>
 <span class="n">arcpy</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">overwriteOutput</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="k">print</span> <span class="s">&quot;esri&#39;s ArcPy environment successfully loaded.&quot;</span>
 
 <span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span> <span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
 <span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span> <span class="n">locale</span><span class="o">.</span><span class="n">LC_NUMERIC</span><span class="p">,</span> <span class="s">&quot;C&quot;</span> <span class="p">)</span>
 
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
-<span class="k">print</span> <span class="s">&quot;              PCI - Running Epipolar Generation&quot;</span>
-<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="c">#*********************************</span>
+<span class="c">#Start of Geomatica Code</span>
+<span class="c">#*********************************</span>
 
-<span class="n">intermediate_outputs</span> <span class="o">=</span> <span class="n">out_folder</span> <span class="o">+</span> <span class="s">&#39;/intermediate_results/&#39;</span>
+<span class="c">#ingests the LIDAR point cloud (.las) into a working format (.pix)</span>
+<span class="n">lidar_point_cloud</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\lidar_cloud.las&quot;</span>
+<span class="n">lidar_return</span> <span class="o">=</span> <span class="s">&quot;RETURNALL&quot;</span> <span class="c">#uses all lidar returns in the .las file</span>
+<span class="n">pix_vector</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\lidar_vector.pix&quot;</span>
+<span class="n">map_units</span>    <span class="o">=</span> <span class="s">&quot;UTM 17 D000&quot;</span>
 
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">intermediate_outputs</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">intermediate_outputs</span><span class="p">)</span>
+<span class="c">#vdemingest( lidar_point_cloud, &quot;&quot;, &quot;&quot;, &quot;&quot;, lidar_return, [], &quot;&quot;,</span>
+ <span class="c">#           &quot;&quot;, &quot;&quot;, pix_vector, map_units, &quot;&quot;, [] )</span>
 
-<span class="c">#Set Epipolar Parameters</span>
-<span class="n">mfile</span> <span class="o">=</span> <span class="n">in_folder</span> <span class="o">+</span> <span class="s">&#39;*.pix&#39;</span>
-<span class="n">dbic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>      <span class="c"># Integer</span>
-<span class="n">mmseg</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
-<span class="n">dbiw</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
-<span class="n">srcbgd</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">selmthd</span> <span class="o">=</span> <span class="s">u&quot;OPT&quot;</span>
-<span class="n">minpc</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
-<span class="n">sampling</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>      <span class="c"># Integer</span>
-<span class="n">epi_outdir</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;epipolars&#39;</span>
-<span class="n">outbgd</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>     <span class="c"># Float</span>
-<span class="n">tfile</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">genopt</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">memsize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1024</span><span class="p">]</span>      <span class="c"># Integer</span>
+<span class="c">#setup the vector files for interpolation into a raster DEM</span>
+<span class="n">index_file</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\lidar_dem.txt&quot;</span>   <span class="c"># output index file, used by VDEMINT</span>
+<span class="n">dem_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">epi_outdir</span><span class="p">)</span>
+<span class="c">#vdemsetup( lidar_point_cloud, index_file, &quot;TIF&quot;, map_units,</span>
+   <span class="c">#        dem_res, [], &quot;&quot;, [], &quot;&quot; )</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">epipolar2</span><span class="p">(</span> <span class="n">mfile</span><span class="p">,</span> <span class="n">dbic</span><span class="p">,</span> <span class="n">mmseg</span><span class="p">,</span> <span class="n">dbiw</span><span class="p">,</span> <span class="n">srcbgd</span><span class="p">,</span> <span class="n">selmthd</span><span class="p">,</span> <span class="n">minpc</span><span class="p">,</span>
-              <span class="n">sampling</span><span class="p">,</span> <span class="n">epi_outdir</span><span class="p">,</span> <span class="n">outbgd</span><span class="p">,</span> <span class="n">tfile</span><span class="p">,</span> <span class="n">genopt</span><span class="p">,</span> <span class="n">memsize</span> <span class="p">)</span>
-<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
+<span class="c">#interpolate the LIDAR point cloud</span>
+<span class="n">maxiter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="c"># max 20 smoothing iterations</span>
+<span class="n">memsize</span><span class="o">=</span> <span class="p">[</span><span class="mi">2048</span><span class="p">]</span> <span class="c"># use 2048 MB (~2GB) of memory</span>
 
-<span class="k">print</span> <span class="s">&quot;Epipolar Generation Complete!&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="c">#vdemint( index_file, [1], [], pix_vector, [], [], &quot;&quot;, maxiter, memsize )</span>
 
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
-<span class="k">print</span> <span class="s">&quot;                 PCI - Running DSM Extraction&quot;</span>
-<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="n">output_lidar_dem</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\lidar_dem.tif&quot;</span>
 
-<span class="c">#Set autodem2 parameters</span>
-<span class="n">mfile</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;epipolars</span><span class="se">\\</span><span class="s">e*.pix&#39;</span>
-<span class="n">dbic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>      <span class="c"># Integer</span>
-<span class="n">dbiw</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
-<span class="n">minmaxel</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c"># Float</span>
-<span class="n">failvalu</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
-<span class="n">backelev</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">32768</span><span class="p">]</span>     <span class="c"># Float</span>
-<span class="n">demdet</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">tertype</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">datatype</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">extinter</span> <span class="o">=</span> <span class="p">[]</span>      <span class="c"># Integer</span>
-<span class="n">demedit</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">scorchan</span> <span class="o">=</span> <span class="s">u&quot;no&quot;</span>
-<span class="n">wallis</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">tfile</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">dsm_outdir</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;dsm&#39;</span>
-<span class="n">filedsm</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;dsm_Urban.pix&#39;</span>
-<span class="n">demclip</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">mapunits</span> <span class="o">=</span> <span class="s">u&quot;&quot;</span>
-<span class="n">upleft</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c"># Float</span>
-<span class="n">loright</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c"># Float</span>
-<span class="n">pxszout</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">]</span>     <span class="c"># Float</span>
-<span class="n">mergeopt</span> <span class="o">=</span> <span class="s">u&quot;blend&quot;</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">dsm_outdir</span><span class="p">)</span>
+<span class="c">#*********************************</span>
+<span class="c">#Start of ArcGIS (ArcPy) Code</span>
+<span class="c">#*********************************[</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">autodem2</span><span class="p">(</span> <span class="n">mfile</span><span class="p">,</span> <span class="n">dbic</span><span class="p">,</span> <span class="n">dbiw</span><span class="p">,</span> <span class="n">minmaxel</span><span class="p">,</span> <span class="n">failvalu</span><span class="p">,</span> <span class="n">backelev</span><span class="p">,</span> <span class="n">demdet</span><span class="p">,</span>
-            <span class="n">tertype</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">extinter</span><span class="p">,</span> <span class="n">demedit</span><span class="p">,</span> <span class="n">scorchan</span><span class="p">,</span> <span class="n">wallis</span><span class="p">,</span>
-            <span class="n">tfile</span><span class="p">,</span> <span class="n">dsm_outdir</span><span class="p">,</span> <span class="n">filedsm</span><span class="p">,</span> <span class="n">demclip</span><span class="p">,</span> <span class="n">mapunits</span><span class="p">,</span> <span class="n">upleft</span><span class="p">,</span> <span class="n">loright</span><span class="p">,</span>
-            <span class="n">pxszout</span><span class="p">,</span> <span class="n">mergeopt</span> <span class="p">)</span>
-<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
+<span class="c">#Creating File Geodatabase</span>
+<span class="n">out_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\arcpy_work</span><span class="se">\\</span><span class="s">&quot;</span>
+<span class="n">arcpy</span><span class="o">.</span><span class="n">CreateFileGDB_management</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s">&#39;pci_esri-solution.gdb&#39;</span><span class="p">)</span>
 
-<span class="k">print</span> <span class="s">&quot;DSM Extraction Complete!&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<span class="n">geodatabase_file</span> <span class="o">=</span> <span class="n">out_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&#39;pci_esri-solution.gdb&#39;</span>
 
-<span class="c">#Export DSM to 32bit GeoTIFF (PCI Geomatica)</span>
-<span class="n">fili</span>    <span class="o">=</span>       <span class="n">filedsm</span>
-<span class="n">filo</span>    <span class="o">=</span>       <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;dsm_urban.tif&#39;</span>
-<span class="n">dbiw</span>    <span class="o">=</span>       <span class="p">[]</span>
-<span class="n">dbic</span>    <span class="o">=</span>       <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">dbib</span>    <span class="o">=</span>       <span class="p">[]</span>
-<span class="n">dbvs</span>    <span class="o">=</span>       <span class="p">[]</span>
-<span class="n">dblut</span>   <span class="o">=</span>       <span class="p">[]</span>
-<span class="n">dbpct</span>   <span class="o">=</span>       <span class="p">[]</span>
-<span class="n">ftype</span>   <span class="o">=</span>       <span class="s">&quot;TIF&quot;</span>
-<span class="n">foptions</span> <span class="o">=</span>  <span class="s">u&quot;&quot;</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">fexport</span><span class="p">(</span> <span class="n">fili</span><span class="p">,</span> <span class="n">filo</span><span class="p">,</span> <span class="n">dbiw</span><span class="p">,</span> <span class="n">dbic</span><span class="p">,</span> <span class="n">dbib</span><span class="p">,</span> <span class="n">dbvs</span><span class="p">,</span> <span class="n">dblut</span><span class="p">,</span> <span class="n">dbpct</span><span class="p">,</span> <span class="n">ftype</span><span class="p">,</span> <span class="n">foptions</span> <span class="p">)</span>
-<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
-<span class="k">print</span> <span class="s">&quot;                 esri - Running Visibility Analysis                 &quot;</span>
-<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-
-<span class="k">print</span> <span class="s">&quot;Creating File Geodatabase&quot;</span>
-<span class="n">arcpy</span><span class="o">.</span><span class="n">CreateFileGDB_management</span><span class="p">(</span><span class="n">intermediate_outputs</span><span class="p">,</span> <span class="s">&#39;pci_esri-solution.gdb&#39;</span><span class="p">)</span> <span class="c">#Create output file GeoDatabase</span>
-<span class="k">print</span> <span class="s">&quot;File Geodatabase created successfully!&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-
-<span class="n">geodatabase_file</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&#39;pci_esri-solution.gdb&#39;</span>
-
-<span class="n">vis_raster</span> <span class="o">=</span> <span class="n">geodatabase_file</span> <span class="o">+</span> <span class="s">&#39;/Visibility_raster&#39;</span>
+<span class="c">#Set parameters and run visibility analysis</span>
+<span class="n">vis_raster</span> <span class="o">=</span> <span class="n">geodatabase_file</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&#39;Visibility_raster&#39;</span>
 
 <span class="n">Analysis_type</span> <span class="o">=</span> <span class="s">&quot;OBSERVERS&quot;</span>
-<span class="n">Import_Surface_Raster</span> <span class="o">=</span> <span class="n">filo</span>
-<span class="n">Input_Observer_Feature</span> <span class="o">=</span> <span class="n">point_file</span>
+<span class="n">Import_Surface_Raster</span> <span class="o">=</span> <span class="n">output_lidar_dem</span>
+<span class="n">Input_Observer_Feature</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\points\poi.shp&quot;</span>
 <span class="n">Output_Raster</span> <span class="o">=</span> <span class="n">vis_raster</span>
 <span class="n">AboGLevel</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-<span class="n">NODATA</span><span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">32768</span><span class="p">]</span>
+<span class="n">NODATA</span><span class="o">=</span> <span class="p">[]</span>
 
-<span class="c"># Process: Visibility</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-<span class="k">print</span> <span class="s">&quot;Beginning Visibility Analysis&quot;</span>
 <span class="n">arcpy</span><span class="o">.</span><span class="n">Visibility_3d</span><span class="p">(</span><span class="n">Import_Surface_Raster</span><span class="p">,</span> <span class="n">Input_Observer_Feature</span><span class="p">,</span> <span class="n">Output_Raster</span><span class="p">,</span> <span class="n">AboGLevel</span><span class="p">,</span> <span class="n">Analysis_type</span><span class="p">,</span> <span class="s">&quot;NODATA&quot;</span><span class="p">,</span> <span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;FLAT_EARTH&quot;</span><span class="p">,</span> <span class="s">&quot;0.13&quot;</span><span class="p">,</span> <span class="s">&quot;5&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;1.5&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;100&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 <span class="k">print</span> <span class="s">&quot;Visibility Analysis complete!&quot;</span>
 
 <span class="c"># Convert Raster to Polygon in ArcGIS</span>
-
 <span class="n">inRaster</span> <span class="o">=</span> <span class="n">vis_raster</span>
-<span class="n">out_poly_folder</span> <span class="o">=</span> <span class="n">intermediate_outputs</span> <span class="o">+</span> <span class="s">&quot;polygons/&quot;</span>
-<span class="n">outPolygons</span> <span class="o">=</span> <span class="n">out_poly_folder</span> <span class="o">+</span> <span class="s">&quot;visibility_poly.shp&quot;</span>
+<span class="n">out_poly_folder</span> <span class="o">=</span> <span class="n">out_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;polygons&quot;</span>
+<span class="n">outPolygons</span> <span class="o">=</span> <span class="n">out_poly_folder</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;visibility_poly.shp&quot;</span>
 <span class="n">field</span> <span class="o">=</span> <span class="s">&quot;VALUE&quot;</span>
 
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">out_poly_folder</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">out_poly_folder</span><span class="p">)</span>
-
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-<span class="k">print</span> <span class="s">&quot;Running Raster to Polygon Conversion&quot;</span>
 <span class="c"># Execute RasterToPolygon</span>
 <span class="n">arcpy</span><span class="o">.</span><span class="n">RasterToPolygon_conversion</span><span class="p">(</span><span class="n">inRaster</span><span class="p">,</span> <span class="n">outPolygons</span><span class="p">,</span> <span class="s">&quot;NO_SIMPLIFY&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
+
 <span class="k">print</span> <span class="s">&quot;Raster to Polygon Conversion Completed!&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
-<span class="k">print</span> <span class="s">&quot;              esri - Intersect Analysis with Roads               &quot;</span>
-<span class="k">print</span> <span class="s">&quot;***************************************************************&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-
-<span class="k">print</span> <span class="s">&quot;Beginning Intersect Analysis&quot;</span>
-
-<span class="n">final_outputs</span> <span class="o">=</span> <span class="n">out_folder</span> <span class="o">+</span> <span class="s">&#39;/final_results/&#39;</span>
-<span class="n">vis_road_dir</span> <span class="o">=</span> <span class="n">final_outputs</span> <span class="o">+</span> <span class="s">&#39;road_visibility/&#39;</span>
-
-<span class="n">roads</span> <span class="o">=</span> <span class="n">road_file</span>
-<span class="n">visibility_poly</span> <span class="o">=</span> <span class="n">outPolygons</span>
-<span class="n">inFeatures</span> <span class="o">=</span> <span class="p">[</span><span class="n">roads</span><span class="p">,</span> <span class="n">visibility_poly</span><span class="p">]</span>
-<span class="n">roads_Intersect</span> <span class="o">=</span> <span class="n">vis_road_dir</span> <span class="o">+</span> <span class="s">&#39;road_visibility.shp&#39;</span>
-
-<span class="k">print</span>
-
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">vis_road_dir</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">vis_road_dir</span><span class="p">)</span>
-    <span class="k">print</span> <span class="s">&quot;output path created&quot;</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-
-<span class="n">arcpy</span><span class="o">.</span><span class="n">Intersect_analysis</span><span class="p">(</span><span class="n">inFeatures</span><span class="p">,</span> <span class="n">roads_Intersect</span><span class="p">,</span> <span class="s">&quot;ALL&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;LINE&quot;</span><span class="p">)</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
-<span class="k">print</span> <span class="s">&quot;Intersect Analysis Complete&quot;</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -363,7 +248,7 @@ resolution aerial imagery. Then use ArcPy to calculte</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><strong>Integration with ArcPy</strong></a><ul>
+<li><a class="reference internal" href="#"><strong>Integration with ArcGIS (ArcPy)</strong></a><ul>
 <li><a class="reference internal" href="#installing-arcgis-64bit-background-geoprocesses">Installing ArcGIS <em>64bit Background Geoprocesses</em></a></li>
 <li><a class="reference internal" href="#import-arcpy-and-geomatica-python-libraries-and-verify-configuration">Import ArcPy and Geomatica Python Libraries and verify configuration</a></li>
 <li><a class="reference internal" href="#handling-geomatica-and-arcpy-exceptions">Handling Geomatica and ArcPy Exceptions</a></li>
@@ -373,11 +258,11 @@ resolution aerial imagery. Then use ArcPy to calculte</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="geomatica_cookbook_image_processing.html"
-                        title="previous chapter"><strong>Geospatial Image Processing</strong></a></p>
+  <p class="topless"><a href="geomatica_cookbook_general.html"
+                        title="previous chapter"><strong>Geomatica Py General</strong></a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="geomatica_cookbook_complete_workflows.html"
-                        title="next chapter"><strong>Workflow Examples for the Left-side of Your Brain</strong></a></p>
+  <p class="topless"><a href="geomatica_cookbook_satellite_photogrammetry.html"
+                        title="next chapter"><strong>Satellite Photogrammetry</strong></a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -409,10 +294,10 @@ resolution aerial imagery. Then use ArcPy to calculte</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="geomatica_cookbook_complete_workflows.html" title="Workflow Examples for the Left-side of Your Brain"
+          <a href="geomatica_cookbook_satellite_photogrammetry.html" title="Satellite Photogrammetry"
              >next</a> |</li>
         <li class="right" >
-          <a href="geomatica_cookbook_image_processing.html" title="Geospatial Image Processing"
+          <a href="geomatica_cookbook_general.html" title="Geomatica Py General"
              >previous</a> |</li>
         <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
       </ul>

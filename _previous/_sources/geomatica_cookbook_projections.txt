@@ -1,6 +1,7 @@
 **Projections**
 =======================
-This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+This section provides some basic recipes for reprojecting rasters and vectors, as well as, resampling
+imagery from the native resolution to a new user-defined resolution (ground sampling distance (GSD)). 
 
 Create projection for an existing image file
 ---------------------------------------------------------
@@ -14,51 +15,45 @@ Create projection for an existing image file
         
 Reproject an image from one coordinate system to a different coordinate system
 ------------------------------------------------------------------------------
-    This example explicitly imports the pansharp2 function from the pansharp2 module and imports
-    all onjects and functions from the ortho2 module
+    This recipe uses a single Geomatica function to reproject an image from a UTM NAD83
+    projected coordinate system to a Latitude and Longitude WGS84 geographic coordinate system
 
     .. code-block:: python
         
         from pci.reproj2 import reproj2
-        
-        input_file = r"c:\data\image.pix" #UTM WGS84 projection
-        reproj_file = r"c:\data\reproj_image.pix
+
+        input_file = r"C:\projection\landsat8_ms.pix" #UTM NAD83 projection
+        reproj_file = r"C:\projection\reproj_image2.pix"
         resolution = [2.0, 2.0]
-        map_units = "Long/Lat E122" #output will be longitude and latitude with NAD83 Ellipse
-        
-        reproj2(input_file, [], [], "", reproj_file, "", "", "", 
+        map_units = "Long/Lat D000" #output will be longitude and latitude with WGS84
+
+        reproj2(input_file, [], [], "", reproj_file, "", "", "",
                 [], resolution, "YES", map_units, "", "", "", "", "", "", "")
 
         
 Reproject a vector layer from one coordinate system to a different coordinate system
 --------------------------------------------------------------------------------------
-    Python prints help documentation to the terminal/console for the specified function. This includes information
-    about the signature of the function (arguments that need to be passed) and information about what the function
-    does. Furthermore, the help document includes information about what input data is required and what output is 
-    produced.
+    This recipe uses a single Geomatica function to reproject a vector layer from a UTM NAD83
+    projected coordinate system to a Latitude and Longitude WGS84 geographic coordinate system
     
-    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
-    
-
     .. code-block:: python
 
         from pci.reproj2 import reproj2
-        
-        input_file = r"c:\data\vectors.pix" #UTM WGS84 projection
+
+        input_file = r"C:\projection\toronto_vector.pix" #UTM NAD83 projection
         vector_layers = [2,3]
-        reproj_file = r"c:\data\reproj_vectors.pix
-        map_units = "Long/Lat E122" #output will be longitude and latitude with NAD83 Ellipse
-        
-        reproj2(input_file, [], vector_layers, "VEC", reproj_file, "", "", "", 
+        reproj_file = r"C:\projection\reproj_vectors.pix"
+        resolution= [2.0, 2.0]
+        map_units = "Long/Lat D000" #output will be longitude and latitude with WGS83
+
+        reproj2(input_file, [], vector_layers, "VEC", reproj_file, "", "", "",
                 [], resolution, "", map_units, "", "", "", "", "", "", "")
         
 
 Resample Image channels
 -----------------------
-    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-    function. The main behaviour of this action is that the script will continue to run if the exception is called.
-    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-    to process the other files
+    This recipe demonstrates how to change the ground sampling distance (GSD) or image resolution
+    from the inpu resolution to 4m resolution, using a cubic convolution resampling method.
 
     .. code-block:: python
         

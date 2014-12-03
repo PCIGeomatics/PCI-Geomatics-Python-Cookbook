@@ -1,6 +1,11 @@
-**Integration with ArcPy**
-=================================
-This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+**Integration with ArcGIS (ArcPy)**
+===================================
+This section provides information about how to setup Geomatica's and ArcPy's python libraries so that they
+can be used together cleanly. Some basic error handling concepts are also exposed in this section for both
+Geomatica and ArcPy. 
+
+At the bottom of this page, you will find a simple example that demonstrates how to combine ArcPy
+functions with Geomatica's python functions for creating powerful integrated workflows.
 
 `ArcPy Cookbook <http://arcpy.wordpress.com/>`_
 
@@ -115,204 +120,86 @@ Handling Geomatica and ArcPy Exceptions
         
 Combining Geomatica and ArcPy Functions
 ---------------------------------------
-    Use Geomatica to automatically extract a 3D Digital Surface Model (DSM) from high 
-    resolution aerial imagery. Then use ArcPy to calculte 
+    This recipe uses Geomatica's library to automatically interpolate a DSM from LIDAR data. 
+    Then use ArcPy to calculate 3D visibility polygons from specific points of interest (POIs) 
 
     .. code-block:: python
 
-        from pci.epipolar2 import *
-        from pci.autodem2 import *
-        from pci.fexport import *
-        from pci.exceptions import *
-        from pathcheck import *
-        from sys import argv
-        import arcpy
-        from arcpy import env
         import arcpy.mapping
         import locale
         import os
-        import shutil
-        import calendar, time
+        import arcpy
+        from pci.vdemingest import vdemingest
+        from pci.vdemsetup import vdemsetup
+        from pci.vdemint import vdemint
+        from arcpy import env
 
         arcpy.CheckOutExtension("3D") #Licensing the ArcGIS 3D Analyst extension
         arcpy.env.overwriteOutput = True
-        print "esri's ArcPy environment successfully loaded."
 
         locale.setlocale( locale.LC_ALL, "" )
         locale.setlocale( locale.LC_NUMERIC, "C" )
-    
-        print ""
-        print "***************************************************************"
-        print "              PCI - Running Epipolar Generation"
-        print "***************************************************************"
-        print ""
 
-        intermediate_outputs = out_folder + '/intermediate_results/'
+        #*********************************
+        #Start of Geomatica Code
+        #*********************************
 
-        if not os.path.exists(intermediate_outputs): 
-            os.makedirs(intermediate_outputs)
+        #ingests the LIDAR point cloud (.las) into a working format (.pix)
+        lidar_point_cloud = r"D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\lidar_cloud.las"
+        lidar_return = "RETURNALL" #uses all lidar returns in the .las file
+        pix_vector = r"D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\lidar_vector.pix"
+        map_units    = "UTM 17 D000"
 
-        #Set Epipolar Parameters
-        mfile = in_folder + '*.pix'  
-        dbic = [1,2,3]      # Integer
-        mmseg = []      # Integer
-        dbiw = []      # Integer
-        srcbgd = u"" 
-        selmthd = u"OPT" 
-        minpc = []      # Integer
-        sampling = [2]      # Integer
-        epi_outdir = intermediate_outputs + 'epipolars'
-        outbgd = [0]     # Float
-        tfile = u"" 
-        genopt = u"" 
-        memsize = [1024]      # Integer
+        #vdemingest( lidar_point_cloud, "", "", "", lidar_return, [], "",
+         #           "", "", pix_vector, map_units, "", [] )
 
-        os.mkdir(epi_outdir)
+        #setup the vector files for interpolation into a raster DEM
+        index_file = r"D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\lidar_dem.txt"   # output index file, used by VDEMINT
+        dem_res = [1,1]
 
-        try:
-            epipolar2( mfile, dbic, mmseg, dbiw, srcbgd, selmthd, minpc,
-                      sampling, epi_outdir, outbgd, tfile, genopt, memsize )
-        except PCIException, e:
-            print e
-        except Exception, e:
-            print e
+        #vdemsetup( lidar_point_cloud, index_file, "TIF", map_units,
+           #        dem_res, [], "", [], "" )
 
-        print "Epipolar Generation Complete!"
-        print ""
+        #interpolate the LIDAR point cloud
+        maxiter = [20] # max 20 smoothing iterations
+        memsize= [2048] # use 2048 MB (~2GB) of memory
 
-        print ""
-        print "***************************************************************"
-        print "                 PCI - Running DSM Extraction"
-        print "***************************************************************"
-        print ""
+        #vdemint( index_file, [1], [], pix_vector, [], [], "", maxiter, memsize )
 
-        #Set autodem2 parameters
-        mfile = intermediate_outputs + 'epipolars\\e*.pix' 
-        dbic = [1]      # Integer
-        dbiw = []      # Integer
-        minmaxel = []     # Float
-        failvalu = []      # Integer
-        backelev = [-32768]     # Float
-        demdet = u"" 
-        tertype = u"" 
-        datatype = u"" 
-        extinter = []      # Integer
-        demedit = u"" 
-        scorchan = u"no" 
-        wallis = u"" 
-        tfile = u"" 
-        dsm_outdir = intermediate_outputs + 'dsm' 
-        filedsm = intermediate_outputs + 'dsm_Urban.pix' 
-        demclip = u"" 
-        mapunits = u"" 
-        upleft = []     # Float
-        loright = []     # Float
-        pxszout = [1.0, 1.00]     # Float
-        mergeopt = u"blend" 
+        output_lidar_dem = r"D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\lidar_dem.tif"
 
-        os.mkdir(dsm_outdir)
 
-        try:
-            autodem2( mfile, dbic, dbiw, minmaxel, failvalu, backelev, demdet, 
-                    tertype, datatype, extinter, demedit, scorchan, wallis, 
-                    tfile, dsm_outdir, filedsm, demclip, mapunits, upleft, loright, 
-                    pxszout, mergeopt )
-        except PCIException, e:
-            print e
-        except Exception, e:
-            print e
+        #*********************************
+        #Start of ArcGIS (ArcPy) Code 
+        #*********************************[
 
-        print "DSM Extraction Complete!"
-        print ""
+        #Creating File Geodatabase
+        out_dir = r"D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\arcpy_work\\"
+        arcpy.CreateFileGDB_management(out_dir, 'pci_esri-solution.gdb') 
 
-        #Export DSM to 32bit GeoTIFF (PCI Geomatica)
-        fili	=	filedsm
-        filo	=	intermediate_outputs + 'dsm_urban.tif'
-        dbiw	=	[]
-        dbic	=	[1]
-        dbib	=	[]
-        dbvs	=	[]
-        dblut	=	[]
-        dbpct	=	[]
-        ftype	=	"TIF"
-        foptions =  u""
+        geodatabase_file = out_dir + os.sep + 'pci_esri-solution.gdb'
 
-        try:
-            fexport( fili, filo, dbiw, dbic, dbib, dbvs, dblut, dbpct, ftype, foptions )
-        except PCIException, e:
-            print e
-        except Exception, e:
-            print e
-
-        print ""
-        print "***************************************************************"
-        print "                 esri - Running Visibility Analysis                 "
-        print "***************************************************************"
-        print ""
-
-        print "Creating File Geodatabase"
-        arcpy.CreateFileGDB_management(intermediate_outputs, 'pci_esri-solution.gdb') #Create output file GeoDatabase
-        print "File Geodatabase created successfully!"
-        print ""
-
-        geodatabase_file = intermediate_outputs + 'pci_esri-solution.gdb'
-
-        vis_raster = geodatabase_file + '/Visibility_raster'
+        #Set parameters and run visibility analysis
+        vis_raster = geodatabase_file + os.sep + 'Visibility_raster'
 
         Analysis_type = "OBSERVERS"
-        Import_Surface_Raster = filo
-        Input_Observer_Feature = point_file
+        Import_Surface_Raster = output_lidar_dem
+        Input_Observer_Feature = r"D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\source_review\data_transform\lidar\points\poi.shp"
         Output_Raster = vis_raster
         AboGLevel = ""
-        NODATA= [-32768]
+        NODATA= []
 
-        # Process: Visibility
-        print ""
-        print "Beginning Visibility Analysis"
         arcpy.Visibility_3d(Import_Surface_Raster, Input_Observer_Feature, Output_Raster, AboGLevel, Analysis_type, "NODATA", "1", "FLAT_EARTH", "0.13", "5", "", "1.5", "", "100", "", "", "", "")
         print "Visibility Analysis complete!"
 
         # Convert Raster to Polygon in ArcGIS
-
         inRaster = vis_raster
-        out_poly_folder = intermediate_outputs + "polygons/"
-        outPolygons = out_poly_folder + "visibility_poly.shp"
+        out_poly_folder = out_dir + os.sep + "polygons"
+        outPolygons = out_poly_folder + os.sep + "visibility_poly.shp"
         field = "VALUE"
 
-        if not os.path.isdir(out_poly_folder):
-            os.mkdir(out_poly_folder)
-
-        print ""
-        print "Running Raster to Polygon Conversion"
         # Execute RasterToPolygon
         arcpy.RasterToPolygon_conversion(inRaster, outPolygons, "NO_SIMPLIFY", field)
-        print ""
+
         print "Raster to Polygon Conversion Completed!"
-        print ""
 
-        print ""
-        print "***************************************************************"
-        print "              esri - Intersect Analysis with Roads               "
-        print "***************************************************************"
-        print ""
-
-        print "Beginning Intersect Analysis"
-
-        final_outputs = out_folder + '/final_results/'
-        vis_road_dir = final_outputs + 'road_visibility/'
-
-        roads = road_file
-        visibility_poly = outPolygons
-        inFeatures = [roads, visibility_poly]
-        roads_Intersect = vis_road_dir + 'road_visibility.shp'  
-
-        print 
-
-        if not os.path.exists(vis_road_dir): 
-            os.makedirs(vis_road_dir)
-            print "output path created"
-        print ""
-          
-        arcpy.Intersect_analysis(inFeatures, roads_Intersect, "ALL", "", "LINE")
-        print ""
-        print "Intersect Analysis Complete"

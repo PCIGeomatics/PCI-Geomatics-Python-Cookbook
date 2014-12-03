@@ -1,18 +1,14 @@
 **Data Transformations**
 ========================
-This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+This section provides some recipes for converting from one data format to another. Examples include:
+vector polygons to bitmaps or thematic rasters, bitmaps to vectors, DEMs to contours, LIDAR (.las) to
+raster DEM and more...
 
-     
-Convert bitmap to vector line and polygon layers
-------------------------------------------------
-    Python prints help documentation to the terminal/console for the specified function. This includes information
-    about the signature of the function (arguments that need to be passed) and information about what the function
-    does. Furthermore, the help document includes information about what input data is required and what output is 
-    produced.
+Convert bitmap to vector line or vector polygon layers
+------------------------------------------------------
+    Takes an input bitmap segment and converts it to either a vector line or vector polygon layer.
+    The output is written to a new file.
     
-    It is best to access this directly with the python interpreter in Geomatica's Focus or using a terminal/console
-    
-
     .. code-block:: python
 
         from pci.bit2line import bit2line 
@@ -39,12 +35,10 @@ Convert bitmap to vector line and polygon layers
         bit2poly(bitmap_file, bitmap_layer, output_poly, smooth_poly, "", format, "")
         
 
-Convert Raster to vector line, polygon, point and raster bitmap
----------------------------------------------------------------
-    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-    function. The main behaviour of this action is that the script will continue to run if the exception is called.
-    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-    to process the other files
+Convert raster to vector line, vector polygon, vector point and bitmap layers
+-----------------------------------------------------------------------------
+    This recipe demonstrates how to convert a raster channel to various vector data types and an
+    output bitmap
 
     .. code-block:: python
 
@@ -52,95 +46,92 @@ Convert Raster to vector line, polygon, point and raster bitmap
         from pci.ras2poly import ras2poly
         from pci.ras2pnt import ras2pnt
         from pci.ras2bit import ras2bit
-        from pci.ra2thmr import thmr
-        
+
         #Set input raster file and layer
-        raster_file = r"c:\input\bitmap.pix"
+        raster_file = r"c:\raster.pix"
         raster_chan = [1]
-        
-        
+
+
         #Convert raster channel to vector lines
-        output_line = r"c:\output\ras2lines.pix"
+        output_line = r"c:\ras2lines.pix"
         smooth_line = "Yes"
         format = "pix" 
-        
-        ras2line(raster_file, raster_chan, output_line, "yes", smooth_line, "", format, foptions)
-        
-        
+
+        ras2line(raster_file, raster_chan, output_line, "yes", smooth_line, "", format, "")
+
+
         #Convert raster channel to vector polygons
-        output_poly = r"c:\output\ras2poly.shp"
+        output_poly = r"c:\ras2poly.shp"
         smooth_poly = "Yes"
         format = "shp" #output will be an ArcGIS shapefile
-        
+
         ras2poly(raster_file, raster_chan, output_poly, smooth_poly, "", format, "")
 
-        
+
         #Convert raster channel to vector points
-        output_points = r"c:\output\ras2pnts.pix"
+        output_points = r"c:\ras2pnts.pix"
         format = "shp" 
-        
+
         ras2pnt(raster_file, raster_chan, output_points, "", format, "")
-        
-        
+
+
         #Convert raster channel to bitmap
-        output_bitmap = r"c:\output\ras2bitmap.shp"
+        output_bitmap = r"c:\ras2bitmap.pix"
         smooth_poly = "Yes"
         format = "pix" 
-        
+
         ras2bit(raster_file, raster_chan, output_bitmap, "", format, "")
         
         
-        
-Convert vector line layer to vector polygons, vector points and raster
-----------------------------------------------------------------------
-    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-    function. The main behaviour of this action is that the script will continue to run if the exception is called.
-    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-    to process the other files
+Convert vector line layer to vector polygon, vector point and raster layers
+---------------------------------------------------------------------------
+    This recipe demonstrates how to convert a vector line layer to various vector and raster data
+    types
 
     .. code-block:: python
 
         from pci.line2poly import line2poly
         from pci.line2pnt import line2pnt
         from pci.line2ras import line2ras
-        
+
         #Set input vector line file and layer
-        line_file = r"c:\input\line.shp"
+        line_file = r"c:\line.shp"
         line_layer = [1]
-        
-        
+
+
         #Convert vector line to vector polygon
-        output_poly = r"c:\output\polygons\line2poly.shp"
+        output_poly = r"c:\line2poly.shp"
         format = "shp"
-        
+
         line2poly(line_file, line_layer, output_poly, "", format, "")
-        
-        
+
+
         #convert vector line to vector points
-        output_points = r"c:\output\line2points.pix"
+        output_points = r"c:\line2points.pix"
         format = "pix"
         convert_mthd = "vertices" #a unique point is placed on each vertex of each line
-        
+
         line2pnt(line_file, line_layer, output_points, convert_mthd, "", format, "")
-       
-       
+
+
         #convert vector line to raster (burns values where the line exists into raster cells) 
-        output_raster = r"c:\output\line2ras.pix"
+        output_raster = r"c:\line2ras.pix"
         format = "pix"
         attr_field = "Num_of_lanes" #intersecting raster cells will be assigned a value based on the number of lanes in the road
         connect = [8] #connect lines using all directions including diagonals
         res = [1] #output raster set to 1m pixel resolution
-        
+
         line2ras(line_file, line_layer, output_raster, [], attr_field, [], connect, 
                  res, format, "")
         
         
-Convert vector polygon layer to vector lines, points, raster bitmap layer and image raster
--------------------------------------------------------------------------------------------
-    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-    function. The main behaviour of this action is that the script will continue to run if the exception is called.
-    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-    to process the other files
+Convert vector polygon layer to vector line, vector point, bitmap and thematic raster layers
+---------------------------------------------------------------------------------------------
+    This recipe demonstrates how to convert a vector poylgon layer to various vector and raster data
+    types.
+    
+    Of particular interest, the final block demonstrates how to convert a polygon layer to a thematic
+    raster (raster with attributes).
 
     .. code-block:: python
 
@@ -148,42 +139,42 @@ Convert vector polygon layer to vector lines, points, raster bitmap layer and im
         from pci.poly2pnt import poly2pnt
         from pci.poly2bit import poly2bit
         from pci.poly2ras import poly2ras
-        
+
         #Set input vector polygon file and layer
-        poly_file = r"c:\input\poly.pix"
-        poly_layer = [2]
-        
-        
+        poly_file = r"C:\polygons.pix"
+        poly_layer = [12]
+
+
         #Convert vector polygons to vector lines
-        output_line = r"c:\output\polygons\poly2line.shp"
+        output_line = r"C:\poly2line.shp"
         format = "shp"
-        
+
         poly2line(poly_file, poly_layer, output_line, "", format, "")
-        
-        
+
+
         #convert vector polygons to vector points (does not create centroid, search cookbook for "centroid") 
-        output_points = r"c:\output\poly2points.pix"
+        output_points = r"C:\poly2points.pix"
         format = "pix"
-        
+
         poly2pnt(poly_file, poly_layer, output_points, "", format, "")
-       
-       
+
+
         #convert vector polygons to a bitmap 
-        output_bitmap = r"c:\output\poly2bitmap.pix"
+        output_bitmap = r"C:\poly2bitmap.pix"
         format = "pix"
         res = [1]
-        
+
         poly2bit(poly_file, poly_layer, output_bitmap, "", res, format, "")
-        
-        
+
+
         #convert vector line to raster (burns values where the polygon exists into raster cells)
-        output_raster = r"c:\output\poly2ras.pix"
+        output_raster = r"C:\poly2thmras.pix"
         format = "pix"
         raster_type = "Thematic Raster"
-        attr_field = "Num_of_lanes" #land use class number
+        attr_field = "class_num" #land use class number
         res = [1] #output raster set to 1m pixel resolution  
-        
-        
+
+
         poly2ras(poly_file, poly_layer, output_raster, [], raster_type, 
                  attr_field, res, format, "")
         
@@ -191,104 +182,66 @@ Convert vector polygon layer to vector lines, points, raster bitmap layer and im
         
 Automatically collect GCP points and convert to Chip Database - **Partial Workflow**
 ------------------------------------------------------------------------------------
-    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-    function. The main behaviour of this action is that the script will continue to run if the exception is called.
-    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-    to process the other files
+    This example demonstrates how to automatically collect GCPs on an image and create a chip 
+    database from the GCP points, using the geographically accurate reference image as the base
 
     .. code-block:: python
 
-        from pci.link import link
-        from pci.autogcp2 import *
-        from pci.gcprefn import *
-        
-        #Create Link File to hold new GCP segment(s)
-        raw_geoeye_image = r"C:\geoeye\RAWDATA\po_311159_0000000\po_000000_bgrn_0000000.tif"
-        link_pix_file = r"C:\geoeye\pix_link\po_311159_0000000\po_311159_bgrn_0000000.pix"
-        
-        link( raw_geoeye_image, link_pix_file, [] )
-        
-        #Run GCP Collection and store new GCP segment in link pix file
-        raw_match_chan = [4]       #When available NIR channel is recommended
-        reference_image = r"C:\geoeye\reference\reference_image.pix" 
-        ref_match_chan = [4]
-        dem = r"C:\geoeye\reference\dem_file.pix" 
-        gcp_search_radius = [50] 
-
-        gcp_seg = autogcp2(link_pix_file, raw_match_chan, u"", [], [], reference_image, ref_match_chan, dem, 
-                        [], [], u"", u"", [], u"", u"", gcp_search_radius, u"", [], u"", [])
-        
-        #autogcp2 function returns the new gcp segment, which can then be directly passed to the gcp refinement function
-        
-        #Setup required parameters for automatic GCP refinement    
-        model_type = u"RF"    #rational function model is often best for newer sensors with good RPCs 
-        order = [0]           #a polynomial order of 0 is best for most DigitalGlobe sensors (due to very accurate RPCs)   
-        reject = [5,0.5,0.5]  #Continue to reject worse GCPs until RMSE falls below 0.5 pixel in x and y directions
-
-        gcprefn(link_pix_file, [gcp_seg], [], [], model_type, order, reject, u"NO", [], [])
-        
-        #accurate GCPs should now be stored in the link pix file
-          
-        #convert GCPs to chip database    
-        chip_chans = [1,2,3]
-        chipDB_file = r"C:\geoeye\reference\chipDatabase\chips.cdb" 
-        
-        pnt2chip(link_pix_file, chip_chans, [], link_pix_file, [gcp_seg], 
-                 chipDB_file, "geoeye", "", [], dem, [], [])
+        #UNDER CONSTRUCTION
         
 
-Create raster DEM from vector elevation layers
-----------------------------------------------
-    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+Create raster DEM from various vector elevation layers
+------------------------------------------------------
+    Interpolate a DEM from multiple vector sources, such as, contours, points and break-lines. 
+    
+    Note: the VDEMINGEST function discovers all valid input data in a directory.
 
     .. code-block:: python
 
-        from pci.vdemingest import *
-        from pci.vdemsetup import *
-        from pci.vdemint import *
+        from pci.vdemingest import vdemingest
+        from pci.vdemsetup import vdemsetup
+        from pci.vdemint import vdemint
 
-        #ingests the LIDAR point cloud (.las) into a working format (.pix)
-        lidar_point_cloud = r"C:\input_lidar\lidar_cloud.las"
-        lidar_return = "RETURNALL" #uses all lidar returns in the .las file
-        pix_vector = r"C:\working_lidar\lidar_vector.pix" #output .pix vector file
+        #ingests the points, contours and breaklines from the following directories into a .pix file
+        points = r"C:\points"
+        contours = r"C:\lines"
+        break_lines = r"C:\breaklines"
+        pix_vector = r"C:\output\ingest_vectors.pix" 
         map_units    = "UTM 17 D000"
 
-        vdemingest( lidar_point_cloud, "", "", "", lidar_return, [], "", 
+        vdemingest( points, contours, break_lines, "", "", [], "", 
                     "", "", pix_vector, map_units, "", [] )
 
 
         #setup the vector files for interpolation into a raster DEM
-        indexfil = r"C:\working_lidar\lidar_vector.pix"   # output index file, used by VDEMINT
-        dem_res  = [1,1] 
+        index_file = r"c:\output\dem_from_vectors.txt"   # output index file, used by VDEMINT
+        dem_res = [1,1] 
 
-        vdemsetup( lidar_point_cloud, indexfil, "PIX", "", 
+        vdemsetup( pix_vector, index_file, "PIX", "", 
                    dem_res, [], "", [], "" )
 
                    
         #interpolate the LIDAR point cloud      
-        dem_file = r"C:\output_dem\dem_fromLIDAR.pix"
         maxiter = [20] # max 20 smoothing iterations
-        memsize= [2048] # use 2048 MB (~2GB) of memory
+        memsize= [1024] # use 2048 MB (~2GB) of memory
 
-        vdemint( file, [1], [], pix_vector, [], [], "", maxiter, memsize )
+        vdemint( index_file, [1], [], pix_vector, [], [], "", maxiter, memsize )
         
 
 Create raster DEM from LIDAR points (.las)
 ----------------------------------------------
-    Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+    This recipe creates a 1m (GSD) raster DEM from lidar return points stored in a .las file
 
     .. code-block:: python
 
-        from pci.vdemingest import *
-        from pci.vdemsetup import *
-        from pci.vdemint import *
+        from pci.vdemingest import vdemingest
+        from pci.vdemsetup import vdemsetup
+        from pci.vdemint import vdemint
 
         #ingests the LIDAR point cloud (.las) into a working format (.pix)
-        lidar_point_cloud = r"C:\input_lidar\lidar_cloud.las"
+        lidar_point_cloud = r"C:\lidar\lidar_cloud.las"
         lidar_return = "RETURNALL" #uses all lidar returns in the .las file
-        pix_vector = r"C:\working_lidar\lidar_vector.pix" #output .pix vector file
+        pix_vector = r"C:\lidar\lidar_vector.pix" 
         map_units    = "UTM 17 D000"
 
         vdemingest( lidar_point_cloud, "", "", "", lidar_return, [], "", 
@@ -296,38 +249,34 @@ Create raster DEM from LIDAR points (.las)
 
 
         #setup the vector files for interpolation into a raster DEM
-        indexfil = r"C:\working_lidar\lidar_vector.pix"   # output index file, used by VDEMINT
-        dem_res  = [1,1] 
+        index_file = r"C:\lidar\lidar_dem.txt"   # output index file, used by VDEMINT
+        dem_res = [1,1] 
 
-        vdemsetup( lidar_point_cloud, indexfil, "PIX", "", 
+        vdemsetup( lidar_point_cloud, index_file, "PIX", "", 
                    dem_res, [], "", [], "" )
 
                    
         #interpolate the LIDAR point cloud      
-        dem_file = r"C:\output_dem\dem_fromLIDAR.pix"
         maxiter = [20] # max 20 smoothing iterations
         memsize= [2048] # use 2048 MB (~2GB) of memory
 
-        vdemint( file, [1], [], pix_vector, [], [], "", maxiter, memsize )
+        vdemint( index_file, [1], [], pix_vector, [], [], "", maxiter, memsize )
 
         
 Generate contours from raster DEM 
 ---------------------------------
-    This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
-    function. The main behaviour of this action is that the script will continue to run if the exception is called.
-    This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-    to process the other files
+    This recipe uses a single function to generate contour vectors from a raster DEM
 
     .. code-block:: python
 
         from pci.contour import contour
-        
-        dem_file = r"c:\dem\extracted_dem.pix"
+
+        dem_file = r"C:\dem.pix"
         elev_chan = [1]
-        output_contour_layer = [2]
-        contour_interval = [10] 10m intervals between contour lines
+        contour_layer_name = "Contours"
+        contour_interval = [10] #10m intervals between contour lines
         dem_no_data = [-32768] #no data value set for inptu DEM
         contour_field = "Elevation"
-        
-        contour(dem_file, elev_chan, [], output_contour_layer, 
-                "", contour_interval, backval, contour_field)
+
+        contour(dem_file, elev_chan, [], contour_layer_name, 
+                "", contour_interval, [], contour_field)

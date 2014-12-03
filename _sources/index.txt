@@ -51,7 +51,8 @@ PCI Geomatics would like to extend a special thanks to the following contributor
 
 * **PCI Development Team** for developing the functions and objects
 * **Sarah Thompson** for performing a code review
-* **Mauro Scatozza** for getting the github project launched
+* **Michael Goldberg** for helping with the documentation
+* **Mauro Scatozza** for getting the GitHub project launched
 * **Freddy Paya** for helping with some recipes
 
    

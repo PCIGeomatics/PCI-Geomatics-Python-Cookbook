@@ -53,34 +53,35 @@
   <div class="section" id="generic-geometric-correction">
 <h1><strong>Generic Geometric Correction</strong><a class="headerlink" href="#generic-geometric-correction" title="Permalink to this headline">¶</a></h1>
 <p>These recipes are for casual geospatial imagery users. They use generic math models to improve the geometric
-accuracy of images so that it better aligns with other datasources, such as GIS road layers.</p>
+accuracy of images so that they better align with other data sources, such as GIS road layers.</p>
 <p>For many casual users of geospatial imagery, budgets may not be in place to obtain raw imagery from a vendor that
-can be processed with specific satellite and aerial models. Rather, many GIS departments have to use whatever imagery
-they can find. As a result, they often obtain imagery with nominal georeferencing, but may not line up with their
-GIS data (i.e. road vectors) and due to the fact that the imagery is already processed, they cannot use the recipes
-in the Satellite Photogrammetry section. As such, these recipes use generic math models to improve the geometric
-accuracy of images with nominal georeferencing.</p>
+can be processed with specific satellite and or aerial models. Rather, many GIS departments have to use whatever imagery
+they can find. As a result, they often obtain imagery with nominal georeferencing, but due to unknown processing
+procedures, the imagery may not line up well with their GIS data (i.e. road vectors). And because
+the imagery is already processed, they cannot use the recipes in the <em>Satellite Photogrammetry</em>
+or <em>Aerial Photogrammetry</em> sections. As such, these recipes use generic math models to improve
+the geometric accuracy of images so that they better align with your GIS data layers.</p>
 <div class="section" id="automatic-gcp-collection-and-2d-geometric-correction-with-polynomial-model">
 <h2>Automatic GCP collection and 2D geometric correction with Polynomial Model<a class="headerlink" href="#automatic-gcp-collection-and-2d-geometric-correction-with-polynomial-model" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This recipe provides a quick and automatic method to geometrically correct imagery with
-georeferencing but missing a proper math model or orbital information. This process includes
-automatic GCP collection and refinement. This may be useful for improving the georeferencing
-of archive imagery.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.polymodel</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+georeferencing, but missing a proper math model or orbital information. This process includes
+automatic GCP collection and refinement.</p>
+<p>This may be useful for improving the georeferencing of archive imagery.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
+<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="n">autogcp2</span>
+<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="n">gcprefn</span>
+<span class="kn">from</span> <span class="nn">pci.polymodel</span> <span class="kn">import</span> <span class="n">polymodel</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
 
 <span class="c">#create PIX link file of input tif image for GCP collection</span>
-<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\miscellaneous_satellite.tif&quot;</span>
-<span class="n">ingest_link_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\miscellaneous_satellite.pix&quot;</span>
+<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\generic\miscellaneous_satellite.tif&quot;</span>
+<span class="n">ingest_link_file</span> <span class="o">=</span> <span class="s">r&quot;C:\generic\miscellaneous_satellite.pix&quot;</span>
 
 <span class="n">link</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#Automatic GCP collection using initial georeferencing only</span>
-<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\reference.tif&quot;</span>
+<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;C:\generic\reference.tif&quot;</span>
 <span class="n">in_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
 <span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
 <span class="n">search_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">]</span>
@@ -113,26 +114,23 @@ of archive imagery.</p>
 <div class="section" id="automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model">
 <h2>Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model<a class="headerlink" href="#automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Some GIS organizations and departments are limited to satellite and aerial imagery that
-has previously been geometrically processed, but the image may not line up well with their GIS
-data layers or may be too inaccurate for practical use.</p>
-<p>This recipe demonstrates how to geometrically correct an image with initial georeferencing
-using automatic GCP collection and refinement from a referencing image.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.tpsmodel</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+<div><p>This recipe demonstrates how to geometrically correct an image with initial georeferencing
+using automatic GCP collection and refinement from a referencing image and DEM.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
+<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="n">autogcp2</span>
+<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="n">gcprefn</span>
+<span class="kn">from</span> <span class="nn">pci.tpsmodel</span> <span class="kn">import</span> <span class="n">tpsmodel</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
 
 <span class="c">#create PIX link file of input tif image for GCP collection</span>
-<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\miscellaneous_satellite.tif&quot;</span>
-<span class="n">ingest_link_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\miscellaneous_satellite.pix&quot;</span>
+<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\generic\miscellaneous_satellite.tif&quot;</span>
+<span class="n">ingest_link_file</span> <span class="o">=</span> <span class="s">r&quot;C:\generic\miscellaneous_satellite.pix&quot;</span>
 
 <span class="n">link</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#Automatic GCP collection using initial georeferencing only</span>
-<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\reference.tif&quot;</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\dem.pix&quot;</span>
+<span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;C:\generic\reference.tif&quot;</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\generic\dem.pix&quot;</span>
 <span class="n">in_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
 <span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
 <span class="n">search_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">]</span>
@@ -152,7 +150,7 @@ using automatic GCP collection and refinement from a referencing image.</p>
 <span class="n">tpsmodel</span><span class="p">(</span> <span class="n">ingest_link_file</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[]</span> <span class="p">)</span>
 
 <span class="c">#Geometrically correct the image with the tps model that was previously computed</span>
-<span class="n">geo_correct_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic\corr_random_satellite.tif&quot;</span>
+<span class="n">geo_correct_image</span> <span class="o">=</span> <span class="s">r&quot;C:\generic\corr_random_satellite.tif&quot;</span>
 <span class="n">res_x</span> <span class="o">=</span> <span class="s">&quot;2&quot;</span>
 <span class="n">res_y</span> <span class="o">=</span> <span class="s">&quot;2&quot;</span>
 
@@ -170,29 +168,29 @@ road vector layers. Unfortunately, these images may have been previously correct
 georeferencing.</p>
 <p>This recipe demonstrates how to geometrically correct an image with nominal georeferencing
 using automatic GCP collection and refinement from a vector road layer.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.fftmvec</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.imageinv</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.fimport</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.iii</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.pcimod</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.tpsmodel</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.fftmvec</span> <span class="kn">import</span> <span class="n">fftmvec</span>
+<span class="kn">from</span> <span class="nn">pci.imageinv</span> <span class="kn">import</span> <span class="n">imageinv</span>
+<span class="kn">from</span> <span class="nn">pci.fimport</span> <span class="kn">import</span> <span class="n">fimport</span>
+<span class="kn">from</span> <span class="nn">pci.iii</span> <span class="kn">import</span> <span class="n">iii</span>
+<span class="kn">from</span> <span class="nn">pci.pcimod</span> <span class="kn">import</span> <span class="n">pcimod</span>
+<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="n">gcprefn</span>
+<span class="kn">from</span> <span class="nn">pci.tpsmodel</span> <span class="kn">import</span> <span class="n">tpsmodel</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
 
-<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\misc_satellite_image.pix&quot;</span>
+<span class="n">input_image</span> <span class="o">=</span> <span class="s">r&quot;C:\generic_road\misc_satellite_image.pix&quot;</span>
 
 <span class="c">#Invert the Near-Infrared channel - Helps FFTMVEC to successfully collect GCPs</span>
-<span class="n">inverse_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\inv_misc_img.pix&quot;</span>
+<span class="n">inverse_image</span> <span class="o">=</span> <span class="s">r&quot;C:\generic_road\inv_misc_img.pix&quot;</span>
 <span class="n">inv_channel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="c">#Near-Infrared channel</span>
 
 <span class="n">imageinv</span><span class="p">(</span><span class="n">input_image</span><span class="p">,</span> <span class="n">inverse_image</span><span class="p">,</span> <span class="n">inv_channel</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
 
 <span class="c">#copy the inverted image channel into the ingested image we are going to collect GCPs for</span>
-<span class="n">pcimod</span><span class="p">(</span><span class="n">input_image</span><span class="p">,</span> <span class="s">&quot;ADD&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c">#create new 32bit channel in input .pix image file</span>
-<span class="n">iii</span><span class="p">(</span><span class="n">inverse_image</span><span class="p">,</span> <span class="n">input_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[])</span> <span class="c">#copy inverse image to input .pix image file</span>
+<span class="n">pcimod</span><span class="p">(</span><span class="n">input_image</span><span class="p">,</span> <span class="s">&quot;ADD&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">iii</span><span class="p">(</span><span class="n">inverse_image</span><span class="p">,</span> <span class="n">input_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[])</span>
 
 <span class="c">#Run FFTMVEC to automatically collect GCPs from road vectors</span>
-<span class="n">roadvec</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\roads\toronto_vector.pix&quot;</span>
+<span class="n">roadvec</span> <span class="o">=</span> <span class="s">r&quot;C:\generic_road\roads\toronto_vector.pix&quot;</span>
 <span class="n">gcp_seg</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="n">fftmvec</span><span class="p">(</span> <span class="n">input_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[],</span> <span class="n">roadvec</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">15</span><span class="p">],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">gcp_seg</span> <span class="p">)</span>
@@ -209,8 +207,8 @@ using automatic GCP collection and refinement from a vector road layer.</p>
 
 
 <span class="c">#Geometrically correct the image with the tps model that was previously computed</span>
-<span class="n">geo_correct_image</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\corr_misc_satellite.pix&quot;</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\Geomatica_Cookbook\generic_road\torontodem.pix&quot;</span>
+<span class="n">geo_correct_image</span> <span class="o">=</span> <span class="s">r&quot;C:\generic_road\corr_misc_satellite.pix&quot;</span>
+<span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;C:\generic_road\torontodem.pix&quot;</span>
 <span class="n">res_x</span> <span class="o">=</span> <span class="s">&quot;4&quot;</span>
 <span class="n">res_y</span> <span class="o">=</span> <span class="s">&quot;4&quot;</span>
 
@@ -223,17 +221,69 @@ using automatic GCP collection and refinement from a vector road layer.</p>
 <div class="section" id="automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model-batch-processing">
 <h2>Automatic GCP collection and 3D geometric correction with Thin Plate Spline Model - <strong>Batch Processing</strong><a class="headerlink" href="#automatic-gcp-collection-and-3d-geometric-correction-with-thin-plate-spline-model-batch-processing" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe demonstrates how to extract a DEM from multiple Aerial images, using an orthoengine project
-that was previously setup for digital aerial processing (See above recipe)</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#Create math model from OE to ingested images</span>
-<span class="n">ingest_airphoto_dir</span> <span class="o">=</span> <span class="s">r&quot;c:\airphoto\ingests&quot;</span>
-<span class="n">prepared_oe_proj</span> <span class="o">=</span> <span class="n">ingest_airphoto_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;oe_configured.prj&quot;</span>
+<div><p>This recipe demonstrates how to automatically discover all valid images in a directory and
+then automatically collect GCPs, refine the GCPs based on RMSE and finally geometrically
+correct all valid images found using a 3D generic model named, Thin Plate Spline (TPS).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">fnmatch</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pci.link</span> <span class="kn">import</span> <span class="n">link</span>
+<span class="kn">from</span> <span class="nn">pci.autogcp2</span> <span class="kn">import</span> <span class="n">autogcp2</span>
+<span class="kn">from</span> <span class="nn">pci.gcprefn</span> <span class="kn">import</span> <span class="n">gcprefn</span>
+<span class="kn">from</span> <span class="nn">pci.tpsmodel</span> <span class="kn">import</span> <span class="n">tpsmodel</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="n">ortho2</span>
 
-<span class="n">ingest_image_list</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">r</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">ingest_airphoto_dir</span><span class="p">):</span>
-    <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&quot;*.tif&quot;</span><span class="p">):</span>
+<span class="n">raw_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\generic_batch\raw&quot;</span>
+<span class="n">file_filter</span> <span class="o">=</span> <span class="s">&quot;*.tif&quot;</span>
+
+<span class="n">raw_image_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">r</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">raw_dir</span><span class="p">):</span>
+    <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">file_filter</span><span class="p">):</span>
         <span class="k">print</span> <span class="s">&quot;found valid input file: &quot;</span><span class="p">,</span> <span class="nb">file</span>
-        <span class="n">ingest_image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">file</span><span class="p">))</span>
+        <span class="n">raw_image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">file</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_image_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">raw_image_list</span><span class="p">:</span>
+
+        <span class="c">#Create .pix link file to store the GCP segement that holds the GCPs</span>
+        <span class="n">ingest_link_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\generic_batch\ingest&quot;</span>
+        <span class="n">ingest_link_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">raw_image</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.pix&quot;</span>
+        <span class="n">ingest_link_image</span> <span class="o">=</span> <span class="n">ingest_link_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingest_link_filename</span>
+
+        <span class="n">link</span><span class="p">(</span> <span class="n">raw_image</span><span class="p">,</span> <span class="n">ingest_link_image</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
+
+        <span class="c">#Automatic GCP collection using initial georeferencing only</span>
+        <span class="n">reference_image</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\generic_batch\reference\o2_5m.pix&quot;</span>
+        <span class="n">dem</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\generic_batch\reference\torontodem.pix&quot;</span>
+        <span class="n">in_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">ref_match_chan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">search_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>
+        <span class="n">num_gcps</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#AUTOGCP2 returns the number of GCPs that were collected. Can use this for building intelligent scripts</span>
+
+        <span class="n">gcp_seg</span> <span class="o">=</span> <span class="n">autogcp2</span><span class="p">(</span> <span class="n">ingest_link_image</span><span class="p">,</span> <span class="n">in_match_chan</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">reference_image</span><span class="p">,</span> <span class="n">ref_match_chan</span><span class="p">,</span>
+                            <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">search_radius</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">num_gcps</span> <span class="p">)</span>
+
+        <span class="c">#Refine GCPs based on generic 2D Polynomial model, which is built by the GCPs</span>
+        <span class="n">reject</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+        <span class="n">refined_gcp_seg</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#GCPREFN returns the segment number with the refined GCPs so that it can be provided into the next func.</span>
+        <span class="n">out_stats</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#GCPREFN populates this list with 11 useful statistics which can be used to build more intelligence into the GCP refinement process</span>
+
+        <span class="n">gcprefn</span><span class="p">(</span> <span class="n">ingest_link_image</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;POLY&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">reject</span><span class="p">,</span> <span class="s">&quot;NO&quot;</span><span class="p">,</span> <span class="n">refined_gcp_seg</span><span class="p">,</span> <span class="n">out_stats</span> <span class="p">)</span>
+
+        <span class="c">#Compute a 3D generic math model (Thin Plate Spline) from the GCPs you collected and refined</span>
+        <span class="n">tpsmodel</span><span class="p">(</span> <span class="n">ingest_link_image</span><span class="p">,</span> <span class="p">[</span><span class="n">gcp_seg</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[]</span> <span class="p">)</span>
+
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;No image files found in &quot;</span> <span class="o">+</span> <span class="n">raw_dir</span> <span class="o">+</span> <span class="s">&quot; that match your filter criteria.&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
+<span class="c">#Geometrically correct the image with the tps model that was previously computed</span>
+<span class="n">geo_correct_dir</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Projects\Open\Marketing\Python_Cookbook\tests\generic_batch\corrected&quot;</span>
+<span class="n">res_x</span> <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+
+<span class="n">ortho2</span><span class="p">(</span><span class="n">ingest_link_dir</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">geo_correct_dir</span><span class="p">,</span> <span class="s">&quot;TIF&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+       <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">dem</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>

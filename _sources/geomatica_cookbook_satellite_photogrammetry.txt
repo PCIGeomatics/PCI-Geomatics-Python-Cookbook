@@ -310,12 +310,7 @@ Subset an OrthoEngine Project
     
     .. code-block:: python 
         
-        import os
-        from pci.autotie2 import *
-        from pci.tprefn import *
-        from pci.crproj import *
-        from pci.cpmmseg import *
-        from pci.ortho2 import *
+        #UNDER CONSTRUCTION
 
 Merge multiple OrthoEngine projects with tie points
 ----------------------------------------------------------------------------------------
@@ -330,12 +325,7 @@ Merge multiple OrthoEngine projects with tie points
     
     .. code-block:: python
     
-        import os
-        from pci.autotie2 import *
-        from pci.tprefn import *
-        from pci.crproj import *
-        from pci.cpmmseg import *
-        from pci.ortho2 import *
+        #UNDER CONSTRUCTION
               
 
 Satellite Orthorectification with GCPs previously collected - **Batch Processing**

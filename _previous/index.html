@@ -56,8 +56,7 @@ tools.</p>
 library and common workflows.  It is also a great resource for more advanced
 users, as it contains useful code snippets that can be easily &#8220;plugged in&#8221; to a python script.</p>
 <ul class="simple">
-<li>None of these recipes helping? <a class="reference external" href="mailto:marketing&#37;&#52;&#48;pcigeomatics&#46;com">E-mail us</a> with your recommendations</li>
-<li>Want to contribute? Checkout our <a class="reference external" href="https://github.com/PCIGeomatics/PCI-Geomatics-Python-Cookbook">Geomatica Cookbook GitHub</a> project</li>
+<li>None of these recipes helping? Want to know if something else is possible with Geomatica? <a class="reference external" href="mailto:cookbook&#37;&#52;&#48;pcigeomatics&#46;com">E-mail us</a> with your questions.</li>
 </ul>
 <p><strong>Requirements:</strong></p>
 <ul class="simple">
@@ -75,6 +74,14 @@ users, as it contains useful code snippets that can be easily &#8220;plugged in&
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_general.html#import-geomatica-py-libraries">Import Geomatica Py Libraries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_general.html#accessing-help-about-geomatica-py-function">Accessing Help About Geomatica Py Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_general.html#handling-geomatica-py-exceptions">Handling Geomatica Py Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_general.html#input-methods">Input Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html"><strong>Integration with ArcGIS (ArcPy)</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#installing-arcgis-64bit-background-geoprocesses">Installing ArcGIS <em>64bit Background Geoprocesses</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#import-arcpy-and-geomatica-python-libraries-and-verify-configuration">Import ArcPy and Geomatica Python Libraries and verify configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#handling-geomatica-and-arcpy-exceptions">Handling Geomatica and ArcPy Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#combining-geomatica-and-arcpy-functions">Combining Geomatica and ArcPy Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html"><strong>Satellite Photogrammetry</strong></a><ul>
@@ -88,9 +95,9 @@ users, as it contains useful code snippets that can be easily &#8220;plugged in&
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#automatic-gcp-collection-and-refinement-from-road-vector-layer">Automatic GCP Collection and refinement from road vector layer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#subset-an-orthoengine-project">Subset an OrthoEngine Project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#merge-multiple-orthoengine-projects-with-tie-points">Merge multiple OrthoEngine projects with tie points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#satellite-orthorectification-with-gcps-previously-collected-batch-processing">Satellite Orthorectification with GCPs previously collected - <strong>Batch Processing</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#automatic-bundle-adjustment-and-orthorectification-gcps-previously-collected">Automatic Bundle Adjustment and Orthorectification (GCPs previously collected)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#automatic-dem-extraction-with-model-refinement-gcps-previously-collected">Automatic DEM Extraction with Model Refinement(GCPs previously collected)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#satellite-orthorectification-with-gcps-previously-collected-batch-processing">Satellite Orthorectification with GCPs previously collected - <strong>Batch Processing</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#satellite-photogrammetric-batch-workflow-with-user-provided-dem-full-workflow">Satellite Photogrammetric Batch Workflow with user provided DEM - <strong>Full Workflow</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_satellite_photogrammetry.html#satellite-photogrammetric-batch-workflow-with-dem-extraction-full-workflow">Satellite Photogrammetric Batch Workflow with DEM Extraction - <strong>Full Workflow</strong></a></li>
 </ul>
@@ -119,7 +126,7 @@ users, as it contains useful code snippets that can be easily &#8220;plugged in&
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#generate-full-resolution-mosaic-single-image">Generate full resolution mosaic (single image)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#generate-mosaic-tiles-from-vector-map-sheet-with-jpeg-compression">Generate Mosaic tiles (from vector map-sheet) with JPEG compression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#clip-mosaic-to-polygon-cookie-cutter-method">Clip Mosaic to polygon (Cookie Cutter Method)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#end-to-end-mosaic-generation-with-tiling-full-workflow-download">End-to-end mosaic generation with tiling - <strong>Full Workflow</strong> Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_mosaicking.html#end-to-end-mosaic-generation-with-tiling-full-workflow">End-to-end mosaic generation with tiling - <strong>Full Workflow</strong></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_projections.html"><strong>Projections</strong></a><ul>
@@ -139,12 +146,12 @@ users, as it contains useful code snippets that can be easily &#8220;plugged in&
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_data_transforms.html"><strong>Data Transformations</strong></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-bitmap-to-vector-line-and-polygon-layers">Convert bitmap to vector line and polygon layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-raster-to-vector-line-polygon-point-and-raster-bitmap">Convert Raster to vector line, polygon, point and raster bitmap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-vector-line-layer-to-vector-polygons-vector-points-and-raster">Convert vector line layer to vector polygons, vector points and raster</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-vector-polygon-layer-to-vector-lines-points-raster-bitmap-layer-and-image-raster">Convert vector polygon layer to vector lines, points, raster bitmap layer and image raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-bitmap-to-vector-line-or-vector-polygon-layers">Convert bitmap to vector line or vector polygon layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-raster-to-vector-line-vector-polygon-vector-point-and-bitmap-layers">Convert raster to vector line, vector polygon, vector point and bitmap layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-vector-line-layer-to-vector-polygon-vector-point-and-raster-layers">Convert vector line layer to vector polygon, vector point and raster layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#convert-vector-polygon-layer-to-vector-line-vector-point-bitmap-and-thematic-raster-layers">Convert vector polygon layer to vector line, vector point, bitmap and thematic raster layers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#automatically-collect-gcp-points-and-convert-to-chip-database-partial-workflow">Automatically collect GCP points and convert to Chip Database - <strong>Partial Workflow</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#create-raster-dem-from-vector-elevation-layers">Create raster DEM from vector elevation layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#create-raster-dem-from-various-vector-elevation-layers">Create raster DEM from various vector elevation layers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#create-raster-dem-from-lidar-points-las">Create raster DEM from LIDAR points (.las)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_data_transforms.html#generate-contours-from-raster-dem">Generate contours from raster DEM</a></li>
 </ul>
@@ -158,32 +165,18 @@ users, as it contains useful code snippets that can be easily &#8220;plugged in&
 <li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_image_processing.html#calculate-top-of-atmosphere-toa-reflectance-image">Calculate Top-of-atmosphere (TOA) Reflectance image</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html"><strong>Integration with ArcPy</strong></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#installing-arcgis-64bit-background-geoprocesses">Installing ArcGIS <em>64bit Background Geoprocesses</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#import-arcpy-and-geomatica-python-libraries-and-verify-configuration">Import ArcPy and Geomatica Python Libraries and verify configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#handling-geomatica-and-arcpy-exceptions">Handling Geomatica and ArcPy Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_integrate_arcpy.html#combining-geomatica-and-arcpy-functions">Combining Geomatica and ArcPy Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="geomatica_cookbook_complete_workflows.html"><strong>Workflow Examples for the Left-side of Your Brain</strong></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_complete_workflows.html#co-register-image-stack">Co-register image stack</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_complete_workflows.html#automatically-identify-and-calculate-volume-of-new-stockpiles">Automatically identify and calculate volume of new stockpiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomatica_cookbook_complete_workflows.html#orthorectification-pansharpening-and-mosaicking-of-satellite-imagery">Orthorectification, pansharpening and mosaicking of satellite imagery</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
 <div class="section" id="contributors-special-thanks">
 <h1>Contributors &amp; Special Thanks<a class="headerlink" href="#contributors-special-thanks" title="Permalink to this headline">¶</a></h1>
-<p><strong>Author:</strong> Shawn Melamed</p>
+<p><strong>Author: Shawn Melamed</strong></p>
 <p>PCI Geomatics would like to extend a special thanks to the following contributors:</p>
 <ul class="simple">
 <li><strong>PCI Development Team</strong> for developing the functions and objects</li>
 <li><strong>Sarah Thompson</strong> for performing a code review</li>
 <li><strong>Mauro Scatozza</strong> for getting the github project launched</li>
 <li><strong>Freddy Paya</strong> for helping with some recipes</li>
-<li><strong>Your name here</strong> (<a class="reference external" href="https://github.com/PCIGeomatics/PCI-Geomatics-Cookbook">Become a contributor</a>)</li>
 </ul>
 </div>
 <div class="section" id="indices-and-tables">

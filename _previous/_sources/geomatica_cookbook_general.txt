@@ -1,21 +1,30 @@
 **Geomatica Py General**
 =================================
-This section provides some basic recipes for importing pci libraries, accessing help, error handling and etc.
+This section provides some basic recipes for testing your installation, importing Geomatica's Python
+library (modules), accessing help, error handling and etc.
 
 Check Installation of Geomatica Py Libraries
 ---------------------------------------------------------
     Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-    Use the Python interpreter in the terminal/console for quickly checking the install and licensing. 
+    Use Python's interactive mode in the terminal/console for quickly checking the install and licensing. 
 
     .. code-block:: python
 
         import pci 
 
-        #If successful, the following will be printed to the console:
-        #PCI Pluggable Framework environment successfully loaded
-        #Otherwise, a PCI exception will be printed
-        
-        
+    
+    If successful...
+    
+    .. image:: images/geomatica_success.png
+    
+    
+    If failure...
+    
+    .. image:: images/geomatica_fail.png
+    
+    Note: Depending on the error, a different error message may be printed
+
+    
 Import Geomatica Py Libraries
 ---------------------------------------------------------
     This example explicitly imports the pansharp2 function from the pansharp2 module and imports
@@ -69,6 +78,45 @@ Handling Geomatica Py Exceptions
         except Exception, e:
             print e
             
-        #This results in python printing a PCI caught exception that the input multispectral file does not exist
-        #The script will continue to run through to the next line of code without exiting, because the exception
-        #is handled with a print statement
+    This results in python printing a PCI caught exception that the input multispectral file does not exist
+    The script will continue to run through to the next line of code without exiting, because the exception
+    is handled with a print statement
+    
+    .. image:: images/error_handling.png
+    
+
+Input Methods
+--------------------------------
+    This recipe demonstrates three (3) different methods that users running a script can 
+    input information, such as, locations to input files.
+
+    .. code-block:: python
+    
+        #Method 1 - In the script directly
+        input_file = r"c:\raw_imagery\image.tif"
+        
+        
+        #Method 2 - With a user prompt
+        input_file = raw_input("Please provide the path to the input image ")
+        
+        '''The script will pause until the user provides an input path. At which point, the 
+        variable "input_file" will be assigned the user provided path.'''
+
+        
+        #Method 3 - Passing information s arguments when launching the script (usually the preferred method)
+        from sys import argv
+        
+        script, input_image, output_dir = argv
+        
+        print "input image is: " + input_image
+        print "output directory is: " + output_dir
+        
+        '''The user running the script will be expected to provide the path to the input file
+        and output directory after providing the location of the script. Each argument is
+        separated by a white space"
+        
+        For example:
+        
+        python c:\python_script\myscript.py c:\raw_imagery\image.tif"
+        '''
+    

@@ -1,0 +1,23 @@
+<CAMERA NAME="UltraCam-D">
+<LENS_SERIAL/>
+<CALIB_SOURCE/>
+<CALIB_DATE/>
+<FL>105.2</FL>
+<SYMMETRY PPX="0.000" PPY="0.27"/>
+<RLDC name="R0">0</RLDC>
+<RLDC name="R1">0</RLDC>
+<RLDC name="R2">0</RLDC>
+<RLDC name="R3">0</RLDC>
+<RLDC name="R4">0</RLDC>
+<RLDC name="R5">0</RLDC>
+<RLDC name="R6">0</RLDC>
+<RLDC name="R7">0</RLDC>
+<DDC name="P1">0</DDC>
+<DDC name="P2">0</DDC>
+<DDC name="P3">0</DDC>
+<DDC name="P4">0</DDC>
+<DIGITAL>
+<CHIP_SIZE WIDTH="103.5" HEIGHT="67.5"/>
+<YSCALE>1.000</YSCALE>
+</DIGITAL>
+</CAMERA>
