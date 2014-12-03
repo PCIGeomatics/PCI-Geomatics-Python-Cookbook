@@ -23,7 +23,7 @@ body {
 }
 
 div.document {
-    background-color: #666666;
+    background-color: #222222;
 }
 
 div.documentwrapper {
@@ -147,7 +147,7 @@ div.body h4,
 div.body h5,
 div.body h6 {
     font-family: 'Trebuchet MS', sans-serif;
-    background-color: #bac1c8;
+    /*background-color: #bac1c8;*/
     font-weight: normal;
     color: #666666;
     border-bottom: 1px solid #ccc;
