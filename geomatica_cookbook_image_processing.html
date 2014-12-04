@@ -104,12 +104,12 @@ to convert it to level 3 imagery.</p>
 <span class="kn">from</span> <span class="nn">pci.fexport</span> <span class="kn">import</span> <span class="n">fexport</span>
 
 <span class="c">#create pix live link file for MS and PAN images</span>
-<span class="n">pan_level2</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\Level2\00025\Lvl02-00025-Pan.tif&quot;</span>
-<span class="n">pan_link</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\working\Lvl02-00025-Pan.pix&quot;</span>
+<span class="n">pan_level2</span> <span class="o">=</span> <span class="s">r&quot;C:\Level2\00025\Lvl02-00025-Pan.tif&quot;</span>
+<span class="n">pan_link</span> <span class="o">=</span> <span class="s">r&quot;C:\Lvl02-00025-Pan.pix&quot;</span>
 <span class="n">link</span><span class="p">(</span><span class="n">pan_level2</span><span class="p">,</span> <span class="n">pan_link</span><span class="p">,</span> <span class="p">[])</span>
 
-<span class="n">ms_level2</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\Level2\00025\Lvl02-00025-Col.tif&quot;</span>
-<span class="n">ms_link</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\working\Lvl02-00025-Col.pix&quot;</span>
+<span class="n">ms_level2</span> <span class="o">=</span> <span class="s">r&quot;C:\Level2\00025\Lvl02-00025-Col.tif&quot;</span>
+<span class="n">ms_link</span> <span class="o">=</span> <span class="s">r&quot;C:\Lvl02-00025-Col.pix&quot;</span>
 <span class="n">link</span><span class="p">(</span><span class="n">ms_level2</span><span class="p">,</span> <span class="n">ms_link</span><span class="p">,</span> <span class="p">[])</span>
 
 <span class="c">#get extents of pan image</span>
@@ -131,7 +131,7 @@ to convert it to level 3 imagery.</p>
         <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">12</span><span class="p">]),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
 
 <span class="c">#run Pansharp2 on MS and PAN imagery</span>
-<span class="n">level3_image</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\output_level3\00025-PSH.pix&quot;</span>
+<span class="n">level3_image</span> <span class="o">=</span> <span class="s">r&quot;C:\output_level3\00025-PSH.pix&quot;</span>
 <span class="n">pansharp2</span><span class="p">(</span><span class="n">ms_link</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">pan_link</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">level3_image</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;PIX&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 
 <span class="c">#set Level3 (pansharpened image) back to pixel projection (no projection)</span>
@@ -139,7 +139,7 @@ to convert it to level 3 imagery.</p>
         <span class="nb">str</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="mi">14</span><span class="p">]),</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
 
 <span class="c">#optionally convert it to a TIF image</span>
-<span class="n">level3_image_tif</span> <span class="o">=</span> <span class="s">r&quot;E:\Esri_cloud_Aerial\demo_DryRun\output_level3\00025-PSH.tif&quot;</span>
+<span class="n">level3_image_tif</span> <span class="o">=</span> <span class="s">r&quot;C:\output_level3\00025-PSH.tif&quot;</span>
 <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
 
 <span class="n">fexport</span><span class="p">(</span><span class="n">level3_image</span><span class="p">,</span> <span class="n">level3_image_tif</span><span class="p">,</span> <span class="p">[],</span> <span class="n">channels</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;TIF&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
@@ -165,9 +165,9 @@ image is a TOA reflectance image, where pixels will be provided a value between 
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.dn2toa</span> <span class="kn">import</span> <span class="n">dn2toa</span>
 
 <span class="c">#Run Top of Atmosphere Reflectance computation</span>
-<span class="n">raw_dn_image</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Demos\Demos\GXL\GXL-S\K3\RAW\K3_20131003174133_07365_20171339_L1R_Bundle\K3_20131003174133_07365_20171339_L1R_Aux.xml-MS&quot;</span>
+<span class="n">raw_dn_image</span> <span class="o">=</span> <span class="s">r&quot;C:\K3\RAW\K3_20131003174133_07365_20171339_L1R_Bundle\K3_20131003174133_07365_20171339_L1R_Aux.xml-MS&quot;</span>
 <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
-<span class="n">toa_image</span> <span class="o">=</span> <span class="s">r&quot;D:\PCI_Work\Demos\Demos\GXL\GXL-S\K3\toa\kompsat3_toa.pix&quot;</span>
+<span class="n">toa_image</span> <span class="o">=</span> <span class="s">r&quot;C:\K3\toa\kompsat3_toa.pix&quot;</span>
 
 <span class="n">dn2toa</span><span class="p">(</span><span class="n">raw_dn_image</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;Reflectance&quot;</span><span class="p">,</span> <span class="n">toa_image</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 </pre></div>
