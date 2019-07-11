@@ -1,45 +1,42 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Projections &#8212; Geomatica Python Cookbook 2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <title>Projections &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/sidebar.js"></script>
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <script type="text/javascript" src="static/sidebar.js"></script>
-    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Files &amp; Layers" href="geomatica_cookbook_files_layers.html" />
     <link rel="prev" title="Mosaicking" href="geomatica_cookbook_mosaicking.html" /> 
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-       
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
         <li class="right" >
           <a href="geomatica_cookbook_files_layers.html" title="Files &amp; Layers"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="geomatica_cookbook_mosaicking.html" title="Mosaicking"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Geomatica Python Cookbook 2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -52,49 +49,19 @@
 <h1><strong>Projections</strong><a class="headerlink" href="#projections" title="Permalink to this headline">¶</a></h1>
 <p>This section provides some basic recipes for reprojecting rasters and vectors, as well as, resampling
 imagery from the native resolution to a new user-defined resolution (ground sampling distance (GSD)).</p>
-<div class="section" id="create-projection-for-an-existing-image-file">
-<h2>Create projection for an existing image file<a class="headerlink" href="#create-projection-for-an-existing-image-file" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#UNDER CONSTRUCTION</span>
-</pre></div>
-</div>
-</div></blockquote>
-</div>
 <div class="section" id="reproject-an-image-from-one-coordinate-system-to-a-different-coordinate-system">
 <h2>Reproject an image from one coordinate system to a different coordinate system<a class="headerlink" href="#reproject-an-image-from-one-coordinate-system-to-a-different-coordinate-system" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This recipe uses a single Geomatica function to reproject an image from a UTM NAD83
 projected coordinate system to a Latitude and Longitude WGS84 geographic coordinate system</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.reproj2</span> <span class="kn">import</span> <span class="n">reproj2</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.reproj</span> <span class="kn">import</span> <span class="n">reproj</span>
 
-<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;C:\projection\landsat8_ms.pix&quot;</span> <span class="c">#UTM NAD83 projection</span>
-<span class="n">reproj_file</span> <span class="o">=</span> <span class="s">r&quot;C:\projection\reproj_image2.pix&quot;</span>
-<span class="n">resolution</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="n">map_units</span> <span class="o">=</span> <span class="s">&quot;Long/Lat D000&quot;</span> <span class="c">#output will be longitude and latitude with WGS84</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;D:\Data\irvine.pix&quot;</span> <span class="c1">#UTM WGS84 projection</span>
+<span class="n">reproj_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;D:\Data\irvine_reroj.pix&quot;</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">map_units</span> <span class="o">=</span> <span class="s2">&quot;UTM 11 D000&quot;</span> <span class="c1">#output will be longitude and latitude with NAD83 Ellipse</span>
 
-<span class="n">reproj2</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">reproj_file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">[],</span> <span class="n">resolution</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span><span class="p">,</span> <span class="n">map_units</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div></blockquote>
-</div>
-<div class="section" id="reproject-a-vector-layer-from-one-coordinate-system-to-a-different-coordinate-system">
-<h2>Reproject a vector layer from one coordinate system to a different coordinate system<a class="headerlink" href="#reproject-a-vector-layer-from-one-coordinate-system-to-a-different-coordinate-system" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>This recipe uses a single Geomatica function to reproject a vector layer from a UTM NAD83
-projected coordinate system to a Latitude and Longitude WGS84 geographic coordinate system</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.reproj2</span> <span class="kn">import</span> <span class="n">reproj2</span>
-
-<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;C:\projection\toronto_vector.pix&quot;</span> <span class="c">#UTM NAD83 projection</span>
-<span class="n">vector_layers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">reproj_file</span> <span class="o">=</span> <span class="s">r&quot;C:\projection\reproj_vectors.pix&quot;</span>
-<span class="n">resolution</span><span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="n">map_units</span> <span class="o">=</span> <span class="s">&quot;Long/Lat D000&quot;</span> <span class="c">#output will be longitude and latitude with WGS83</span>
-
-<span class="n">reproj2</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="p">[],</span> <span class="n">vector_layers</span><span class="p">,</span> <span class="s">&quot;VEC&quot;</span><span class="p">,</span> <span class="n">reproj_file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">[],</span> <span class="n">resolution</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">map_units</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="n">reproj</span><span class="p">(</span><span class="n">fili</span><span class="o">=</span><span class="n">input_file</span><span class="p">,</span> <span class="n">dbic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">filo</span><span class="o">=</span><span class="n">reproj_file</span><span class="p">,</span> <span class="n">repmeth</span><span class="o">=</span><span class="s2">&quot;BR&quot;</span><span class="p">,</span> <span class="n">pxsz</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">mapunits</span><span class="o">=</span><span class="n">map_units</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -103,16 +70,13 @@ projected coordinate system to a Latitude and Longitude WGS84 geographic coordin
 <h2>Resample Image channels<a class="headerlink" href="#resample-image-channels" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This recipe demonstrates how to change the ground sampling distance (GSD) or image resolution
-from the inpu resolution to 4m resolution, using a cubic convolution resampling method.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.resamp</span> <span class="kn">import</span> <span class="n">resamp</span>
+from the input resolution to 4m resolution, using a cubic convolution resampling method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.resamp</span> <span class="kn">import</span> <span class="n">resamp</span>
 
-<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\image.pix&quot;</span> <span class="c">#2m resolution data</span>
-<span class="n">channels</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#defaults to all channels</span>
-<span class="n">resampled_file</span> <span class="o">=</span> <span class="s">r&quot;c:\data\resampled_image.pix&quot;</span>
-<span class="n">resolution</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span> <span class="c">#downsample from 2m to 4m resolution</span>
-<span class="n">resample_method</span> <span class="o">=</span><span class="s">&quot;cubic&quot;</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;D:\Data\irvine.pix&quot;</span>  <span class="c1"># 2m resolution data</span>
+<span class="n">resampled_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;D:\Data\irvine_resamp.pix&quot;</span>
 
-<span class="n">resamp</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">resampled_file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">resample_method</span><span class="p">)</span>
+<span class="n">resamp</span><span class="p">(</span><span class="n">fili</span><span class="o">=</span><span class="n">input_file</span><span class="p">,</span> <span class="n">dbic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">filo</span><span class="o">=</span><span class="n">resampled_file</span><span class="p">,</span> <span class="n">pxszout</span><span class="o">=</span><span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span> <span class="n">resample</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -126,14 +90,12 @@ from the inpu resolution to 4m resolution, using a cubic convolution resampling 
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="static/PCI_Logo_med.png" alt="Logo"/>
+              <img class="logo" src="_static/pcilogo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><strong>Projections</strong></a><ul>
-<li><a class="reference internal" href="#create-projection-for-an-existing-image-file">Create projection for an existing image file</a></li>
 <li><a class="reference internal" href="#reproject-an-image-from-one-coordinate-system-to-a-different-coordinate-system">Reproject an image from one coordinate system to a different coordinate system</a></li>
-<li><a class="reference internal" href="#reproject-a-vector-layer-from-one-coordinate-system-to-a-different-coordinate-system">Reproject a vector layer from one coordinate system to a different coordinate system</a></li>
 <li><a class="reference internal" href="#resample-image-channels">Resample Image channels</a></li>
 </ul>
 </li>
@@ -145,24 +107,16 @@ from the inpu resolution to 4m resolution, using a cubic convolution resampling 
   <h4>Next topic</h4>
   <p class="topless"><a href="geomatica_cookbook_files_layers.html"
                         title="next chapter"><strong>Files &amp; Layers</strong></a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="sources/geomatica_cookbook_projections.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -172,19 +126,21 @@ from the inpu resolution to 4m resolution, using a cubic convolution resampling 
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
         <li class="right" >
           <a href="geomatica_cookbook_files_layers.html" title="Files &amp; Layers"
              >next</a> |</li>
         <li class="right" >
           <a href="geomatica_cookbook_mosaicking.html" title="Mosaicking"
              >previous</a> |</li>
-        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Geomatica Python Cookbook 2 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2014, PCI Geomatics
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+        &#169; Copyright 2018, PCI Geomatics.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

@@ -1,45 +1,34 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Geomatica Py General &#8212; Geomatica Python Cookbook 2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <title>Geomatica Py General &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/sidebar.js"></script>
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <script type="text/javascript" src="static/sidebar.js"></script>
-    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
-    <link rel="next" title="Integration with ArcGIS (ArcPy)" href="geomatica_cookbook_integrate_arcpy.html" />
-    <link rel="prev" title="Welcome to the Geomatica Python Cookbook!" href="index.html" /> 
-  </head>
-  <body role="document">
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-       
-        <li class="right" >
-          <a href="geomatica_cookbook_integrate_arcpy.html" title="Integration with ArcGIS (ArcPy)"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to the Geomatica Python Cookbook!"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">Geomatica Python Cookbook 2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -50,30 +39,39 @@
             
   <div class="section" id="geomatica-py-general">
 <h1><strong>Geomatica Py General</strong><a class="headerlink" href="#geomatica-py-general" title="Permalink to this headline">¶</a></h1>
-<p>This section provides some basic recipes for testing your installation, importing Geomatica&#8217;s Python
-library (modules), accessing help, error handling and etc.</p>
+<p>This section provides some basic recipes for testing your installation, importing Geomatica’s Python
+library (modules), accessing help, error handling, etc.</p>
 <div class="section" id="check-installation-of-geomatica-py-libraries">
 <h2>Check Installation of Geomatica Py Libraries<a class="headerlink" href="#check-installation-of-geomatica-py-libraries" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
-Use Python&#8217;s interactive mode in the terminal/console for quickly checking the install and licensing.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pci</span>
+Use Python’s interactive mode in the terminal/console for quickly checking the installation and licensing.</p>
+<p>If you are running in CMD and have multiple Python versions installed, make sure you are using the 64-bit python 2.7 version.
+This is especially important if you have ArcGIS installed. A 32-bit version of python in installed with ArcGIS.</p>
+<p>More information on Getting Started with Geomatica and Python is available from the Developer Zone:
+<a class="reference external" href="https://support.pcigeomatics.com/hc/en-us/articles/207601873-Getting-Started-with-Geomatica-and-Python">https://support.pcigeomatics.com/hc/en-us/articles/207601873-Getting-Started-with-Geomatica-and-Python</a></p>
+<p>Open Command Line (Start &gt; type CMD)
+In CMD navigate to the python27 folder:</p>
+<p>&gt; cd C:python27 (this could be different based on your installation)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pci</span>
 </pre></div>
 </div>
-<p>If successful...</p>
-<img alt="images/geomatica_success.png" src="images/geomatica_success.png" />
-<p>If failure...</p>
-<img alt="images/geomatica_fail.png" src="images/geomatica_fail.png" />
-<p>Note: Depending on the error, a different error message may be printed</p>
+<p>If no error message appears then the PCI library has been correctly imported.
+You can then choose to check the Geomatica Version from command line to ensure that the correct Geomatica version is being used.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pci</span><span class="o">.</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>The PCI version is then printed in the terminal.</p>
 </div></blockquote>
 </div>
 <div class="section" id="import-geomatica-py-libraries">
 <h2>Import Geomatica Py Libraries<a class="headerlink" href="#import-geomatica-py-libraries" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This example explicitly imports the pansharp2 function from the pansharp2 module and imports
-all objects and functions from the ortho2 module</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span> <span class="c">#Imports the pansharp2 function/object from the pansharp2 module</span>
-<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span> <span class="c">#imports all of the functions and objects from the ortho2 module</span>
+<div><p>This example explicitly imports the pansharp2 function from the pansharp2 module.
+Alternatively, you can also import the pci.algo module. This allows you to only import one module. You would then run
+a function with the algo module - i.e. algo.pansharp2() instead of pansharp2().</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span> <span class="c1"># Imports the pansharp2 function from the pansharp2 module</span>
+<span class="kn">from</span> <span class="nn">pci.algo</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1"># imports the algo module which provides access to all Geomatica functions</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -85,8 +83,8 @@ all objects and functions from the ortho2 module</p>
 about the signature of the function (arguments that need to be passed) and information about what the function
 does. Furthermore, the help document includes information about what input data is required and what output is
 produced.</p>
-<p>It is best to access this directly with the python interpreter in Geomatica&#8217;s Focus or using a terminal/console</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
+<p>It is best to access this directly with the python interpreter in Geomatica’s Focus or using a terminal/console.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
 
 <span class="n">help</span><span class="p">(</span><span class="n">pansharp2</span><span class="p">)</span>
 </pre></div>
@@ -99,18 +97,16 @@ produced.</p>
 <div><p>This example demonstrates how to handle exceptions that may result from incorrectly invoking a Geomatica
 function. The main behaviour of this action is that the script will continue to run if the exception is called.
 This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
-to process the other files</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
+to process the other files.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
 <span class="kn">from</span> <span class="nn">pci.exceptions</span> <span class="kn">import</span> <span class="n">PCIException</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="n">ms_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYorkk_multispectral.pix&quot;</span> <span class="c">#this file is incorrectly spelt and thus, does not exist</span>
-<span class="n">ms_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="c">#pansharpen channels 1 to 4 (Red, green, blue and NIR)</span>
-<span class="n">pan_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYork_panchromatic.pix&quot;</span>
-<span class="n">out_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYork_pansharpened.pix&quot;</span>
+<span class="n">ms_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;c:\NewYorkk_multispectral.pix&quot;</span> <span class="c1"># this file is incorrectly spelt and thus, does not exist</span>
+<span class="n">pan_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;c:\NewYork_panchromatic.pix&quot;</span>
+<span class="n">out_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;c:\NewYork_pansharpened.pix&quot;</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">pansharp2</span><span class="p">(</span><span class="n">ms_file</span><span class="p">,</span> <span class="n">ms_channels</span><span class="p">,</span> <span class="p">[],</span> <span class="n">pan_file</span><span class="p">,</span> <span class="p">[],</span> <span class="n">out_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;pix&quot;</span><span class="p">,</span> <span class="s">&quot;tiled512&quot;</span><span class="p">)</span>
+    <span class="n">pansharp2</span><span class="p">(</span><span class="n">fili</span><span class="o">=</span><span class="n">ms_file</span><span class="p">,</span> <span class="n">dbic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">fili_pan</span><span class="o">=</span><span class="n">pan_file</span><span class="p">,</span> <span class="n">filo</span><span class="o">=</span><span class="n">out_file</span><span class="p">,</span> <span class="n">ftype</span><span class="o">=</span><span class="s2">&quot;pix&quot;</span><span class="p">,</span> <span class="n">foptions</span><span class="o">=</span><span class="s2">&quot;tiled512&quot;</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">e</span>
 <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
@@ -119,33 +115,33 @@ to process the other files</p>
 </div>
 <p>This results in python printing a PCI caught exception that the input multispectral file does not exist
 The script will continue to run through to the next line of code without exiting, because the exception
-is handled with a print statement</p>
+is handled with a print statement.</p>
 <img alt="images/error_handling.png" src="images/error_handling.png" />
 </div></blockquote>
 </div>
 <div class="section" id="input-methods">
 <h2>Input Methods<a class="headerlink" href="#input-methods" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe demonstrates three (3) different methods that users running a script can
-input information, such as, locations to input files.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#Method 1 - In the script directly</span>
-<span class="n">input_file</span> <span class="o">=</span> <span class="s">r&quot;c:\raw_imagery\image.tif&quot;</span>
+<div><p>This recipe demonstrates three (3) different input methods. Developers can decide if they want to input the file path directly
+as a variable, prompt users for the path location or pass the path as an argument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Method 1 - In the script directly</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;c:\raw_imagery\image.tif&quot;</span>
 
 
-<span class="c">#Method 2 - With a user prompt</span>
-<span class="n">input_file</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Please provide the path to the input image &quot;</span><span class="p">)</span>
+<span class="c1"># Method 2 - With a user prompt</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s2">&quot;Please provide the path to the input image &quot;</span><span class="p">)</span>
 
 <span class="sd">&#39;&#39;&#39;The script will pause until the user provides an input path. At which point, the</span>
 <span class="sd">variable &quot;input_file&quot; will be assigned the user provided path.&#39;&#39;&#39;</span>
 
 
-<span class="c">#Method 3 - Passing information as arguments when launching the script (usually the preferred method)</span>
+<span class="c1"># Method 3 - Passing information as arguments when launching the script (usually the preferred method)</span>
 <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
 
 <span class="n">script</span><span class="p">,</span> <span class="n">input_image</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">=</span> <span class="n">argv</span>
 
-<span class="k">print</span> <span class="s">&quot;input image is: &quot;</span> <span class="o">+</span> <span class="n">input_image</span>
-<span class="k">print</span> <span class="s">&quot;output directory is: &quot;</span> <span class="o">+</span> <span class="n">output_dir</span>
+<span class="k">print</span> <span class="s2">&quot;input image is: &quot;</span> <span class="o">+</span> <span class="n">input_image</span>
+<span class="k">print</span> <span class="s2">&quot;output directory is: &quot;</span> <span class="o">+</span> <span class="n">output_dir</span>
 
 <span class="sd">&#39;&#39;&#39;The user running the script will be expected to provide the path to the input file</span>
 <span class="sd">and output directory after providing the location of the script. Each argument is</span>
@@ -168,9 +164,9 @@ input information, such as, locations to input files.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="static/PCI_Logo_med.png" alt="Logo"/>
+              <img class="logo" src="_static/pcilogo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><strong>Geomatica Py General</strong></a><ul>
 <li><a class="reference internal" href="#check-installation-of-geomatica-py-libraries">Check Installation of Geomatica Py Libraries</a></li>
@@ -182,30 +178,16 @@ input information, such as, locations to input files.</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to the Geomatica Python Cookbook!</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="geomatica_cookbook_integrate_arcpy.html"
-                        title="next chapter"><strong>Integration with ArcGIS (ArcPy)</strong></a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="sources/geomatica_cookbook_general.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -215,19 +197,15 @@ input information, such as, locations to input files.</p>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        
-        <li class="right" >
-          <a href="geomatica_cookbook_integrate_arcpy.html" title="Integration with ArcGIS (ArcPy)"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to the Geomatica Python Cookbook!"
-             >previous</a> |</li>
-        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">Geomatica Python Cookbook 2 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2014, PCI Geomatics
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+        &#169; Copyright 2018, PCI Geomatics.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

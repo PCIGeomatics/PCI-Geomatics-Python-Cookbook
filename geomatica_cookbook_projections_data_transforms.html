@@ -1,45 +1,40 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Projections &amp; Data Transformations &mdash; Geomatica Cookbook 1.0.0 documentation</title>
-    
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
-    
+    <title>Projections &amp; Data Transformations &#8212; Geomatica Python Cookbook 2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0',
+        VERSION:     '2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <script type="text/javascript" src="static/sidebar.js"></script>
-    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
-    <link rel="next" title="Geospatial Image Processing &amp; Analysis" href="geomatica_cookbook_image_processing_analysis.html" />
-    <link rel="prev" title="Mosaicking" href="geomatica_cookbook_mosaicking.html" /> 
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        
-        <li class="right" >
-          <a href="geomatica_cookbook_image_processing_analysis.html" title="Geospatial Image Processing &amp; Analysis"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="geomatica_cookbook_mosaicking.html" title="Mosaicking"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">Geomatica Python Cookbook 2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -56,11 +51,11 @@
 <blockquote>
 <div><p>Quickly check to ensure that Geomatica is correctly installed and licensed for your computer.
 Use the Python interpreter in the terminal/console for quickly checking the install and licensing.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pci</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pci</span>
 
-<span class="c">#If successful, the following will be printed to the console:</span>
-<span class="c">#PCI Pluggable Framework environment successfully loaded</span>
-<span class="c">#Otherwise, a PCI exception will be printed</span>
+<span class="c1">#If successful, the following will be printed to the console:</span>
+<span class="c1">#PCI Pluggable Framework environment successfully loaded</span>
+<span class="c1">#Otherwise, a PCI exception will be printed</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -70,8 +65,8 @@ Use the Python interpreter in the terminal/console for quickly checking the inst
 <blockquote>
 <div><p>This example explicitly imports the pansharp2 function from the pansharp2 module and imports
 all onjects and functions from the ortho2 module</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span> <span class="c">#Imports the pansharp2 function/object from the pansharp2 module</span>
-<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span> <span class="c">#imports all of the functions and objects from the ortho2 module</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span> <span class="c1">#Imports the pansharp2 function/object from the pansharp2 module</span>
+<span class="kn">from</span> <span class="nn">pci.ortho2</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#imports all of the functions and objects from the ortho2 module</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -83,8 +78,8 @@ all onjects and functions from the ortho2 module</p>
 about the signature of the function (arguments that need to be passed) and information about what the function
 does. Furthermore, the help document includes information about what input data is required and what output is
 produced.</p>
-<p>It is best to access this directly with the python interpreter in Geomatica&#8217;s Focus or using a terminal/console</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
+<p>It is best to access this directly with the python interpreter in Geomatica’s Focus or using a terminal/console</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
 
 <span class="n">help</span><span class="p">(</span><span class="n">pansharp2</span><span class="p">)</span>
 </pre></div>
@@ -98,25 +93,25 @@ produced.</p>
 function. The main behaviour of this action is that the script will continue to run if the exception is called.
 This is mainly desirable when performing batch operations, so that if one file fails to run, the script will continue
 to process the other files</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.pansharp2</span> <span class="kn">import</span> <span class="n">pansharp2</span>
 <span class="kn">from</span> <span class="nn">pci.exceptions</span> <span class="kn">import</span> <span class="n">PCIException</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="n">ms_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYorkk_multispectral.pix&quot;</span> <span class="c">#this file is incorrectly spelt and thus, does not exist</span>
-<span class="n">ms_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="c">#pansharpen channels 1 to 4 (Red, green, blue and NIR)</span>
-<span class="n">pan_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYork_panchromatic.pix&quot;</span>
-<span class="n">out_file</span> <span class="o">=</span> <span class="s">r&quot;c:\NewYork_pansharpened.pix&quot;</span>
+<span class="n">ms_file</span> <span class="o">=</span> <span class="s2">r&quot;c:\NewYorkk_multispectral.pix&quot;</span> <span class="c1">#this file is incorrectly spelt and thus, does not exist</span>
+<span class="n">ms_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="c1">#pansharpen channels 1 to 4 (Red, green, blue and NIR)</span>
+<span class="n">pan_file</span> <span class="o">=</span> <span class="s2">r&quot;c:\NewYork_panchromatic.pix&quot;</span>
+<span class="n">out_file</span> <span class="o">=</span> <span class="s2">r&quot;c:\NewYork_pansharpened.pix&quot;</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">pansharp2</span><span class="p">(</span><span class="n">ms_file</span><span class="p">,</span> <span class="n">ms_channels</span><span class="p">,</span> <span class="p">[],</span> <span class="n">pan_file</span><span class="p">,</span> <span class="p">[],</span> <span class="n">out_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;pix&quot;</span><span class="p">,</span> <span class="s">&quot;tiled512&quot;</span><span class="p">)</span>
+    <span class="n">pansharp2</span><span class="p">(</span><span class="n">ms_file</span><span class="p">,</span> <span class="n">ms_channels</span><span class="p">,</span> <span class="p">[],</span> <span class="n">pan_file</span><span class="p">,</span> <span class="p">[],</span> <span class="n">out_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;pix&quot;</span><span class="p">,</span> <span class="s2">&quot;tiled512&quot;</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">e</span>
 <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">e</span>
 
-<span class="c">#This results in python printing a PCI caught exception that the input multispectral file does not exist</span>
-<span class="c">#The script will continue to run through to the next line of code without exiting, because the exception</span>
-<span class="c">#is handled with a print statement</span>
+<span class="c1">#This results in python printing a PCI caught exception that the input multispectral file does not exist</span>
+<span class="c1">#The script will continue to run through to the next line of code without exiting, because the exception</span>
+<span class="c1">#is handled with a print statement</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -129,6 +124,9 @@ to process the other files</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pcilogo.png" alt="Logo"/>
+            </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><strong>Projections &amp; Data Transformations</strong></a><ul>
@@ -140,30 +138,14 @@ to process the other files</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="geomatica_cookbook_mosaicking.html"
-                        title="previous chapter"><strong>Mosaicking</strong></a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="geomatica_cookbook_image_processing_analysis.html"
-                        title="next chapter"><strong>Geospatial Image Processing &amp; Analysis</strong></a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="sources/geomatica_cookbook_projections_data_transforms.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -173,19 +155,15 @@ to process the other files</p>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        
-        <li class="right" >
-          <a href="geomatica_cookbook_image_processing_analysis.html" title="Geospatial Image Processing &amp; Analysis"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="geomatica_cookbook_mosaicking.html" title="Mosaicking"
-             >previous</a> |</li>
-        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">Geomatica Python Cookbook 2 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2014, PCI Geomatics
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+        &#169; Copyright 2018, PCI Geomatics.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

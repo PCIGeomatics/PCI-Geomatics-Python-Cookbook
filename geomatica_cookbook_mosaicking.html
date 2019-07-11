@@ -1,45 +1,42 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Mosaicking &#8212; Geomatica Python Cookbook 2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <title>Mosaicking &mdash; Geomatica Cookbook 1.0.0 documentation</title>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/sidebar.js"></script>
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <script type="text/javascript" src="static/sidebar.js"></script>
-    <link rel="top" title="Geomatica Cookbook 1.0.0 documentation" href="index.html" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Projections" href="geomatica_cookbook_projections.html" />
     <link rel="prev" title="Generic Geometric Correction" href="geomatica_cookbook_generic_geometric_correction.html" /> 
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
         <li class="right" >
           <a href="geomatica_cookbook_projections.html" title="Projections"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="geomatica_cookbook_generic_geometric_correction.html" title="Generic Geometric Correction"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Geomatica Python Cookbook 2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -50,27 +47,26 @@
             
   <div class="section" id="mosaicking">
 <h1><strong>Mosaicking</strong><a class="headerlink" href="#mosaicking" title="Permalink to this headline">¶</a></h1>
-<p>This section provides recipes related to Geomatica&#8217;s automatic mosaicking functions. Here you
-will discover concepts for automatic color balancing, seamline generation, tiling from vector
-polygons, clipping mosaics to irregular polygons and more...</p>
-<p>Please note that this section expects that you ahave already generated the ortho images, which
-are to be included into the mosaic.</p>
-<div class="section" id="automatic-color-balancing-and-seamline-generation-with-qa-preview-mosaic">
-<h2>Automatic color balancing and seamline generation (With QA preview mosaic)<a class="headerlink" href="#automatic-color-balancing-and-seamline-generation-with-qa-preview-mosaic" title="Permalink to this headline">¶</a></h2>
+<p>This section provides recipes related to Geomatica’s automatic mosaicking functions. Here you
+will discover concepts for automatic color balancing, cutline generation, tiling from vector
+polygons, clipping mosaics to irregular polygons and more…</p>
+<p>Please note that this section expects that you have already generated the ortho images, which
+will be included in the mosaic.</p>
+<div class="section" id="automatic-color-balancing-and-cutline-generation-with-qa-preview-mosaic">
+<h2>Automatic color balancing and cutline generation (With QA preview mosaic)<a class="headerlink" href="#automatic-color-balancing-and-cutline-generation-with-qa-preview-mosaic" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This recipe calls a single function which performs color balancing and generates seamlines.
-It also creates an XML file that can be loaded into Geomatica&#8217;s Mosaic Tool for
-performing quality assurance on a preview mosaic.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.mosprep</span> <span class="kn">import</span> <span class="n">mosprep</span>
+<div><p>This recipe calls a single function which performs color balancing, image sorting, normalization and cutline generation.
+It also creates a .MOS file that can be loaded into Geomatica’s Mosaic Tool for
+performing quality assurance.
+More information on editing the mosaic preview in the Mosaic Tool can be found in this tutorial:
+<a class="reference external" href="https://support.pcigeomatics.com/hc/en-us/articles/360015189232-Mosaic-Tool-Automatic-Mosaicking-in-Geomatica-2018">https://support.pcigeomatics.com/hc/en-us/articles/360015189232-Mosaic-Tool-Automatic-Mosaicking-in-Geomatica-2018</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.mosprep</span> <span class="kn">import</span> <span class="n">mosprep</span>
 
-<span class="n">orthos</span> <span class="o">=</span> <span class="s">r&quot;C:\orthos&quot;</span>
-<span class="n">src_img_file</span> <span class="o">=</span> <span class="s">r&quot;C:\Mosaic\mosaic.xml&quot;</span>
-<span class="n">normalize</span> <span class="o">=</span> <span class="s">&quot;None&quot;</span> <span class="c">#HotSpot method often useful for airphoto imagery</span>
-<span class="n">col_balance</span> <span class="o">=</span> <span class="s">&quot;neighborhood&quot;</span>
-<span class="n">cutlines</span> <span class="o">=</span> <span class="s">&quot;minsqdiff&quot;</span>
+<span class="n">orthos</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\test\ShawnPy\Data\Mosaic\orthos&quot;</span>
+<span class="n">src_img_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\test\ShawnPy\Data\Mosaic\mosaic.mos&quot;</span>
 
-<span class="n">mosprep</span><span class="p">(</span><span class="n">orthos</span><span class="p">,</span> <span class="n">src_img_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;ADAPTIVE&quot;</span><span class="p">,</span>
-        <span class="s">&quot;OVERLAP&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">cutlines</span><span class="p">)</span>
+<span class="n">mosprep</span><span class="p">(</span><span class="n">mfile</span><span class="o">=</span><span class="n">orthos</span><span class="p">,</span> <span class="n">silfile</span><span class="o">=</span><span class="n">src_img_file</span><span class="p">,</span> <span class="n">sortmthd</span><span class="o">=</span><span class="s2">&quot;NEARESTCENTER&quot;</span><span class="p">,</span> <span class="n">normaliz</span><span class="o">=</span><span class="s2">&quot;ADAPTIVE&quot;</span><span class="p">,</span>
+        <span class="n">balspec</span><span class="o">=</span><span class="s2">&quot;BUNDLE&quot;</span><span class="p">,</span> <span class="n">cutmthd</span><span class="o">=</span><span class="s2">&quot;MINSQDIFF&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -79,27 +75,21 @@ performing quality assurance on a preview mosaic.</p>
 <h2>Generate full resolution mosaic (single image)<a class="headerlink" href="#generate-full-resolution-mosaic-single-image" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This recipe demonstrates how to create a single full resolution mosaic file from multiple
-input images (usually orthos), using the color balancing coefficients and seamlines
+input images (usually orthos), using the color balancing coefficients and cutlines
 automatically computed from the MOSPREP function (see above).</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.mosdef</span> <span class="kn">import</span> <span class="n">mosdef</span>
-<span class="kn">from</span> <span class="nn">pci.mosrun2</span> <span class="kn">import</span> <span class="n">mosrun2</span>
-
-<span class="c">#Create Mosaic Definition XML file to</span>
-<span class="n">src_image_file</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\mosaic_prep\preview_proj001.xml&quot;</span> <span class="c">#output from mosprep</span>
-<span class="n">mosdef_file</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\mosaic_def\def_proj001.xml&quot;</span>
-<span class="n">mos_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="n">blend_width</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>
-
-<span class="n">mosdef</span><span class="p">(</span><span class="n">src_image_file</span><span class="p">,</span> <span class="n">mosdef_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
-        <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">mos_res</span><span class="p">,</span> <span class="n">blend_width</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-
-<span class="c">#Create full resolution mosaic</span>
-<span class="n">mos_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\Final_mosaic&quot;</span>
-<span class="n">source_map</span> <span class="o">=</span> <span class="s">&quot;yes&quot;</span>
-
-<span class="n">mosrun2</span><span class="p">(</span><span class="n">src_image_file</span><span class="p">,</span> <span class="n">mosdef_file</span><span class="p">,</span> <span class="n">mos_dir</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">source_map</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
+<p>from pci.mosdef import mosdef
+from pci.mosrun import mosrun</p>
+<p># Create Mosaic Definition XML file to
+src_image_file = r”C:testShawnPyDataMosaicmosaic.mos”  # Output from mosprep
+mosdef_file = r”C:testShawnPyDataMosaicmosdef.xml”</p>
+<p>mosdef(silfile=src_image_file, mdfile=mosdef_file, pxszout=[2], blend=[5])</p>
+<p># Create full resolution mosaic
+mos_dir = r”C:testShawnPyDataMosaicFinalMosaic”
+source_map = “yes”</p>
+<p>mosrun(silfile=src_image_file, mdfile=mosdef_file, outdir=mos_dir, crsrcmap=”YES”)</p>
 </div></blockquote>
 </div>
 <div class="section" id="generate-mosaic-tiles-from-vector-map-sheet-with-jpeg-compression">
@@ -108,95 +98,24 @@ automatically computed from the MOSPREP function (see above).</p>
 <div><p>This recipe creates a full resolution tiled mosaic with jpeg compression set to 75%. This
 can be very useful when generating large mosaics.</p>
 <p>In this recipe, GeoTIFF tiles (with JPEG compression), defined by
-vector polygons, are generated. The polygons, which define the tiles can have overlap.
-Furthermore, the script automatically names the tiles using an attribute field &#8220;Tile Code&#8221;
+vector polygons, are generated. The polygons, which define the tiles, can have overlap.
+Furthermore, the script automatically names the tiles using an attribute field “Tile Code”
 found in the vector polygon file.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.mosdef</span> <span class="kn">import</span> <span class="n">mosdef</span>
-<span class="kn">from</span> <span class="nn">pci.mosrun2</span> <span class="kn">import</span> <span class="n">mosrun2</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.mosdef</span> <span class="kn">import</span> <span class="n">mosdef</span>
+<span class="kn">from</span> <span class="nn">pci.mosrun</span> <span class="kn">import</span> <span class="n">mosrun</span>
 
-<span class="c">#Create Mosaic Definition XML file to</span>
-<span class="n">src_image_file</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\mosprep\mosaic.xml&quot;</span>
-<span class="n">mosdef_file</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\mosdef\mosdef.xml&quot;</span>
-<span class="n">tile_specs</span> <span class="o">=</span> <span class="s">r&quot;VECTOR, C:\tiles.pix, Tile_Code&quot;</span> <span class="c">#tiling parameters</span>
-<span class="n">mos_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="n">blend_width</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="c1"># Create Mosaic Definition XML file to</span>
+<span class="n">src_image_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Mosaic\mosaic.mos&quot;</span>
+<span class="n">mosdef_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Mosaic\mosaic_def.xml&quot;</span>
+<span class="n">tile_specs</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;VECTOR, C:\tiles.pix, Tile_Code&quot;</span> <span class="c1">#tiling parameters</span>
 
-<span class="n">mosdef</span><span class="p">(</span><span class="n">src_image_file</span><span class="p">,</span> <span class="n">mosdef_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">mos_res</span><span class="p">,</span> <span class="n">blend_width</span><span class="p">,</span>
-       <span class="p">[],</span> <span class="s">&quot;TIF&quot;</span><span class="p">,</span> <span class="s">&quot;JPEG75&quot;</span><span class="p">)</span> <span class="c">#.tif output file format with JPEG 75% compression</span>
+<span class="n">mosdef</span><span class="p">(</span><span class="n">silfile</span><span class="o">=</span><span class="n">src_image_file</span><span class="p">,</span> <span class="n">mdfile</span><span class="o">=</span><span class="n">mosdef_file</span><span class="p">,</span> <span class="n">tispec</span><span class="o">=</span><span class="n">tile_specs</span><span class="p">,</span> <span class="n">pxszout</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">blend</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+       <span class="n">ftype</span><span class="o">=</span><span class="s2">&quot;TIF&quot;</span><span class="p">,</span> <span class="n">foptions</span><span class="o">=</span><span class="s2">&quot;JPEG75&quot;</span><span class="p">)</span>
 
-<span class="c">#Create full resolution mosaic</span>
-<span class="n">mos_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\mosaic\Tiles&quot;</span>
-<span class="n">source_map</span> <span class="o">=</span> <span class="s">&quot;yes&quot;</span>
+<span class="c1"># Create full resolution mosaic</span>
+<span class="n">mos_dir</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\Mosaic\Tiles&quot;</span>
 
-<span class="n">mosrun2</span><span class="p">(</span><span class="n">src_image_file</span><span class="p">,</span> <span class="n">mosdef_file</span><span class="p">,</span> <span class="n">mos_dir</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">source_map</span><span class="p">,</span>
-        <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;NEAR&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div></blockquote>
-</div>
-<!--
-<div class="section" id="clip-mosaic-to-polygon-cookie-cutter-method">
-<h2>Clip Mosaic to polygon (Cookie Cutter Method)<a class="headerlink" href="#clip-mosaic-to-polygon-cookie-cutter-method" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>This recipe provides code that will clip a mosaic along the edges of an input irregular polygon. This is
-commonly known as a &#8220;Cookie Cutter&#8221; method.</p>
-<p>E.g. For country-wide mosaics, the function can remove the imagery outside of a country&#8217;s
-political borders.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#UNDER CONSTRUCTION</span>
-</pre></div>
-</div>
-</div></blockquote>
-</div>-->
-<div class="section" id="end-to-end-mosaic-generation-with-tiling-full-workflow">
-<h2>End-to-end mosaic generation with tiling - <strong>Full Workflow</strong><a class="headerlink" href="#end-to-end-mosaic-generation-with-tiling-full-workflow" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>This recipe provides a complete mosaicking workflow, with automatic tiling from vector polygons.
-The script takes in orthos that have been processed and performs automatic color balancing and
-automatic seamline generation.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pci.mosprep</span> <span class="kn">import</span> <span class="n">mosprep</span>
-<span class="kn">from</span> <span class="nn">pci.mosdef</span> <span class="kn">import</span> <span class="n">mosdef</span>
-<span class="kn">from</span> <span class="nn">pci.mosrun2</span> <span class="kn">import</span> <span class="n">mosrun2</span>
-<span class="kn">from</span> <span class="nn">pci.exceptions</span> <span class="kn">import</span> <span class="n">PCIException</span>
-
-<span class="n">orthos</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\orthos&quot;</span>
-<span class="n">src_img_file</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\mosprep\mosaic.xml&quot;</span>
-<span class="n">normalize</span> <span class="o">=</span> <span class="s">&quot;None&quot;</span> <span class="c">#HotSpot method often useful for airphoto imagery</span>
-<span class="n">col_balance</span> <span class="o">=</span> <span class="s">&quot;neighborhood&quot;</span>
-<span class="n">cutlines</span> <span class="o">=</span> <span class="s">&quot;minsqdiff&quot;</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">mosprep</span><span class="p">(</span><span class="n">orthos</span><span class="p">,</span> <span class="n">src_img_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;ADAPTIVE&quot;</span><span class="p">,</span>
-            <span class="s">&quot;OVERLAP&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">cutlines</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-
-<span class="c">#Create Mosaic Definition XML file to</span>
-<span class="n">mosdef_file</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\mosaic_def\mosdef.xml&quot;</span>
-<span class="n">tile_specs</span> <span class="o">=</span> <span class="s">r&quot;VECTOR, C:\project001\misc\tiles.pix, Tile_Code&quot;</span> <span class="c">#tiling parameter</span>
-<span class="n">mos_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="n">blend_width</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">mosdef</span><span class="p">(</span><span class="n">src_img_file</span><span class="p">,</span> <span class="n">mosdef_file</span><span class="p">,</span> <span class="p">[],</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">mos_res</span><span class="p">,</span> <span class="n">blend_width</span><span class="p">,</span>
-        <span class="p">[],</span> <span class="s">&quot;TIF&quot;</span><span class="p">,</span> <span class="s">&quot;JPEG75&quot;</span><span class="p">)</span> <span class="c">#.tif output file format with JPEG 75% compression</span>
-<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-
-<span class="c">#Create full resolution mosaic</span>
-<span class="n">mos_dir</span> <span class="o">=</span> <span class="s">r&quot;C:\project001\final_mosaic&quot;</span>
-<span class="n">source_map</span> <span class="o">=</span> <span class="s">&quot;yes&quot;</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">mosrun2</span><span class="p">(</span><span class="n">src_img_file</span><span class="p">,</span> <span class="n">mosdef_file</span><span class="p">,</span> <span class="n">mos_dir</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">source_map</span><span class="p">,</span>
-            <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;NEAR&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">PCIException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">e</span>
+<span class="n">mosrun</span><span class="p">(</span><span class="n">silfile</span><span class="o">=</span><span class="n">src_image_file</span><span class="p">,</span> <span class="n">mdfile</span><span class="o">=</span><span class="n">mosdef_file</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">mos_dir</span><span class="p">,</span> <span class="n">crsrcmap</span><span class="o">=</span><span class="s2">&quot;YES&quot;</span><span class="p">,</span> <span class="n">resample</span><span class="o">=</span><span class="s2">&quot;NEAR&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -210,16 +129,14 @@ automatic seamline generation.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="static/PCI_Logo_med.png" alt="Logo"/>
+              <img class="logo" src="_static/pcilogo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><strong>Mosaicking</strong></a><ul>
-<li><a class="reference internal" href="#automatic-color-balancing-and-seamline-generation-with-qa-preview-mosaic">Automatic color balancing and seamline generation (With QA preview mosaic)</a></li>
+<li><a class="reference internal" href="#automatic-color-balancing-and-cutline-generation-with-qa-preview-mosaic">Automatic color balancing and cutline generation (With QA preview mosaic)</a></li>
 <li><a class="reference internal" href="#generate-full-resolution-mosaic-single-image">Generate full resolution mosaic (single image)</a></li>
 <li><a class="reference internal" href="#generate-mosaic-tiles-from-vector-map-sheet-with-jpeg-compression">Generate Mosaic tiles (from vector map-sheet) with JPEG compression</a></li>
-<li><a class="reference internal" href="#clip-mosaic-to-polygon-cookie-cutter-method">Clip Mosaic to polygon (Cookie Cutter Method)</a></li>
-<li><a class="reference internal" href="#end-to-end-mosaic-generation-with-tiling-full-workflow">End-to-end mosaic generation with tiling - <strong>Full Workflow</strong></a></li>
 </ul>
 </li>
 </ul>
@@ -230,24 +147,16 @@ automatic seamline generation.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="geomatica_cookbook_projections.html"
                         title="next chapter"><strong>Projections</strong></a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="sources/geomatica_cookbook_mosaicking.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -257,19 +166,21 @@ automatic seamline generation.</p>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
         <li class="right" >
           <a href="geomatica_cookbook_projections.html" title="Projections"
              >next</a> |</li>
         <li class="right" >
           <a href="geomatica_cookbook_generic_geometric_correction.html" title="Generic Geometric Correction"
              >previous</a> |</li>
-        <li><a href="index.html">Geomatica Cookbook 1.0.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Geomatica Python Cookbook 2 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2014, PCI Geomatics
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+        &#169; Copyright 2018, PCI Geomatics.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>
