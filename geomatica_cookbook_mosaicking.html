@@ -77,19 +77,22 @@ More information on editing the mosaic preview in the Mosaic Tool can be found i
 <div><p>This recipe demonstrates how to create a single full resolution mosaic file from multiple
 input images (usually orthos), using the color balancing coefficients and cutlines
 automatically computed from the MOSPREP function (see above).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pci.mosdef</span> <span class="kn">import</span> <span class="n">mosdef</span>
+<span class="kn">from</span> <span class="nn">pci.mosrun</span> <span class="kn">import</span> <span class="n">mosrun</span>
+
+<span class="c1"># Create Mosaic Definition XML file to</span>
+<span class="n">src_image_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\test\ShawnPy\Data\Mosaic\mosaic.mos&quot;</span>  <span class="c1"># Output from mosprep</span>
+<span class="n">mosdef_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\test\ShawnPy\Data\Mosaic\mosdef.xml&quot;</span>
+
+<span class="n">mosdef</span><span class="p">(</span><span class="n">silfile</span><span class="o">=</span><span class="n">src_image_file</span><span class="p">,</span> <span class="n">mdfile</span><span class="o">=</span><span class="n">mosdef_file</span><span class="p">,</span> <span class="n">pxszout</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">blend</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="c1"># Create full resolution mosaic</span>
+<span class="n">mos_dir</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\test\ShawnPy\Data\Mosaic\FinalMosaic&quot;</span>
+<span class="n">source_map</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span>
+
+<span class="n">mosrun</span><span class="p">(</span><span class="n">silfile</span><span class="o">=</span><span class="n">src_image_file</span><span class="p">,</span> <span class="n">mdfile</span><span class="o">=</span><span class="n">mosdef_file</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">mos_dir</span><span class="p">,</span> <span class="n">crsrcmap</span><span class="o">=</span><span class="s2">&quot;YES&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>from pci.mosdef import mosdef
-from pci.mosrun import mosrun</p>
-<p># Create Mosaic Definition XML file to
-src_image_file = r”C:testShawnPyDataMosaicmosaic.mos”  # Output from mosprep
-mosdef_file = r”C:testShawnPyDataMosaicmosdef.xml”</p>
-<p>mosdef(silfile=src_image_file, mdfile=mosdef_file, pxszout=[2], blend=[5])</p>
-<p># Create full resolution mosaic
-mos_dir = r”C:testShawnPyDataMosaicFinalMosaic”
-source_map = “yes”</p>
-<p>mosrun(silfile=src_image_file, mdfile=mosdef_file, outdir=mos_dir, crsrcmap=”YES”)</p>
 </div></blockquote>
 </div>
 <div class="section" id="generate-mosaic-tiles-from-vector-map-sheet-with-jpeg-compression">
